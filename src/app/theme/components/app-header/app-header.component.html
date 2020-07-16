@@ -1,0 +1,78 @@
+<div class="app-header">
+  <a class="brand" routerLink="/">
+    <img height="30" src="assets/images/logo.svg" alt="" />
+    <span>{{appName}}</span>
+  </a>
+
+  <!--<ul class="nav">
+    <li class="nav-item">
+      <a href="javascript:;">快捷操作1</a>
+    </li>
+    <li class="nav-item">
+      <a href="javascript:;">快捷操作2</a>
+    </li>
+    <li class="nav-item">
+      <a href="javascript:;">快捷操作3</a>
+    </li>
+  </ul>-->
+
+  <ul class="nav tools">
+    <li class="nav-icon">
+      <nz-badge [nzCount]="22">
+        <i nz-icon nzType="bell" nzTheme="outline"></i>
+      </nz-badge>
+    </li>
+    <li class="nav-icon">
+      <i nz-icon nzType="message" nzTheme="outline"></i>
+    </li>
+    <li class="nav-icon">
+      <i nz-icon nzType="mail" nzTheme="outline"></i>
+    </li>
+  </ul>
+
+  <div class="user">
+    <div nz-dropdown [nzDropdownMenu]="menu" [nzPlacement]="'bottomRight'" class="user-name">
+      <nz-avatar nzIcon="user"></nz-avatar>
+      <span>{{utils.getJwtTokenClaim(jwtKvEnum.Username)}}</span>
+      <i nz-icon nzType="down" style="margin-left: 3px"></i>
+    </div>
+  </div>
+
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <ul nz-menu>
+      <li nz-menu-item>个人中心</li>
+      <li nz-menu-item>修改密码</li>
+      <li nz-submenu nzTitle="设置主题">
+        <ul nz-menu nzSelectable>
+          <li nz-menu-item [nzSelected]="" (click)="changeTheme(themeEnum.Default)">default 默认主题</li>
+          <li nz-menu-item (click)="changeTheme(themeEnum.Orange)">orange 橙色主题</li>
+          <li nz-menu-item (click)="changeTheme(themeEnum.Turquoise)">turquoise 蓝绿色主题</li>
+<!--          <li nz-menu-item (click)="changeTheme(themeEnum.Dark)">dark 黑暗主题</li>--><!--如果要定制黑暗主题，去掉注释即可-->
+        </ul>
+      </li>
+      <li nz-menu-item (click)="logout()">退出登录</li>
+    </ul>
+  </nz-dropdown-menu>
+
+  <!--<div class="user">
+    <nz-dropdown [nzPlacement]="'bottomRight'">
+      <div nz-dropdown class="user-name">
+        <nz-avatar nzIcon="user"></nz-avatar>
+        <span>{{utils.getJwtTokenClaim(jwtKvEnum.Username)}}</span>
+        <i nz-icon nzType="down" style="margin-left: 3px"></i>
+      </div>
+
+      <ul nz-menu nzSelectable>
+        <li nz-menu-item>
+          <a>个人中心</a>
+        </li>
+        <li nz-menu-item>
+          <a>修改密码</a>
+        </li>
+        <li nz-menu-item>
+          <a (click)="logout()">退出登录</a>
+        </li>
+      </ul>
+    </nz-dropdown>
+  </div>-->
+</div>

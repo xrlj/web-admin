@@ -1,0 +1,342 @@
+<nz-card class="card-list" nzTitle="用户列表">
+  <div class="card-list-action">
+    <nz-input-group [nzSuffix]="usernameSuffixTemplate">
+      <input type="text" nz-input [(ngModel)]="vUserSearchReq.username" placeholder="用户名称"/>
+    </nz-input-group>
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="性别" [(ngModel)]="vUserSearchReq.sex" style="min-width: 200px">
+      <nz-option [nzLabel]="'男'" [nzValue]="1"></nz-option>
+      <nz-option [nzLabel]="'女'" [nzValue]="2"></nz-option>
+      <nz-option [nzLabel]="'保密'" [nzValue]="0"></nz-option>
+    </nz-select>
+    <button nz-button nzType="default" (click)="search(true)"><i nz-icon nzType="search"></i>查询</button>
+    <button nz-button nzType="primary" (click)="addModalShow()"><i nz-icon nzType="plus"></i>新增</button>
+    <button nz-button nzType="danger" (click)="delUser()"><i nz-icon nzType="delete"></i>删除</button>
+    <button nz-button nzType="primary" nzGhost (click)="showSetUserRole()">设置角色</button>
+    <button nz-button nzType="default"><i nz-icon nzType="export" nzTheme="outline"></i>导出</button>
+  </div>
+  <div class="card-list-table">
+    <nz-table
+      #userTable
+      nzShowPagination
+      nzShowSizeChanger
+      nzBordered
+      [nzFrontPagination]="false"
+      [nzData]="listOfAllData"
+      [nzLoading]="loading"
+      [nzTotal]="total"
+      [(nzPageIndex)]="pageIndex"
+      [(nzPageSize)]="pageSize"
+      (nzPageIndexChange)="search()"
+      (nzPageSizeChange)="search(true)"
+      (nzCurrentPageDataChange)="currentPageDataChange($event)"
+    >
+      <thead>
+      <tr>
+        <th
+          nzShowCheckbox
+          [(nzChecked)]="isAllDisplayDataChecked"
+          [nzIndeterminate]="isIndeterminate"
+          (nzCheckedChange)="checkAll($event)"
+        ></th>
+        <th nzWidth="12%" nzAlign="center">用户名</th>
+        <th nzWidth="12%" nzAlign="center">所属部门</th>
+        <th nzWidth="12%" nzAlign="center">邮箱</th>
+        <th nzWidth="12%" nzAlign="center">手机号码</th>
+        <th nzWidth="10%" nzAlign="center">性别</th>
+        <th nzWidth="10%" nzAlign="center">状态</th>
+        <th nzWidth="12%" nzAlign="center"
+            nzShowSort
+        >
+          创建时间
+        </th>
+        <th nzWidth="20%" nzAlign="center">操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of userTable['data']">
+        <td
+          nzShowCheckbox
+          [(nzChecked)]="mapOfCheckedId[data.userId]"
+          [nzDisabled]="data.disabled"
+          (nzCheckedChange)="refreshStatus()"
+        ></td>
+        <td nzAlign="center">{{ data.username }}</td>
+        <td nzAlign="center">{{ data.deptName }}</td>
+        <td nzAlign="center">{{ data.email }}</td>
+        <td nzAlign="center">{{ data.mobile }}</td>
+        <td nzAlign="center">{{ data.sexTypeName }}</td>
+        <td nzAlign="center"><span [style.color]="setUserStatusNameColor(data.status)">{{ data.statusName}}</span></td>
+        <td nzAlign="center">{{ data.dateCreated }}</td>
+        <td nzAlign="center" [ngSwitch]="data?.status">
+          <div *ngSwitchCase="userStatus.DISABLE">
+            <a (click)="enableUser(data.userId, data.accoutId)">启用</a>
+          </div>
+          <div *ngSwitchCase="userStatus.BLACK">
+            <a (click)="rmUserBlack(data.userId, data.accoutId)">解除黑名单</a>
+          </div>
+          <div *ngSwitchCase="userStatus.CHECK_WAIT">
+            <a (click)="checkUser(data.userId)">审核</a>
+          </div>
+          <div *ngSwitchCase="userStatus.CHECK_FAILURE">
+            <a (click)="editUser(data.userId)">编辑</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="checkUser(data.userId)">重新审核</a>
+          </div>
+          <div *ngSwitchDefault>
+            <a (click)="editUser(data.userId)">编辑</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="disableUser(data.userId, data.username)">禁用</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="addUserBlack(data.userId, data.username)">拉黑</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="updateUserPwd(data.userId)">更改密码</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="resetUserPwd(data.userId)">重置密码</a>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</nz-card>
+
+<ng-template #usernameSuffixTemplate
+><i
+  nz-icon
+  nz-tooltip
+  class="ant-input-clear-icon"
+  nzTheme="fill"
+  nzType="close-circle"
+  *ngIf="vUserSearchReq.username"
+  (click)="vUserSearchReq.username = null"
+></i
+></ng-template>
+
+<!--新增、编辑角色-->
+<nz-modal *ngIf="isShowAddOrEditModal"
+          [(nzVisible)]="isShowAddOrEditModal"
+          nzWidth="800"
+          [nzMaskClosable]="false"
+          [nzTitle]="modalType === 1 ? '新增' : '修改'"
+          (nzOnCancel)="handleCancel(modalType)"
+          (nzOnOk)="handleOk()"
+          [nzOkLoading]="isModalOkLoading">
+
+  <form nz-form [formGroup]="addOrEditForm">
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="username" nzRequired>用户名</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzHasFeedback nzValidatingTip="检查用户名..." [nzErrorTip]="userErrorTpl">
+        <input nz-input formControlName="username" placeholder="用户名" [disabled]="modalType === 2 ? true : false" [readonly]="modalType ===2 ? true : false"/>
+        <ng-template #userErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')">
+            请输入用户名!
+          </ng-container>
+          <ng-container *ngIf="control.hasError('duplicated')">
+            用户名已存在!
+          </ng-container>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+    <!--部门-->
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="deptId" nzRequired>所属部门</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconSearchDeptButton">
+          <input nz-input id="deptId" formControlName="deptId"
+                 placeholder="选择部门" (click)="showDeptSearchModal()" readonly/>
+        </nz-input-group>
+        <nz-form-explain *ngIf="addOrEditForm.get('deptId')?.dirty && addOrEditForm.get('deptId')?.errors">请选择部门</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <!--密码-->
+    <nz-form-item *ngIf="modalType === 1">
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired>密码</nz-form-label>
+      <div>
+        <nz-form-control [nzSm]="10" [nzXs]="24" nzHasFeedback nzErrorTip="请输入密码!">
+          <input nz-input type="password" formControlName="password" (ngModelChange)="validateConfirmPassword()" placeholder="密码"/>
+        </nz-form-control>
+      </div>
+    </nz-form-item>
+    <nz-form-item *ngIf="modalType === 1">
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired>确认密码</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzHasFeedback [nzErrorTip]="passwordErrorTpl">
+        <input nz-input type="password" formControlName="confirm" placeholder="确认密码" />
+        <ng-template #passwordErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')">
+            请再次输入密码!
+          </ng-container>
+          <ng-container *ngIf="control.hasError('confirm')">
+            确认密码和密码不一致!
+          </ng-container>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+    <!--真实姓名-->
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="realName" nzRequired>真实姓名</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <input nz-input id="realName" formControlName="realName" placeholder="真实姓名"/>
+        <nz-form-explain *ngIf="addOrEditForm.get('realName')?.dirty && addOrEditForm.get('realName')?.errors">真实姓名不为空!
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <!--手机号码-->
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="mobile" nzRequired>手机号码</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <input nz-input id="mobile" formControlName="mobile" maxlength="11" placeholder="11位手机号码"/>
+        <nz-form-explain *ngIf="addOrEditForm.get('mobile')?.dirty && addOrEditForm.get('mobile')?.errors">请输入正确手机号码!
+        </nz-form-explain>
+        <!--<ng-template #mobileErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('maxLength')">
+            11位手机号码!
+          </ng-container>
+        </ng-template>-->
+      </nz-form-control>
+    </nz-form-item>
+    <!--性别-->
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24">性别</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <nz-radio-group formControlName="sex">
+          <label nz-radio nzValue="1">男</label>
+          <label nz-radio nzValue="2">女</label>
+          <label nz-radio nzValue="0">保密</label>
+        </nz-radio-group>
+      </nz-form-control>
+    </nz-form-item>
+    <!--email-->
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24">邮箱</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzHasFeedback [nzErrorTip]="emailErrorTpl">
+        <input nz-input formControlName="email" placeholder="电子邮箱" type="email" />
+        <ng-template #emailErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('email')">
+            电子邮箱格式错误!
+          </ng-container>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+    <!--角色-->
+    <!--<nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24">角色配置</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <nz-select id="roleId" formControlName="roleId" nzShowSearch nzAllowClear nzPlaceHolder="请选择角色">
+          <nz-option *ngFor="let role of roleList" [nzLabel]="role.roleName" [nzValue]="role.id"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>-->
+    <!--用户状态-->
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24">状态</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <nz-radio-group formControlName="status">
+          <label nz-radio nzValue="0">停用</label>
+          <label nz-radio nzValue="1">正常</label>
+        </nz-radio-group>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>
+
+<ng-template #suffixIconSearchDeptButton>
+  <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+</ng-template>
+
+<!--///// 部门搜索对话框 ////////-->
+<nz-modal *ngIf="isShowDeptSearchModal"
+          [(nzVisible)]="isShowDeptSearchModal"
+          [nzMask]="false"
+          [nzFooter]="null"
+          nzWidth="600"
+          [nzTitle]="'选择部门'"
+          (nzOnCancel)="deptSearchHandleCancel()" [nzStyle]="{ top: '160px' }">
+
+  <nz-input-group [nzSuffix]="suffixIcon">
+    <input type="text" nz-input placeholder="关键字" [(ngModel)]="deptSearchValue" />
+  </nz-input-group>
+  <ng-template #suffixIcon>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  <nz-tree
+    [nzData]="deptDataList"
+    [nzSearchValue]="deptSearchValue"
+    (nzClick)="deptClickEvent($event)"
+    (nzExpandChange)="deptSearchEvent($event)"
+    (nzSearchValueChange)="deptSearchEvent($event)"
+  >
+  </nz-tree>
+</nz-modal>
+
+<!--重置密码内容框                                                                                                                                                                                                                                                                                                          -->
+<nz-modal [(nzVisible)]="isShowModifyPwdModal"
+          nzWidth="800"
+          [nzMaskClosable]="false"
+          [nzTitle]="'重置密码'"
+          (nzOnOk)="updateUserPwdHandleOk()"
+          (nzOnCancel)="updateUserPwdHandleCancel()"
+          [nzOkLoading]="isPwdModalOkLoading">
+
+  <form nz-form [formGroup]="modifyPwdForm">
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="oldPassword" nzRequired>旧密码</nz-form-label>
+      <div>
+        <nz-form-control [nzSm]="10" [nzXs]="24">
+          <input nz-input type="password" formControlName="oldPassword" (ngModelChange)="this.modifyPwdForm.controls.password.updateValueAndValidity()" placeholder="旧密码"/>
+          <nz-form-explain *ngIf="modifyPwdForm.get('oldPassword')?.dirty && modifyPwdForm.get('oldPassword')?.errors">请输入旧的密码!
+          </nz-form-explain>
+        </nz-form-control>
+      </div>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired>密码</nz-form-label>
+      <div>
+        <nz-form-control [nzSm]="10" [nzXs]="24" nzHasFeedback [nzErrorTip]="passwordErrorTpl">
+          <input nz-input type="password" formControlName="password" (ngModelChange)="updatePwdValidateConfirmPassword()" placeholder="密码"/>
+          <ng-template #passwordErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('required')">
+              请输入密码！
+            </ng-container>
+            <ng-container *ngIf="control.hasError('notOld')">
+              新密码不能和旧密码一样！
+            </ng-container>
+          </ng-template>
+        </nz-form-control>
+      </div>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired>确认密码</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzHasFeedback [nzErrorTip]="confirmPasswordErrorTpl">
+        <input nz-input type="password" formControlName="confirm" placeholder="确认密码" />
+        <ng-template #confirmPasswordErrorTpl let-control>
+          <ng-container *ngIf="control.hasError('required')">
+            请再次输入密码!
+          </ng-container>
+          <ng-container *ngIf="control.hasError('confirm')">
+            确认密码和密码不一致!
+          </ng-container>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+
+</nz-modal>
+
+<!--设置用户角色内容框-->
+<nz-modal [(nzVisible)]="isShowUserRolesModal"
+          nzWidth="600"
+          [nzMaskClosable]="false"
+          [nzTitle]="'设置用户角色'"
+          (nzOnOk)="setUserRolesHandleOk()"
+          (nzOnCancel)="setUserRolesHandleCancel()"
+          [nzOkLoading]="isUserRolesModalOkLoading">
+
+  <nz-checkbox-wrapper style="width: 100%;margin-left: 20px" (nzOnChange)="setUserRoleOnChange($event)">
+    <div nz-row>
+      <div nz-col nzSpan="8" *ngFor="let role of roleList">
+        <label nz-checkbox [nzValue]="role.id" [ngModel]="isUserRole(role.id)">{{role.roleName}}</label>
+      </div>
+    </div>
+  </nz-checkbox-wrapper>
+
+</nz-modal>

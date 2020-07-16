@@ -1,0 +1,150 @@
+<!--菜单列表-->
+<nz-card class="content" nzTitle="应用菜单列表" [nzExtra]="extraTemplate">
+  <div class="content-action">
+    <nz-select
+      nzShowSearch
+      nzAllowClear
+      nzPlaceHolder="请选择应用系统"
+      [(ngModel)]="appSelected"
+      (ngModelChange)="getMenuByClientId(0)"
+      style="min-width: 200px"
+    >
+      <nz-option *ngFor="let appInfo of appDataList" [nzLabel]="appInfo.appName" [nzValue]="appInfo.appId"></nz-option>
+    </nz-select>
+    <button nz-button nzType="default" (click)="refreshMenuList()"><i nz-icon nzType="search"></i>查询</button>
+    <button nz-button nzType="primary" (click)="addMenu()"><i nz-icon nzType="plus"></i>新增</button>
+  </div>
+  <!--列表-->
+  <nz-table #expandTable [nzData]="menuList" [nzShowPagination]="false" [nzLoading]="isRefreshMenuList" nzBordered>
+    <thead>
+    <tr>
+      <th nzWidth="18%" nzAlign="center">名称</th>
+      <th nzWidth="10%" nzAlign="center">图标</th>
+      <th nzWidth="10%" nzAlign="center">类型</th>
+      <th nzWidth="10%" nzAlign="center">排序</th>
+      <th nzWidth="10%" nzAlign="center">显示状态</th>
+      <th nzWidth="18%" nzAlign="center">路由</th>
+      <th nzWidth="10%" nzAlign="center">授权标识</th>
+      <th nzAlign="center">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let data of expandTable['data']">
+        <ng-container *ngFor="let item of menuListOfExpandedData[data.key]">
+          <tr *ngIf="(item.parent && item.parent.expand) || !item.parent">
+            <td
+              [nzIndentSize]="item.level * 20"
+              [nzShowExpand]="!!item.children"
+              [(nzExpand)]="item.expand"
+              (nzExpandChange)="collapse(menuListOfExpandedData[data.key], item, $event)"
+            >
+              {{ item.title }}
+            </td>
+            <td nzAlign="center">
+              <i nz-icon [nzType]="item.icon"></i>
+            </td>
+            <td *ngIf="item.type === 1" nzAlign="center">
+              <nz-tag>菜单</nz-tag>
+            </td>
+            <td *ngIf="item.type === 2" nzAlign="center">
+              <nz-tag [nzColor]="'green'">按钮</nz-tag>
+            </td>
+            <td nzAlign="center">{{ item.sort }}</td>
+            <td *ngIf="item.show" nzAlign="center"><nz-tag [nzColor]="">显示</nz-tag></td>
+            <td *ngIf="!item.show" nzAlign="center"><nz-tag [nzColor]="">不显示</nz-tag></td>
+            <td nzAlign="center">{{ item.link }}</td>
+            <td nzAlign="center">{{ item.perms }}</td>
+            <td nzAlign="center">
+              <a (click)="addMenuForCurrent(item.id)">新增</a>
+              <nz-divider nzType="vertical"></nz-divider>
+              <a (click)="editMenu(item.id)">修改</a>
+              <nz-divider nzType="vertical"></nz-divider>
+              <a (click)="delMenu(item.id, item.title)">删除</a>
+            </td>
+          </tr>
+        </ng-container>
+      </ng-container>
+    </tbody>
+  </nz-table>
+</nz-card>
+<ng-template #extraTemplate>
+  <span style="cursor: pointer;" (click)="refreshMenuList()">
+    <i nz-icon [nzType]="'sync'" [nzSpin]="isRefreshMenuList"></i><!--动态加载的，点击刷新的时候把false改成true-->
+    <span style="margin-left: 5px;">刷新数据</span>
+  </span>
+</ng-template>
+
+<!--新增菜单对话框-->
+<nz-modal *ngIf="isShowAdd"
+          [(nzVisible)]="isShowAdd"
+          nzWidth="800"
+          [nzTitle]="dialogType === 1 ? '新增' : '修改'"
+          (nzOnCancel)="handleCancel()"
+          (nzOnOk)="handleOk()"
+          [nzOkLoading]="isAddOkLoading">
+
+  <nz-radio-group [(ngModel)]="radioValue" [nzDisabled]="dialogType === 2 ? true : false" (ngModelChange)="selectAddMenuType($event)" class="menu-type">
+    <label><span>类型</span></label>
+    <label nz-radio nzValue="A">菜单</label>
+    <label nz-radio nzValue="B">按钮</label>
+  </nz-radio-group>
+
+  <form nz-form [formGroup]="addMenuForm">
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="menuName" nzRequired>名称</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <input nz-input id="menuName" formControlName="menuName" placeholder="菜单名称"/>
+        <nz-form-explain *ngIf="addMenuForm.get('menuName')?.dirty && addMenuForm.get('menuName')?.errors">请输入菜单名称!
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="parentMenu" nzRequired>上级菜单</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <nz-tree-select id="parentMenu" formControlName="parentMenu"
+                        [nzNodes]="selectMenuList"
+                        nzShowSearch
+                        nzPlaceHolder="一级菜单"
+                        [(ngModel)]="selectMenuKey"
+                        (ngModelChange)="onChange($event)">
+        </nz-tree-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="isShow" nzRequired>是否显示</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <nz-select id="isShow" formControlName="isShow" [ngModel]="menuDetails ? (menuDetails.show ? '1' : '0') : '1'">
+          <nz-option nzLabel="显示" nzValue="1"></nz-option>
+          <nz-option nzLabel="不显示" nzValue="0"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="radioValue === 'A'">
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="routerPath">路由</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <input nz-input id="routerPath" formControlName="routerPath" placeholder="路由"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="sortNumber">排序</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <nz-input-number id="sortNumber" formControlName="sortNumber" [nzMin]="1" [nzMax]="1000" [nzStep]="1" [ngModel]="1"
+                         style="width: 150px"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="menuPermission">授权标志</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <input nz-input id="menuPermission" formControlName="menuPermission"
+               placeholder="多个用英文逗号分隔，如：sys:menu:save,sys:menu:select"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="radioValue === 'A'">
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="icon">图标</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <input nz-input id="icon" formControlName="icon" placeholder="图标"/>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+
+</nz-modal>
