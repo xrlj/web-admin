@@ -5,6 +5,7 @@
 // 开发环境
 export const environment = {
   production: false,
+  tag: 'dev',
   config_global: true, // 是否启用全局变量。全局变量在app.config.ts中配置。
   // apiUrl: 'http://api-dev.xrlj.com:5555'
   apiUrl: 'http://localhost:5555'

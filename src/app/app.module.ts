@@ -12,6 +12,7 @@ import zh from '@angular/common/locales/zh';
 import {CustomBtnComponent} from './components/custom-btn/custom-btn.component';
 import {httpInterceptorProviders} from './interceptors';
 import { UEditorModule } from 'ngx-ueditor';
+import {IconsProviderModule} from './icons-provider.module';
 
 registerLocaleData(zh);
 
@@ -21,6 +22,7 @@ registerLocaleData(zh);
     BrowserModule,
     AppRoutingModule,
     NgZorroAntdModule,
+    IconsProviderModule,
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,

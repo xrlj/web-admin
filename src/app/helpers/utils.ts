@@ -5,11 +5,22 @@ import {Md5} from 'ts-md5/dist/md5';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {JwtKvEnum} from './enum/jwt-kv-enum';
 import {Constants} from './constants';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Utils {
+
+  /**
+   * 开发，测试环境下才打印文本到控制台
+   * @param data 打印内容
+   */
+  print(data: any): void {
+    if (environment.tag === 'dev' || environment.tag === 'test') {
+      console.log(data)
+    }
+  }
 
   /**
    * 字符串转码base64。

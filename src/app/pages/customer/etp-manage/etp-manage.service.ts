@@ -10,7 +10,11 @@ export class EtpManageService {
 
   constructor(private api: Api, private utils: Utils) { }
 
+  /**
+   * 新增企业。
+   * @param body 请求json对象。
+   */
   addEtp(body: any): any {
-    return this.api.post(ApiPath.usercentral.appInfoApi.registerAppInfo, body);
+    return this.api.post(ApiPath.usercentral.enterpriseApi.add, body);
   }
 }

@@ -5,8 +5,8 @@ import {Utils} from '../../../helpers/utils';
 import {DefaultBusService} from '../../../helpers/event-bus/default-bus.service';
 import {VCustomerEtpResp} from '../../../helpers/vo/resp/v-customer-etp-resp';
 import {VCustomerEtpReq} from '../../../helpers/vo/req/v-customer-etp-req';
-import {EtpTypeEnum} from '../../../helpers/enum/etp-type-enum';
 import {EtpManageService} from './etp-manage.service';
+import {EtpTypeEnum} from '../../../helpers/enum/etp-type-enum';
 
 @Component({
   selector: 'app-etp-manage',
@@ -41,12 +41,15 @@ export class EtpManageComponent implements OnInit {
   isModalOkLoading = false;
   vCustomerEtpResp: VCustomerEtpResp; // 详情
 
+  enterpriseType: number; // 企业类型。
+
   constructor(private fb: FormBuilder, private etpManageService: EtpManageService,
               public uiHelper: UIHelper, private utils: Utils,
               private defaultBusService: DefaultBusService) {
     // 新增编辑对话框
     this.addOrEditForm = this.fb.group({
       etpName: [null, [Validators.required]],
+      unifyCode: [null, [Validators.required]],
       oriCode: [null, null],
       shortName: [null, null],
       telephone: [null, [Validators.required]],
@@ -103,7 +106,20 @@ export class EtpManageComponent implements OnInit {
     this.isShowAddOrEditModal = true;
 
     switch (this.tabIndex) {
-      case 0:
+      case 0: // 保理商
+        this.enterpriseType = EtpTypeEnum.FACTOR;
+        break;
+      case 1: // 核心企业
+        this.enterpriseType = EtpTypeEnum.CORE;
+        break;
+      case 2:
+        this.enterpriseType = EtpTypeEnum.MEMBER;
+        break;
+      case 3:
+        this.enterpriseType = EtpTypeEnum.SUPPLIER;
+        break
+      case 4:
+        this.enterpriseType = EtpTypeEnum.SPV;
         break;
       default:
     }
@@ -120,7 +136,7 @@ export class EtpManageComponent implements OnInit {
    * 新增或编辑对话框取消。
    * @param modalType 1-新增；2-编辑
    */
-  handleCancel(modalType: number) {
+  handleCancel() {
     this.reInit();
   }
 
@@ -130,10 +146,18 @@ export class EtpManageComponent implements OnInit {
   handleOk(modalType: number) {
     if (this.addOrEditForm.valid) { // 前端通过所有输入校验
       const value = this.addOrEditForm.value;
-      console.log('>>>>>value:' + JSON.stringify(value));
+      value.enterpriseType = this.enterpriseType;
+      this.utils.print(`请求参数：${value}`);
       this.isModalOkLoading = true;
       if (modalType === 1) { // 新增
-
+          this.etpManageService.addEtp(value).ok(data => {
+            this.utils.print(data);
+            this.handleCancel();
+          }).fail(error => {
+            this.uiHelper.modalError(error.msg);
+          }).final(() => {
+            this.isModalOkLoading = false;
+          });
       } else { // 编辑
       }
     } else {
