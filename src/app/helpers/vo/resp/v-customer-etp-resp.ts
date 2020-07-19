@@ -10,27 +10,35 @@ export interface VCustomerEtpResp {
   /**
    * 企业全称。
    */
-  fullName: string;
+  etpName: string;
   /**
    * 企业联系人。
    */
-  linkName: string;
+  contactName: string;
   /**
    * 企业联系人电话。
    */
-  linkMobile: string;
+  contactMobile: string;
   /**
    * 企业状态
    */
-  etpStatus: number;
+  status: number;
   /**
-   * 企业状态名称。
+   * 企业状态名称
    */
-  etpStatusName: string;
+  statusName: string;
   /**
    * 创建时间。
    */
   dateCreated: string;
+  /**
+   * 注册邀请。
+   */
+  registerInvitationUrl: string;
+  /**
+   * 注册状态
+   */
+  registerStatus: string;
   /**
    * 选择状态。
    */

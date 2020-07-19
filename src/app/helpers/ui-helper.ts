@@ -314,35 +314,6 @@ export class UIHelper {
   }
 
   /**
-   * 设置不同状态下。不同颜色样式显示。
-   * @param status 状态。
-   */
-  setEtpStatusNameColor(status: number): string {
-    let color = '';
-    switch (status) {
-      case UserStatusEnum.BLACK:
-        color = 'red';
-        break;
-      case UserStatusEnum.DISABLE:
-        color = 'red';
-        break;
-      case UserStatusEnum.CHECK_FAILURE:
-        color = 'red';
-        break;
-      case UserStatusEnum.CHECK_PASS:
-        color = 'green';
-        break;
-      case UserStatusEnum.VERIFIED_PASS:
-        color = 'green';
-        break;
-      default:
-        color = 'gray';
-        break;
-    }
-    return color;
-  }
-
-  /**
    * 保存当前主题字符串。
    * @param currentTheme 选定的当前主题，默认为default
    */

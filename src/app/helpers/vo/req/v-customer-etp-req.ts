@@ -4,9 +4,13 @@ export interface VCustomerEtpReq extends VPageReq {
   /**
    * 企业全称。
    */
-  fullName?: string;
+  etpName?: string;
   /**
    * 企业编码。
    */
   etpCode?: string;
+  /**
+   * 企业类型。
+   */
+  enterpriseType?: number;
 }

@@ -30,9 +30,8 @@ export class EtpManageComponent implements OnInit {
   pageIndex = 1; // 页码
   pageSize = 10; // 每页条数
   total = 0; // 总条数
-
   // 列表搜索条件
-  etpSearchVo: VCustomerEtpReq = {pageIndex: this.pageIndex, pageSize: this.pageSize};
+  etpSearchVo: VCustomerEtpReq = {};
 
   // 新增编辑对话框
   addOrEditForm: FormGroup;
@@ -65,6 +64,23 @@ export class EtpManageComponent implements OnInit {
   }
 
   search(reset: boolean = false): void {
+    reset ? this.etpSearchVo.pageIndex = 1 : this.etpSearchVo.pageIndex = this.pageIndex;
+    this.etpSearchVo.pageSize = this.pageSize;
+    this.setEtpType();
+    this.etpSearchVo.enterpriseType = this.enterpriseType;
+    this.utils.print(this.etpSearchVo);
+    this.loading = true;
+    this.etpManageService.getAll(this.etpSearchVo)
+      .ok(data => {
+        this.pageIndex = data.pageIndex;
+        this.pageSize = data.pageSize;
+        this.total = data.total;
+        this.listOfAllData = data.list;
+      }).fail(error => {
+      this.uiHelper.msgTipError(error.msg);
+    }).final(() => {
+      this.loading = false;
+    });
   }
 
   /**
@@ -105,6 +121,13 @@ export class EtpManageComponent implements OnInit {
     this.modalType = modalType;
     this.isShowAddOrEditModal = true;
 
+    this.setEtpType();
+  }
+
+  /**
+   * 转换设定企业类型。
+   */
+  private setEtpType(): void {
     switch (this.tabIndex) {
       case 0: // 保理商
         this.enterpriseType = EtpTypeEnum.FACTOR;
@@ -150,14 +173,18 @@ export class EtpManageComponent implements OnInit {
       this.utils.print(`请求参数：${value}`);
       this.isModalOkLoading = true;
       if (modalType === 1) { // 新增
-          this.etpManageService.addEtp(value).ok(data => {
-            this.utils.print(data);
-            this.handleCancel();
-          }).fail(error => {
-            this.uiHelper.modalError(error.msg);
-          }).final(() => {
-            this.isModalOkLoading = false;
-          });
+        this.etpManageService.addEtp(value).ok(data => {
+          this.uiHelper.msgTipSuccess('新增成功');
+          this.handleCancel();
+          setTimeout(() => {
+            this.search();
+          }, 100);
+          this.search(false);
+        }).fail(error => {
+          this.uiHelper.modalError(error.msg);
+        }).final(() => {
+          this.isModalOkLoading = false;
+        });
       } else { // 编辑
       }
     } else {
