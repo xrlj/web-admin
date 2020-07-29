@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",
-    "start": "node ./less-compiler.js && ng serve --port 4000",
+    "start": "ng serve --port 4000",
     "build": "ng build && node ./less-compiler.js",
     "test": "ng test",
     "lint": "ng lint",
@@ -52,7 +52,6 @@
     "less-plugin-clean-css": "^1.5.1",
     "protractor": "~7.0.0",
     "ts-node": "~8.3.0",
-    "tslint": "~6.1.0",
     "typescript": "~3.9.5"
   }
 }
