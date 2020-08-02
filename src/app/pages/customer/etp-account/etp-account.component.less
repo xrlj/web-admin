@@ -1,11 +1,8 @@
-.tab-card-list {
-  margin-left: 0px;
-  margin-right: 0px;
-}
 
 :host {
   background: #f5f5f5;
   overflow: hidden;
+  //padding: 24px;
   display: block;
 }
 
@@ -19,16 +16,32 @@
 }
 
 .card-container ::ng-deep .ant-tabs-card .ant-tabs-bar {
-  border-color: #F0F2F5;
+  border-color: #E5E5E5;
 }
 
 .card-container ::ng-deep .ant-tabs-card .ant-tabs-bar .ant-tabs-tab {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
   border-color: transparent;
-  background: transparent;
+  background: #F6F6F6;
+  border-top-width: 1.4px;
+  border-bottom-color: #e5e5e5;
 }
 
 .card-container ::ng-deep .ant-tabs-card .ant-tabs-bar .ant-tabs-tab-active {
-  border-color: #F0F2F5;
+  border-color: transparent;
   border-bottom-color: transparent;
+  border-top-color: #E5E5E5;
+  border-left-color: #E5E5E5;
+  border-right-color: #E5E5E5;
+  border-top-width: 1.4px;
+  border-left-width: 1.4px;
+  border-right-width: 1.4px;
   background: #fff;
+}
+
+
+.tab-card-list {
+  margin-left: 0px;
+  margin-right: 0px;
 }

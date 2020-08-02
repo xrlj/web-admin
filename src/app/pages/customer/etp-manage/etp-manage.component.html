@@ -1,6 +1,6 @@
 <nz-card class="card-list" nzTitle="企业列表">
   <div class="card-container">
-    <nz-tabset [nzTabPosition]="'top'" [(nzSelectedIndex)]="tabIndex" [nzType]="'card'" (nzSelectedIndexChange)="search(true)">
+    <nz-tabset [nzTabBarGutter]="0" [nzTabPosition]="'top'" [(nzSelectedIndex)]="tabIndex" [nzType]="'card'" (nzSelectedIndexChange)="search(true)">
       <nz-tab *ngFor="let title of tabTitle" [nzTitle]="title">
         <div class="tab-card-list">
           <!--搜索-->

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Event, NavigationEnd, Router} from '@angular/router';
+import {ActivationStart, Event, NavigationEnd, Router} from '@angular/router';
 import {Constants} from '../../../helpers/constants';
 import {VMenuResp} from '../../../helpers/vo/resp/v-menu-resp';
 
@@ -37,15 +37,19 @@ const expandMenu = menus => {
 export class AppBodyComponent implements OnInit {
   currentBreads = [];
 
-  private menus: VMenuResp[];
+  menus: VMenuResp[];
+
+  menuTabs = [];
 
   constructor(private router: Router) {
     this.menus = JSON.parse(localStorage.getItem(Constants.localStorageKey.menus));
     console.log(this.menus);
+    // 路由事件
     // detect router change
     router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
-        this.setCurrentBreads();
+        // this.setCurrentBreads();
+        this.newTab('首页');
       }
     });
   }
@@ -67,5 +71,15 @@ export class AppBodyComponent implements OnInit {
       }
     });
     this.currentBreads = currentBreads;
+  }
+
+  closeTab(tab: string): void {
+    this.menuTabs.splice(this.menuTabs.indexOf(tab), 1);
+  }
+
+  newTab(tabName: string): void {
+    debugger;
+    const  currentUrl = this.router.url;
+    this.menuTabs.push(tabName);
   }
 }

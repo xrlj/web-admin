@@ -1,5 +1,23 @@
 <div class="app-body">
-  <div class="breadcrumb">
+  <div class="tab-navigation">
+    <nz-tabset [nzType]="'card'" [nzTabBarExtraContent]="extraTemplate">
+      <nz-tab *ngFor="let tab of menuTabs" [nzTitle]="titleTemplate">
+        <ng-template #titleTemplate>
+          <div>
+            {{ tab }}
+            <i nz-icon nzType="close" (click)="closeTab(tab)" class="ant-tabs-close-x"></i>
+          </div>
+        </ng-template>
+        <div class="main">
+          <router-outlet></router-outlet>
+        </div>
+      </nz-tab>
+    </nz-tabset>
+    <ng-template #extraTemplate>
+<!--      <i class="ant-tabs-new-tab" nz-icon nzType="plus" (click)="newTab()"></i>-->
+    </ng-template>
+  </div>
+  <!--<div class="breadcrumb">
     <span>
       <i nz-icon nzType="environment" nzTheme="outline"></i>
       <span>当前位置：</span>
@@ -9,9 +27,6 @@
         <a [routerLink]="bread.link">{{ bread.title }}</a>
       </nz-breadcrumb-item>
     </nz-breadcrumb>
-  </div>
+  </div>-->
 
-  <div class="main">
-    <router-outlet></router-outlet>
-  </div>
 </div>

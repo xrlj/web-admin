@@ -40,7 +40,7 @@ export class AppAsideComponent implements OnInit {
   }
 
   /**
-   * 菜单展开时间回调该方法。然后修改其余一级菜单的展开状态。
+   * 菜单展开时回调该方法。然后修改其余一级菜单的展开状态。
    * @param value 一级菜单名称。
    */
   openHandler(value: string): void {
