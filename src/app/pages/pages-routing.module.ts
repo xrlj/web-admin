@@ -27,11 +27,6 @@ const routes: Routes = [
     children: [
       { path: '', component: DashboardComponent },
       {
-        path: 'navigation',
-        // loadChildren: './navigation/navigation.module#NavigationModule',
-        loadChildren: () =>import('./navigation/navigation.module').then(m => m.NavigationModule)
-      },
-      {
         path: 'customer',
         loadChildren: () =>import('./customer/customer.module').then(m => m.CustomerModule)
       },

@@ -35,11 +35,12 @@ const expandMenu = menus => {
   styleUrls: ['./app-body.component.less']
 })
 export class AppBodyComponent implements OnInit {
-  currentBreads = [];
 
   menus: VMenuResp[];
+  menusLastChildren: VMenuResp[] = []; // 所有最小级
 
   menuTabs = [];
+  currentMenuTab = 0;
 
   constructor(private router: Router) {
     this.menus = JSON.parse(localStorage.getItem(Constants.localStorageKey.menus));
@@ -48,29 +49,28 @@ export class AppBodyComponent implements OnInit {
     // detect router change
     router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
-        // this.setCurrentBreads();
-        this.newTab('首页');
+        this.setCurrentMenuTab();
       }
     });
   }
 
   ngOnInit() {
+    this.expandMenusLastChildrenAll(this.menus);
+    console.log(JSON.stringify(this.menusLastChildren));
   }
 
-  setCurrentBreads() {
+  setCurrentMenuTab(): void {
     const currentUrl = this.router.url;
     const expandedMenus = expandMenu(this.menus);
-
-    let currentBreads = [];
-    expandedMenus.forEach(menu => {
+    expandedMenus.forEach((menu, index) => {
       if (menu.length) {
         const lastMenu = menu[menu.length - 1];
         if (lastMenu.link === currentUrl) {
-          currentBreads = menu;
+          this.newTab(lastMenu.title);
+          // console.log(lastMenu.title + '====' + lastMenu.link);
         }
       }
     });
-    this.currentBreads = currentBreads;
   }
 
   closeTab(tab: string): void {
@@ -78,8 +78,72 @@ export class AppBodyComponent implements OnInit {
   }
 
   newTab(tabName: string): void {
-    debugger;
-    const  currentUrl = this.router.url;
-    this.menuTabs.push(tabName);
+    if (this.menuTabs.length > 0) {
+      const b = this.menuTabs.includes(tabName);
+      if (!b) {
+        this.menuTabs.push(tabName);
+      }
+    } else {
+      this.menuTabs.push(tabName);
+    }
+
+    this.currentMenuTab = this.getIndexByMenuTabName(tabName);
+  }
+
+  getIndexByMenuTabName(tabName: string): number {
+    let i = 0
+    this.menuTabs.forEach((title, index) => {
+      if (tabName === title) {
+        i = index;
+      }
+    })
+    return i;
+  }
+
+  /**
+   * 点击tab显示菜单对应的页面
+   * @param tabName tab名称
+   */
+  showMenuLinkByTabName(): void {
+    let tabName = '';
+    this.menuTabs.every((value, index) => {
+      debugger;
+      if (index === this.currentMenuTab) {
+        tabName = value;
+        return false;
+      }
+      return true;
+    })
+    console.log(tabName);
+    const link = this.getMenuLinkFromAllChildrenByTitle(tabName);;
+    this.router.navigateByUrl(link);
+  }
+
+  getMenuLinkFromAllChildrenByTitle(title: string): string {
+    let link = '';
+    this.menusLastChildren.every(childMenu => {
+      if (childMenu.title === title) {
+        link = childMenu.link;
+        return false;
+      }
+      return true;
+    });
+    return link;
+  }
+
+  /**
+   * 遍历菜单树，把所有最小级菜单放到数组。
+   * @param menus 菜单树
+   */
+  expandMenusLastChildrenAll(menus: VMenuResp[]): void {
+    menus.forEach((menu, index) => {
+      if (menu.children && menu.children.length > 0) {
+        this.expandMenusLastChildrenAll(menu.children);
+      } else {
+        if (menu) {
+          this.menusLastChildren.push(menu);
+        }
+      }
+    });
   }
 }
