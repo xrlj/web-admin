@@ -1,6 +1,6 @@
 <div class="app-body">
   <div class="tab-navigation">
-    <nz-tabset [nzType]="'card'" [(nzSelectedIndex)]="currentMenuTab" (nzSelectedIndexChange)="showMenuLinkByTabName()" [nzTabBarExtraContent]="extraTemplate">
+    <nz-tabset [nzType]="'card'" [nzSize]="'small'" [(nzSelectedIndex)]="currentMenuTab" (nzSelectedIndexChange)="showMenuLinkByTabName()" [nzTabBarExtraContent]="extraTemplate">
       <nz-tab *ngFor="let tab of menuTabs" [nzTitle]="titleTemplate">
         <ng-template #titleTemplate>
           <div>

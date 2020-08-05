@@ -75,6 +75,8 @@ export class AppBodyComponent implements OnInit {
 
   closeTab(tab: string): void {
     this.menuTabs.splice(this.menuTabs.indexOf(tab), 1);
+    console.log('>>>aa' + this.menuTabs);
+    console.log('>>>>bbb' + this.currentMenuTab);
   }
 
   newTab(tabName: string): void {
@@ -87,7 +89,7 @@ export class AppBodyComponent implements OnInit {
       this.menuTabs.push(tabName);
     }
 
-    this.currentMenuTab = this.getIndexByMenuTabName(tabName);
+    this.currentMenuTab = this.menuTabs.indexOf(tabName);
   }
 
   getIndexByMenuTabName(tabName: string): number {
@@ -107,7 +109,6 @@ export class AppBodyComponent implements OnInit {
   showMenuLinkByTabName(): void {
     let tabName = '';
     this.menuTabs.every((value, index) => {
-      debugger;
       if (index === this.currentMenuTab) {
         tabName = value;
         return false;
