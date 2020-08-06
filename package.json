@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 4000",
+    "start": "node ./less-compiler.js && ng serve --port 4000",
     "build": "ng build && node ./less-compiler.js",
     "test": "ng test",
     "lint": "ng lint",

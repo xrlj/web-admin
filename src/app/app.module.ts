@@ -13,6 +13,8 @@ import {CustomBtnComponent} from './components/custom-btn/custom-btn.component';
 import {httpInterceptorProviders} from './interceptors';
 import { UEditorModule } from 'ngx-ueditor';
 import {IconsProviderModule} from './icons-provider.module';
+import {RouteReuseStrategy} from '@angular/router';
+import {SimpleReuseStrategy} from './theme/layouts/simple-reuse-strategy';
 
 registerLocaleData(zh);
 
@@ -37,7 +39,12 @@ registerLocaleData(zh);
       }
     })
   ],
-  providers: [{provide: NZ_I18N, useValue: zh_CN}, httpInterceptorProviders],
+  providers: [
+    {provide: NZ_I18N, useValue: zh_CN},
+    httpInterceptorProviders,
+    {provide: RouteReuseStrategy, useClass: SimpleReuseStrategy}
+  ],
+  // providers: [{provide: NZ_I18N, useValue: zh_CN}, httpInterceptorProviders],
   exports: [
     CustomBtnComponent
   ],

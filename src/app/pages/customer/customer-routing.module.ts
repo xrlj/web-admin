@@ -4,8 +4,8 @@ import {EtpManageComponent} from './etp-manage/etp-manage.component';
 import {EtpAccountComponent} from './etp-account/etp-account.component';
 
 const routes: Routes = [
-  { path: 'etp', component: EtpManageComponent },
-  { path: 'account', component: EtpAccountComponent }
+  { path: 'etp', component: EtpManageComponent, data: {title: '企业管理', isRemove: true} },
+  { path: 'account', component: EtpAccountComponent, data: {title: '企业账号管理', isRemove: true} }
 ];
 
 @NgModule({

@@ -1,11 +1,17 @@
 <div class="app-body">
   <div class="tab-navigation">
-    <nz-tabset [nzType]="'card'" [nzSize]="'small'" [(nzSelectedIndex)]="currentMenuTab" (nzSelectedIndexChange)="showMenuLinkByTabName()" [nzTabBarExtraContent]="extraTemplate">
-      <nz-tab *ngFor="let tab of menuTabs" [nzTitle]="titleTemplate">
+    <nz-tabset style="margin-left: -1px; padding-bottom: 0px;" [nzAnimated]="true"
+               [nzType]="'card'"
+               [nzTabBarGutter]="0"
+               [nzShowPagination]="true"
+               [(nzSelectedIndex)]="currentMenuTab"
+               (nzSelectChange)="nzSelectChange($event)"
+               [nzTabBarExtraContent]="extraTemplate">
+      <nz-tab *ngFor="let menu of menuList" [nzTitle]="titleTemplate">
         <ng-template #titleTemplate>
           <div>
-            {{ tab }}
-            <i nz-icon nzType="close" (click)="closeTab(tab)" class="ant-tabs-close-x"></i>
+            {{ menu.title }}
+            <i *ngIf="menu.isRemove" nz-icon nzType="close" (click)="closeUrl(menu.url)" class="ant-tabs-close-x"></i>
           </div>
         </ng-template>
       </nz-tab>
@@ -13,8 +19,9 @@
     <ng-template #extraTemplate>
       <i class="ant-tabs-new-tab" nz-icon nzType="plus"></i>
     </ng-template>
-    <div class="main">
-      <router-outlet></router-outlet>
-    </div>
+  </div>
+  <div class="tab-content">
+    <!--路由的内容会被显示在这里-->
+    <ng-content></ng-content>
   </div>
 </div>

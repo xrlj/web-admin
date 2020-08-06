@@ -1,33 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivationStart, Event, NavigationEnd, Router} from '@angular/router';
-import {Constants} from '../../../helpers/constants';
-import {VMenuResp} from '../../../helpers/vo/resp/v-menu-resp';
-
-const expandMenu = menus => {
-  const result = [];
-  menus.forEach(menu1 => {
-    if (menu1.children && menu1.children.length > 0) {
-      menu1.children.forEach(menu2 => {
-        if (menu2.children && menu2.children.length > 0) {
-          menu2.children.forEach(menu3 => {
-            if (menu3.children && menu3.children.length > 0) {
-              menu3.children.forEach(menu4 => {
-                result.push([menu1, menu2, menu3, menu4]);
-              });
-            } else {
-              result.push([menu1, menu2, menu3]);
-            }
-          });
-        } else {
-          result.push([menu1, menu2]);
-        }
-      });
-    } else {
-      result.push([menu1]);
-    }
-  });
-  return result;
-};
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {Title} from '@angular/platform-browser';
+import {filter, map, mergeMap} from 'rxjs/operators';
+import {SimpleReuseStrategy} from '../../layouts/simple-reuse-strategy';
 
 @Component({
   selector: 'app-body',
@@ -36,115 +11,67 @@ const expandMenu = menus => {
 })
 export class AppBodyComponent implements OnInit {
 
-  menus: VMenuResp[];
-  menusLastChildren: VMenuResp[] = []; // 所有最小级
+  menuList = [];
+  currentMenuTab = -1;
 
-  menuTabs = [];
-  currentMenuTab = 0;
-
-  constructor(private router: Router) {
-    this.menus = JSON.parse(localStorage.getItem(Constants.localStorageKey.menus));
-    console.log(this.menus);
-    // 路由事件
-    // detect router change
-    router.events.subscribe((event: Event) => {
-      if (event instanceof NavigationEnd) {
-        this.setCurrentMenuTab();
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private titleService: Title) {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      map(() => this.activatedRoute),
+      map(route => {
+        while (route.firstChild) { route = route.firstChild; }
+        return route;
+      }),
+      filter(route => route.outlet === 'primary'),
+      mergeMap(route => route.data)
+    ).subscribe((event) => {
+      // 路由data的标题
+      const menu = {...event};
+      menu.url = this.router.url;
+      const url = menu.url;
+      this.titleService.setTitle(menu.title); // 设置网页标题
+      const exitMenu = this.menuList.find(info => info.url === url);
+      if (!exitMenu) {// 如果不存在那么不添加，
+        this.menuList.push(menu);
       }
+      this.currentMenuTab = this.menuList.findIndex(p => p.url === url);
     });
   }
 
   ngOnInit() {
-    this.expandMenusLastChildrenAll(this.menus);
-    console.log(JSON.stringify(this.menusLastChildren));
   }
 
-  setCurrentMenuTab(): void {
-    const currentUrl = this.router.url;
-    const expandedMenus = expandMenu(this.menus);
-    expandedMenus.forEach((menu, index) => {
-      if (menu.length) {
-        const lastMenu = menu[menu.length - 1];
-        if (lastMenu.link === currentUrl) {
-          this.newTab(lastMenu.title);
-          // console.log(lastMenu.title + '====' + lastMenu.link);
-        }
-      }
-    });
-  }
-
-  closeTab(tab: string): void {
-    this.menuTabs.splice(this.menuTabs.indexOf(tab), 1);
-    console.log('>>>aa' + this.menuTabs);
-    console.log('>>>>bbb' + this.currentMenuTab);
-  }
-
-  newTab(tabName: string): void {
-    if (this.menuTabs.length > 0) {
-      const b = this.menuTabs.includes(tabName);
-      if (!b) {
-        this.menuTabs.push(tabName);
-      }
-    } else {
-      this.menuTabs.push(tabName);
+  // 关闭选项标签
+  closeUrl(url: string) {
+    // 当前关闭的是第几个路由
+    const index = this.menuList.findIndex(p => p.url === url);
+    // 如果只有一个不可以关闭
+    if (this.menuList.length === 1) {
+      return;
     }
-
-    this.currentMenuTab = this.menuTabs.indexOf(tabName);
-  }
-
-  getIndexByMenuTabName(tabName: string): number {
-    let i = 0
-    this.menuTabs.forEach((title, index) => {
-      if (tabName === title) {
-        i = index;
+    this.menuList.splice(index, 1);
+    // 删除复用
+    // delete SimpleReuseStrategy.handlers[module];
+    SimpleReuseStrategy.deleteRouteSnapshot(url);
+    // 如果当前删除的对象是当前选中的，那么需要跳转
+    if (this.currentMenuTab === index) {
+      // 显示上一个选中
+      let menu = this.menuList[index - 1];
+      if (!menu) {// 如果上一个没有下一个选中
+        menu = this.menuList[index];
       }
-    })
-    return i;
-  }
-
-  /**
-   * 点击tab显示菜单对应的页面
-   * @param tabName tab名称
-   */
-  showMenuLinkByTabName(): void {
-    let tabName = '';
-    this.menuTabs.every((value, index) => {
-      if (index === this.currentMenuTab) {
-        tabName = value;
-        return false;
-      }
-      return true;
-    })
-    console.log(tabName);
-    const link = this.getMenuLinkFromAllChildrenByTitle(tabName);;
-    this.router.navigateByUrl(link);
-  }
-
-  getMenuLinkFromAllChildrenByTitle(title: string): string {
-    let link = '';
-    this.menusLastChildren.every(childMenu => {
-      if (childMenu.title === title) {
-        link = childMenu.link;
-        return false;
-      }
-      return true;
-    });
-    return link;
+      // 跳转路由
+      this.router.navigate([menu.url]);    }
   }
 
   /**
-   * 遍历菜单树，把所有最小级菜单放到数组。
-   * @param menus 菜单树
+   * tab发生改变
    */
-  expandMenusLastChildrenAll(menus: VMenuResp[]): void {
-    menus.forEach((menu, index) => {
-      if (menu.children && menu.children.length > 0) {
-        this.expandMenusLastChildrenAll(menu.children);
-      } else {
-        if (menu) {
-          this.menusLastChildren.push(menu);
-        }
-      }
-    });
+  nzSelectChange($event) {
+    this.currentMenuTab = $event.index;
+    const menu = this.menuList[this.currentMenuTab];
+    // 跳转路由
+    this.router.navigate([menu.url]);
   }
 }
+

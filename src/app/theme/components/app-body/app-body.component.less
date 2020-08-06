@@ -4,7 +4,40 @@
   padding-top: 0px;
   min-height: calc(100vh - 110px);
 
-  .main {
-    padding: 24px 30px;
+  .tab-content {
+    margin-top: 60px;
+    margin-left: 18px;
+    margin-right: 18px;
   }
 }
+
+/*tab-bar样式*/
+.tab-navigation ::ng-deep .ant-tabs-card .ant-tabs-bar {
+  position: fixed;
+  top: 50px;
+  left: 230px;
+  right: 0;
+  z-index: 930;
+  background: #fff;
+  padding: 0px;
+}
+
+/*tab未激活时候的样式*/
+.tab-navigation ::ng-deep .ant-tabs-card .ant-tabs-bar .ant-tabs-tab {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-color: transparent;
+  background: transparent;
+}
+
+/*tab激活的样式*/
+.tab-navigation ::ng-deep .ant-tabs-card .ant-tabs-bar .ant-tabs-tab-active {
+  border-color: transparent;
+  //border-bottom-color: #409EFF;
+  border-bottom-width: 1.5px;
+  background: #F5F7FA;
+}
+
+
+
+

@@ -6,6 +6,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import {InitComponent} from './init/init.component';
+import {ParameterManageComponent} from './setting/parameter-manage/parameter-manage.component';
 
 const routes: Routes = [
   {
@@ -25,7 +26,7 @@ const routes: Routes = [
     path: 'pages',
     component: DefaultComponent,
     children: [
-      { path: '', component: DashboardComponent },
+      { path: '', component: DashboardComponent, data: {title: '首页', isRemove: false} },
       {
         path: 'customer',
         loadChildren: () =>import('./customer/customer.module').then(m => m.CustomerModule)
