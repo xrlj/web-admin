@@ -10,6 +10,7 @@ import {VMenuResp} from './vo/resp/v-menu-resp';
 import { NzTreeNode, NzTreeNodeOptions } from 'ng-zorro-antd';
 import {VDeptResp} from './vo/resp/v-dept-resp';
 import {UserStatusEnum} from './enum/user-status-enum';
+import {ThemeEnum} from './enum/theme-enum';
 
 @Injectable({
   providedIn: 'root'
@@ -314,6 +315,45 @@ export class UIHelper {
   }
 
   /**
+   * 更改系统主题风格。
+   * @param theme 主题。default 默认主题；orange 橙色主题；turquoise蓝绿色主题
+   */
+  changeTheme(theme: ThemeEnum): void {
+    const style = document.createElement('link');
+    style.type = 'text/css';
+    style.rel = 'stylesheet';
+    style.id = `theme-${theme}-link`;
+    switch (theme) {
+      case ThemeEnum.Default:
+        style.href = './assets/themes/style.default.css';
+        break;
+      case ThemeEnum.Orange:
+        style.href = './assets/themes/style.orange.css';
+        break;
+      case ThemeEnum.Turquoise:
+        style.href = './assets/themes/style.turquoise.css';
+        break;
+      case ThemeEnum.Dark:
+        style.href = './assets/themes/style.dark.css';
+        break;
+    }
+    document.head.append(style);
+
+    style.onload = () => {
+      // 移除旧的
+      for (const key in ThemeEnum) {
+        const themeName = ThemeEnum[key];
+        if (theme !== themeName) {
+          const dom = document.getElementById(`theme-${themeName}-link`);
+          if (dom) {
+            dom.remove();
+          }
+        }
+      }
+    };
+  }
+
+  /**
    * 保存当前主题字符串。
    * @param currentTheme 选定的当前主题，默认为default
    */
@@ -327,5 +367,10 @@ export class UIHelper {
   getCurrentTheme(): string {
     const currentTheme = localStorage.getItem('currentTheme');
     return currentTheme;
+  }
+
+  isCurrentTheme(themeEnum: ThemeEnum): boolean {
+    const currentTheme = this.getCurrentTheme();
+    return currentTheme === themeEnum;
   }
 }

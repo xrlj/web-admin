@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Router} from '@angular/router';
 import {UIHelper} from '../../../helpers/ui-helper';
 import {DefaultBusService} from '../../../helpers/event-bus/default-bus.service';
@@ -16,6 +16,8 @@ export class DefaultComponent implements OnInit {
 
   isSpinning = false;
 
+  @Output() toggleCollapsed = new EventEmitter();
+
   constructor(private router: Router, private uiHelper: UIHelper, private defaultBusService: DefaultBusService) {
     // 订阅是否显示加载对话框事件
     this.defaultBusService.loadingSpin$.subscribe(isLoadingSpin => {
@@ -31,6 +33,7 @@ export class DefaultComponent implements OnInit {
   onToggleCollapsed(evt) {
     console.log('执行了 onToggleCollapsed');
     this.collapsed = !this.collapsed;
+    this.toggleCollapsed.emit(this.collapsed);
   }
 
   /*showSpinning(isSpinning: boolean) {

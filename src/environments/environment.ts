@@ -3,9 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 // 开发环境
+import {ThemeEnum} from '../app/helpers/enum/theme-enum';
+
 export const environment = {
   production: false,
   tag: 'dev',
+  themeStyle: ThemeEnum.Turquoise, // 设置系统默认风格
   config_global: true, // 是否启用全局变量。全局变量在app.config.ts中配置。
   // apiUrl: 'http://api-dev.xrlj.com:5555'
   apiUrl: 'http://localhost:5555'

@@ -1,41 +1,59 @@
+@tab-height: 40px;
+
 .app-body {
   position: relative;
   overflow-x: hidden;
   padding-top: 0px;
   min-height: calc(100vh - 110px);
 
-  .tab-content {
+  >.tab-navigation {
+    position: fixed;
+    top: 50px;
+    right: 0;
+    z-index: 930;
+    background: #fff;
+    height: @tab-height;
+    padding: 0px;
+  }
+
+  >.tab-content {
     margin-top: 60px;
     margin-left: 18px;
     margin-right: 18px;
   }
 }
 
+.tab-manage {
+  background: #F5F7FA;
+  padding-right: 10px;
+  padding-left: 10px;
+  height: @tab-height - 1.2;
+}
+
 /*tab-bar样式*/
-.tab-navigation ::ng-deep .ant-tabs-card .ant-tabs-bar {
-  position: fixed;
-  top: 50px;
-  left: 230px;
-  right: 0;
-  z-index: 930;
-  background: #fff;
-  padding: 0px;
+:host .tab-navigation ::ng-deep .ant-tabs-card .ant-tabs-bar {
+  height: @tab-height;
+  border-color: #E5E5E5;
+  border-bottom-width: 1px;
 }
 
 /*tab未激活时候的样式*/
-.tab-navigation ::ng-deep .ant-tabs-card .ant-tabs-bar .ant-tabs-tab {
+:host .tab-navigation ::ng-deep .ant-tabs-card .ant-tabs-bar .ant-tabs-tab {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   border-color: transparent;
   background: transparent;
+  height: @tab-height;
+  color: #5F6266;
 }
 
 /*tab激活的样式*/
-.tab-navigation ::ng-deep .ant-tabs-card .ant-tabs-bar .ant-tabs-tab-active {
+:host .tab-navigation ::ng-deep .ant-tabs-card .ant-tabs-bar .ant-tabs-tab-active {
   border-color: transparent;
-  //border-bottom-color: #409EFF;
+  border-bottom-color: #15B3A3;
   border-bottom-width: 1.5px;
   background: #F5F7FA;
+  color: #303133;
 }
 
 

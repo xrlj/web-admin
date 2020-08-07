@@ -1,8 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {Component, Input, OnInit} from '@angular/core';
+import {ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router} from '@angular/router';
 import {Title} from '@angular/platform-browser';
 import {filter, map, mergeMap} from 'rxjs/operators';
 import {SimpleReuseStrategy} from '../../layouts/simple-reuse-strategy';
+import {NzContextMenuService, NzDropdownMenuComponent} from 'ng-zorro-antd';
+import {AppPath} from '../../../app-path';
 
 @Component({
   selector: 'app-body',
@@ -11,10 +13,16 @@ import {SimpleReuseStrategy} from '../../layouts/simple-reuse-strategy';
 })
 export class AppBodyComponent implements OnInit {
 
+  @Input() collapsed: boolean;
+
   menuList = [];
   currentMenuTab = -1;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private titleService: Title) {
+  constructor(private router: Router,
+              private activatedRoute: ActivatedRoute,
+              private activatedRouteSnapshot: ActivatedRouteSnapshot,
+              private titleService: Title,
+              private nzContextMenuService: NzContextMenuService) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       map(() => this.activatedRoute),
@@ -29,16 +37,31 @@ export class AppBodyComponent implements OnInit {
       const menu = {...event};
       menu.url = this.router.url;
       const url = menu.url;
-      this.titleService.setTitle(menu.title); // 设置网页标题
+      // this.titleService.setTitle(menu.title); // 设置网页标题
       const exitMenu = this.menuList.find(info => info.url === url);
       if (!exitMenu) {// 如果不存在那么不添加，
-        this.menuList.push(menu);
+        if (this.menuList.length === 0 && url !== AppPath.pages) { // 刷新浏览器的时候，重新回到首页
+          menu.url = AppPath.pages;
+          menu.title = '首页';
+          menu.isRemove = false;
+          this.menuList.push(menu);
+          this.router.navigateByUrl(menu.url);
+        } else {
+          this.menuList.push(menu);
+        }
       }
       this.currentMenuTab = this.menuList.findIndex(p => p.url === url);
     });
   }
 
   ngOnInit() {
+  }
+
+  /**
+   * 右激鼠标，创建菜单。
+   */
+  contextMenu($event: MouseEvent, menu: NzDropdownMenuComponent): void {
+    this.nzContextMenuService.create($event, menu);
   }
 
   // 关闭选项标签
@@ -52,7 +75,7 @@ export class AppBodyComponent implements OnInit {
     this.menuList.splice(index, 1);
     // 删除复用
     // delete SimpleReuseStrategy.handlers[module];
-    SimpleReuseStrategy.deleteRouteSnapshot(url);
+    SimpleReuseStrategy.deleteRouteSnapshot(url, this.activatedRouteSnapshot);
     // 如果当前删除的对象是当前选中的，那么需要跳转
     if (this.currentMenuTab === index) {
       // 显示上一个选中

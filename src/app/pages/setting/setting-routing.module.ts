@@ -23,8 +23,8 @@ const routes: Routes = [
   { path: 'parameter', component: ParameterManageComponent, data: {title: '参数管理', isRemove: true} },
   { path: 'dictionary', component: DictionaryManageComponent, data: {title: '字段管理', isRemove: true} },
   { path: 'dictionary-type', component: DictionaryTypeComponent, data: {title: '字典类型管理', isRemove: true} },
-  { path: 'file', component: FileManageComponent, data: {title: '文件管理', isRemove: true} },
-  { path: 'zh-area', component: ZhAreaManageComponent, data: {title: '地区管理', isRemove: true} },
+  { path: 'file', component: FileManageComponent, data: {title: '上传文件', isRemove: true} },
+  { path: 'zh-area', component: ZhAreaManageComponent, data: {title: '行政区域', isRemove: true} },
 ];
 
 @NgModule({

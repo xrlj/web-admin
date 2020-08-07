@@ -9,8 +9,10 @@ export class SimpleReuseStrategy implements RouteReuseStrategy {
   public static handlers: { [key: string]: DetachedRouteHandle } = {};
   private static waitDelete: string;
 
-  public static deleteRouteSnapshot(url: string): void {
-    const key = url.replace(/\//g, '_');
+  public static deleteRouteSnapshot(url: string, route: ActivatedRouteSnapshot): void {
+    debugger;
+    // const key = url.replace(/\//g, '_');
+    const key = url.replace(/\//g, '_') + '_' + (route.routeConfig.loadChildren || route.routeConfig.component.toString().split('(')[0].split(' ')[1] );
     if (SimpleReuseStrategy.handlers[key]) {
       delete SimpleReuseStrategy.handlers[key];
     } else {
@@ -20,9 +22,14 @@ export class SimpleReuseStrategy implements RouteReuseStrategy {
 
   /** 表示对所有路由允许复用 如果你有路由不想利用可以在这加一些业务逻辑判断 */
   public shouldDetach(route: ActivatedRouteSnapshot): boolean {
-    debugger;
-    const  data = route.routeConfig && route.routeConfig.data;
-    return true;
+    const  data = route.routeConfig && route.routeConfig.data; // 路由中配置了data数据的，才复用
+    if (data) {
+      console.log('>>>>路由复用：' + route.routeConfig.path);
+      return true;
+    } else {
+      console.log('>>>>路由不复用：' + route.routeConfig.path);
+      return false;
+    }
   }
 
   /** 当路由离开时会触发。按path作为key存储路由快照&组件当前实例对象 */

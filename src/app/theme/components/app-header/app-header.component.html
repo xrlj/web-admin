@@ -44,35 +44,13 @@
       <li nz-menu-item>修改密码</li>
       <li nz-submenu nzTitle="设置主题">
         <ul nz-menu nzSelectable>
-          <li nz-menu-item [nzSelected]="" (click)="changeTheme(themeEnum.Default)">default 默认主题</li>
-          <li nz-menu-item (click)="changeTheme(themeEnum.Orange)">orange 橙色主题</li>
-          <li nz-menu-item (click)="changeTheme(themeEnum.Turquoise)">turquoise 蓝绿色主题</li>
+          <li nz-menu-item [nzSelected]="" (click)="uiHelper.changeTheme(themeEnum.Default)">default 默认主题</li>
+          <li nz-menu-item (click)="uiHelper.changeTheme(themeEnum.Orange)">orange 橙色主题</li>
+          <li nz-menu-item (click)="uiHelper.changeTheme(themeEnum.Turquoise)">turquoise 蓝绿色主题</li>
 <!--          <li nz-menu-item (click)="changeTheme(themeEnum.Dark)">dark 黑暗主题</li>--><!--如果要定制黑暗主题，去掉注释即可-->
         </ul>
       </li>
       <li nz-menu-item (click)="logout()">退出登录</li>
     </ul>
   </nz-dropdown-menu>
-
-  <!--<div class="user">
-    <nz-dropdown [nzPlacement]="'bottomRight'">
-      <div nz-dropdown class="user-name">
-        <nz-avatar nzIcon="user"></nz-avatar>
-        <span>{{utils.getJwtTokenClaim(jwtKvEnum.Username)}}</span>
-        <i nz-icon nzType="down" style="margin-left: 3px"></i>
-      </div>
-
-      <ul nz-menu nzSelectable>
-        <li nz-menu-item>
-          <a>个人中心</a>
-        </li>
-        <li nz-menu-item>
-          <a>修改密码</a>
-        </li>
-        <li nz-menu-item>
-          <a (click)="logout()">退出登录</a>
-        </li>
-      </ul>
-    </nz-dropdown>
-  </div>-->
 </div>
