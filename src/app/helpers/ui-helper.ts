@@ -224,6 +224,8 @@ export class UIHelper {
     }
   }
 
+  /*============================ 菜单 start ====================*/
+
   /**
    * 递归遍历菜单树。当节点没有子节点的时候，添加isLeaf=true。目的，去掉箭头展开按钮。
    * @param data 菜单节点数据。
@@ -241,6 +243,8 @@ export class UIHelper {
       }
     });
   }
+
+  /*============================ 菜单 end ====================*/
 
   /**
    * 通用方法，所有选择树可以。递归遍历树节点。当节点没有子节点的时候，添加isLeaf=true。目的，去掉箭头展开按钮。
@@ -292,6 +296,8 @@ export class UIHelper {
       });
     }
   }
+
+  /*========================= 系统主题 =========================*/
 
   /**
    * TreeSelect，选择树，选定后根据key，获取节点对象中包含的id。通用
@@ -352,6 +358,48 @@ export class UIHelper {
       }
     };
   }
+
+  /*changeTheme(theme: string) {
+    let themeUrl = './assets/themes/style.default.css';
+    switch (theme) {
+      case 'orange':
+        themeUrl = './assets/themes/style.orange.css';
+        break;
+      case 'turquoise':
+        themeUrl = './assets/themes/style.turquoise.css';
+        break;
+    }
+
+    // create new link element
+    const newThemeElement = document.createElement('link') as HTMLLinkElement;
+    // put the link into the document head
+    document.head.appendChild(newThemeElement);
+
+    // add the type to the link element
+    newThemeElement.type = 'text/css';
+    // add the rel to the link elmenent
+    newThemeElement.rel = 'stylesheet';
+    // listen the link load event
+    newThemeElement.onload = () => {
+      // get the theme link element
+      const themeElements = document.querySelectorAll('link[theme-link]');
+      // get all of the style elements and remove all of theme from the document
+      themeElements.forEach(themeElement => {
+        // remove the prevoius theme styles from the document when the new theme styles already downloaded
+        document.head.removeChild(themeElement);
+      });
+
+      // add attribute to the theme link element
+      newThemeElement.setAttribute('theme-link', '');
+      // remove the listener
+      newThemeElement.onload = null;
+
+    };
+
+    newThemeElement.href = themeUrl;
+
+    this.uiHelper.storageCurrentTheme(theme); // 保存当前主题
+  }*/
 
   /**
    * 保存当前主题字符串。

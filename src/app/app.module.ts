@@ -14,7 +14,7 @@ import {httpInterceptorProviders} from './interceptors';
 import { UEditorModule } from 'ngx-ueditor';
 import {IconsProviderModule} from './icons-provider.module';
 import {RouteReuseStrategy} from '@angular/router';
-import {SimpleReuseStrategy} from './theme/layouts/simple-reuse-strategy';
+import {SimpleReuseStrategy} from './helpers/simple-reuse-strategy';
 
 registerLocaleData(zh);
 

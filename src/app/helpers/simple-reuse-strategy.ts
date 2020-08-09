@@ -1,5 +1,4 @@
-import {RouteReuseStrategy, DefaultUrlSerializer, ActivatedRouteSnapshot, DetachedRouteHandle} from '@angular/router';
-import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, DetachedRouteHandle, RouteReuseStrategy} from '@angular/router';
 
 /**
  * 路由复用策略。Angular实现多标签页效果(路由重用)
@@ -14,7 +13,6 @@ export class SimpleReuseStrategy implements RouteReuseStrategy {
 
   public static deleteRouteSnapshotAll(): void {
     this.handlers = {};
-    console.log(this.handlers);
   }
 
   public static deleteRouteSnapshot(url: string): void {
@@ -29,6 +27,7 @@ export class SimpleReuseStrategy implements RouteReuseStrategy {
 
   /** 表示对所有路由允许复用 如果你有路由不想利用可以在这加一些业务逻辑判断 */
   public shouldDetach(route: ActivatedRouteSnapshot): boolean {
+    console.log('=======shouldDetach');
     const  data = route.routeConfig && route.routeConfig.data && route.routeConfig.data.isRemove; // 路由中配置了data数据的，才复用
     if (data) {
       return true;  // true代表复用该路由
@@ -39,6 +38,7 @@ export class SimpleReuseStrategy implements RouteReuseStrategy {
 
   /** 当路由离开时会触发。按path作为key存储路由快照&组件当前实例对象 */
   public store(route: ActivatedRouteSnapshot, handle: DetachedRouteHandle): void {
+    console.log('=======shouldDetach');
     if (SimpleReuseStrategy.waitDelete && SimpleReuseStrategy.waitDelete === this.getRouteUrl(route)) {
       // 如果待删除是当前路由则不存储快照
       SimpleReuseStrategy.waitDelete = null;
@@ -49,11 +49,13 @@ export class SimpleReuseStrategy implements RouteReuseStrategy {
 
   /** 若 path 在缓存中有的都认为允许还原路由 */
   public shouldAttach(route: ActivatedRouteSnapshot): boolean {
+    console.log('=======shouldDetach');
     return !!SimpleReuseStrategy.handlers[this.getRouteUrl(route)];
   }
 
   /** 从缓存中获取快照，若无则返回nul */
   public retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle {
+    console.log('=======shouldDetach');
     if (!route.routeConfig) {
       return null;
     }

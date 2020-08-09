@@ -1,4 +1,4 @@
-@tab-height: 40px;
+@tab-height: 38px;
 
 .app-body {
   position: relative;
@@ -17,7 +17,7 @@
   }
 
   >.tab-content {
-    margin-top: 60px;
+    margin-top: 58px;
     margin-left: 18px;
     margin-right: 18px;
   }
@@ -25,20 +25,20 @@
 
 .tab-manage {
   background: #F5F7FA;
-  padding-right: 10px;
-  padding-left: 10px;
+  padding-right: 14px;
+  padding-left: 14px;
   height: @tab-height - 1.2;
 }
 
 /*tab-bar样式*/
-:host .tab-navigation ::ng-deep .ant-tabs-card .ant-tabs-bar {
+.tab-navigation ::ng-deep .ant-tabs-card .ant-tabs-bar {
   height: @tab-height;
   border-color: #E5E5E5;
   border-bottom-width: 1px;
 }
 
 /*tab未激活时候的样式*/
-:host .tab-navigation ::ng-deep .ant-tabs-card .ant-tabs-bar .ant-tabs-tab {
+.tab-navigation ::ng-deep .ant-tabs-card .ant-tabs-bar .ant-tabs-tab {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   border-color: transparent;
@@ -48,7 +48,7 @@
 }
 
 /*tab激活的样式*/
-:host .tab-navigation ::ng-deep .ant-tabs-card .ant-tabs-bar .ant-tabs-tab-active {
+.tab-navigation ::ng-deep .ant-tabs-card .ant-tabs-bar .ant-tabs-tab-active {
   border-color: transparent;
   border-bottom-color: #15B3A3;
   border-bottom-width: 1.5px;

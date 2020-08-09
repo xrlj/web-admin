@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {ApiPath} from '../../api-path';
 import {Constants} from '../../helpers/constants';
 import {AppPath} from '../../app-path';
+import {SimpleReuseStrategy} from '../../helpers/simple-reuse-strategy';
 
 @Component({
   selector: 'app-init',
@@ -24,7 +25,7 @@ export class InitComponent implements OnInit {
     this.status = false;
     this.api.get(ApiPath.usercentral.userApi.getUserMenus)
       .ok(data => {
-        // debugger;
+        SimpleReuseStrategy.deleteRouteSnapshotAll(); // 重新初始化路由复用，清空旧的复用路由
         localStorage.setItem(Constants.localStorageKey.menus, JSON.stringify(data));
         this.router.navigateByUrl(AppPath.pages);
       })

@@ -9,7 +9,7 @@ import {Utils} from '../../../helpers/utils';
 import {JwtKvEnum} from '../../../helpers/enum/jwt-kv-enum';
 import {ThemeEnum} from '../../../helpers/enum/theme-enum';
 import {environment} from '../../../../environments/environment';
-import {SimpleReuseStrategy} from '../../layouts/simple-reuse-strategy';
+import {SimpleReuseStrategy} from '../../../helpers/simple-reuse-strategy';
 import {Constants} from '../../../helpers/constants';
 import {VMenuResp} from '../../../helpers/vo/resp/v-menu-resp';
 
@@ -20,7 +20,6 @@ import {VMenuResp} from '../../../helpers/vo/resp/v-menu-resp';
 })
 export class AppHeaderComponent implements OnInit {
   constructor(private router: Router,
-              private activatedRouteSnapshot: ActivatedRouteSnapshot,
               private api: Api,
               public utils: Utils,
               public uiHelper: UIHelper, private defaultBusService: DefaultBusService) {
@@ -32,7 +31,11 @@ export class AppHeaderComponent implements OnInit {
   jwtKvEnum: typeof  JwtKvEnum = JwtKvEnum;
   themeEnum: typeof  ThemeEnum = ThemeEnum;
 
+  menusLastChildren: VMenuResp[] = []; // 所有最小级
+
   ngOnInit() {
+    // const menus = JSON.parse(localStorage.getItem(Constants.localStorageKey.menus));
+    // this.expandMenusLastChildrenAll(menus);
   }
 
   /**
@@ -44,12 +47,6 @@ export class AppHeaderComponent implements OnInit {
         this.defaultBusService.showLoading(true);
         this.api.get(ApiPath.logout).ok(data => {
           if (data) {
-            const menus = JSON.parse(localStorage.getItem(Constants.localStorageKey.menus));
-            if (menus) {
-              menus.forEach(menu => {
-                SimpleReuseStrategy.deleteRouteSnapshot(menu.link, this.activatedRouteSnapshot);
-              });
-            }
             localStorage.clear();
             this.router.navigateByUrl(AppPath.login); // 退出成功
           } else {
@@ -63,45 +60,20 @@ export class AppHeaderComponent implements OnInit {
       });
   }
 
-  /*changeTheme(theme: string) {
-    let themeUrl = './assets/themes/style.default.css';
-    switch (theme) {
-      case 'orange':
-        themeUrl = './assets/themes/style.orange.css';
-        break;
-      case 'turquoise':
-        themeUrl = './assets/themes/style.turquoise.css';
-        break;
-    }
+  /**
+   * 遍历菜单树，把所有最小级菜单放到数组。
+   * @param menus 菜单树
+   */
+  expandMenusLastChildrenAll(menus: VMenuResp[]): void {
+    menus.forEach((menu, index) => {
+      if (menu.children && menu.children.length > 0) {
+        this.expandMenusLastChildrenAll(menu.children);
+      } else {
+        if (menu) {
+          this.menusLastChildren.push(menu);
+        }
+      }
+    });
+  }
 
-    // create new link element
-    const newThemeElement = document.createElement('link') as HTMLLinkElement;
-    // put the link into the document head
-    document.head.appendChild(newThemeElement);
-
-    // add the type to the link element
-    newThemeElement.type = 'text/css';
-    // add the rel to the link elmenent
-    newThemeElement.rel = 'stylesheet';
-    // listen the link load event
-    newThemeElement.onload = () => {
-      // get the theme link element
-      const themeElements = document.querySelectorAll('link[theme-link]');
-      // get all of the style elements and remove all of theme from the document
-      themeElements.forEach(themeElement => {
-        // remove the prevoius theme styles from the document when the new theme styles already downloaded
-        document.head.removeChild(themeElement);
-      });
-
-      // add attribute to the theme link element
-      newThemeElement.setAttribute('theme-link', '');
-      // remove the listener
-      newThemeElement.onload = null;
-
-    };
-
-    newThemeElement.href = themeUrl;
-
-    this.uiHelper.storageCurrentTheme(theme); // 保存当前主题
-  }*/
 }

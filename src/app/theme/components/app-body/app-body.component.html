@@ -1,6 +1,6 @@
 <div class="app-body">
   <div class="tab-navigation" [style.left]="collapsed ? '50px' : '230px'">
-    <nz-tabset style="margin-left: -1px; padding-bottom: 0px;" [nzAnimated]="true"
+    <nz-tabset style="margin-left: -1px;" [nzAnimated]="true"
                [nzType]="'card'"
                [nzTabBarGutter]="0"
                [nzShowPagination]="true"
@@ -15,11 +15,12 @@
                (contextmenu)="contextMenu($event, contextTabManageMenu)"></i>
           </div>
           <div *ngIf="!menu.isRemove">
-            <i style="padding-left: 0px; width: 5px" nz-icon nzType="home"></i>
+            <i style="padding-left: 0; width: 0;" nz-icon nzType="home"></i>
           </div>
         </ng-template>
       </nz-tab>
     </nz-tabset>
+    <!--tab-bar右边下拉菜单-->
     <ng-template #extraTemplate>
       <div class="tab-manage">
         <a nz-dropdown [nzDropdownMenu]="rightTabMangeMenu">
@@ -28,9 +29,9 @@
       </div>
       <nz-dropdown-menu #rightTabMangeMenu="nzDropdownMenu">
         <ul nz-menu>
-          <li nz-menu-item>关闭当前标签页</li>
-          <li nz-menu-item>关闭其它标签页</li>
-          <li nz-menu-item>关闭全部标签页</li>
+          <li nz-menu-item (click)="closeTabByContextMenu(1)">关闭当前标签页</li>
+          <li nz-menu-item (click)="closeTabByContextMenu(2)">关闭其它标签页</li>
+          <li nz-menu-item (click)="closeTabByContextMenu(3)">关闭全部标签页</li>
         </ul>
       </nz-dropdown-menu>
     </ng-template>
@@ -41,10 +42,11 @@
   </div>
 </div>
 
+<!--tab 删除按钮右击下拉菜单-->
 <nz-dropdown-menu #contextTabManageMenu="nzDropdownMenu">
   <ul nz-menu>
-    <li nz-menu-item>关闭当前标签页</li>
-    <li nz-menu-item>关闭其它标签页</li>
-    <li nz-menu-item>关闭全部标签页</li>
+    <li nz-menu-item (click)="closeTabByContextMenu(1)">关闭当前标签页</li>
+    <li nz-menu-item (click)="closeTabByContextMenu(2)">关闭其它标签页</li>
+    <li nz-menu-item (click)="closeTabByContextMenu(3)">关闭全部标签页</li>
   </ul>
 </nz-dropdown-menu>

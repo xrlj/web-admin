@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router} from '@angular/router';
 import {Title} from '@angular/platform-browser';
 import {filter, map, mergeMap} from 'rxjs/operators';
-import {SimpleReuseStrategy} from '../../layouts/simple-reuse-strategy';
+import {SimpleReuseStrategy} from '../../../helpers/simple-reuse-strategy';
 import {NzContextMenuService, NzDropdownMenuComponent} from 'ng-zorro-antd';
 import {AppPath} from '../../../app-path';
 
@@ -20,7 +20,6 @@ export class AppBodyComponent implements OnInit {
 
   constructor(private router: Router,
               private activatedRoute: ActivatedRoute,
-              private activatedRouteSnapshot: ActivatedRouteSnapshot,
               private titleService: Title,
               private nzContextMenuService: NzContextMenuService) {
     this.router.events.pipe(
@@ -45,7 +44,7 @@ export class AppBodyComponent implements OnInit {
           menu.title = '首页';
           menu.isRemove = false;
           this.menuList.push(menu);
-          this.router.navigateByUrl(menu.url);
+          this.router.navigate([menu.url]);
         } else {
           this.menuList.push(menu);
         }
@@ -74,8 +73,7 @@ export class AppBodyComponent implements OnInit {
     }
     this.menuList.splice(index, 1);
     // 删除复用
-    // delete SimpleReuseStrategy.handlers[module];
-    SimpleReuseStrategy.deleteRouteSnapshot(url, this.activatedRouteSnapshot);
+    SimpleReuseStrategy.deleteRouteSnapshot(url);
     // 如果当前删除的对象是当前选中的，那么需要跳转
     if (this.currentMenuTab === index) {
       // 显示上一个选中
@@ -95,6 +93,44 @@ export class AppBodyComponent implements OnInit {
     const menu = this.menuList[this.currentMenuTab];
     // 跳转路由
     this.router.navigate([menu.url]);
+  }
+
+  /**
+   * 快捷关闭菜单。
+   * @param type 1=关闭当前菜单tab；2=关闭其它；3=关闭全部
+   */
+  closeTabByContextMenu(type: number): void {
+    if (this.menuList.length <= 1) {
+      return;
+    }
+    const menus = [];
+    const currentMenu = this.menuList[this.currentMenuTab];
+    switch (type) {
+      case 1:
+        this.closeUrl(currentMenu.url);
+        break
+      case 2:
+        this.menuList.forEach((menu, index) => {
+          if (!menu.isRemove || menu.url === currentMenu.url) {
+            menus.push(menu);
+          } else {
+            delete SimpleReuseStrategy.handlers[menu.url];
+          }
+        });
+        this.menuList = menus;
+        break;
+      case 3:
+        this.menuList.forEach((menu, index) => {
+          if (!menu.isRemove) {
+            menus.push(menu);
+          }
+        });
+        this.menuList = menus;
+        // 删除复用
+        SimpleReuseStrategy.deleteRouteSnapshotAll();
+        this.router.navigate([this.menuList[0].url]);
+        break;
+    }
   }
 }
 
