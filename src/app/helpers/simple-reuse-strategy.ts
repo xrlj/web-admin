@@ -1,4 +1,5 @@
 import {RouteReuseStrategy, DefaultUrlSerializer, ActivatedRouteSnapshot, DetachedRouteHandle} from '@angular/router';
+import {Injectable} from '@angular/core';
 
 /**
  * 路由复用策略。Angular实现多标签页效果(路由重用)
@@ -9,10 +10,16 @@ export class SimpleReuseStrategy implements RouteReuseStrategy {
   public static handlers: { [key: string]: DetachedRouteHandle } = {};
   private static waitDelete: string;
 
-  public static deleteRouteSnapshot(url: string, route: ActivatedRouteSnapshot): void {
-    debugger;
+  private static route: ActivatedRouteSnapshot;
+
+  public static deleteRouteSnapshotAll(): void {
+    this.handlers = {};
+    console.log(this.handlers);
+  }
+
+  public static deleteRouteSnapshot(url: string): void {
     // const key = url.replace(/\//g, '_');
-    const key = url.replace(/\//g, '_') + '_' + (route.routeConfig.loadChildren || route.routeConfig.component.toString().split('(')[0].split(' ')[1] );
+    const key = url.replace(/\//g, '_') + '_' + (this.route.routeConfig.loadChildren || this.route.routeConfig.component.toString().split('(')[0].split(' ')[1] );
     if (SimpleReuseStrategy.handlers[key]) {
       delete SimpleReuseStrategy.handlers[key];
     } else {
@@ -22,12 +29,10 @@ export class SimpleReuseStrategy implements RouteReuseStrategy {
 
   /** 表示对所有路由允许复用 如果你有路由不想利用可以在这加一些业务逻辑判断 */
   public shouldDetach(route: ActivatedRouteSnapshot): boolean {
-    const  data = route.routeConfig && route.routeConfig.data; // 路由中配置了data数据的，才复用
+    const  data = route.routeConfig && route.routeConfig.data && route.routeConfig.data.isRemove; // 路由中配置了data数据的，才复用
     if (data) {
-      console.log('>>>>路由复用：' + route.routeConfig.path);
-      return true;
+      return true;  // true代表复用该路由
     } else {
-      console.log('>>>>路由不复用：' + route.routeConfig.path);
       return false;
     }
   }
@@ -65,6 +70,8 @@ export class SimpleReuseStrategy implements RouteReuseStrategy {
   private getRouteUrl(route: ActivatedRouteSnapshot) {
     // https://www.cnblogs.com/caption/p/9332393.html
     // return route['_routerState'].url.replace(/\//g, '_');
+
+    SimpleReuseStrategy.route = route;
 
     return route['_routerState'].url.replace(/\//g, '_')
       + '_' + (route.routeConfig.loadChildren || route.routeConfig.component.toString().split('(')[0].split(' ')[1] );
