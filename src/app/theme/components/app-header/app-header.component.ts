@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Api} from '../../../helpers/http/api';
-import {ActivatedRouteSnapshot, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {ApiPath} from '../../../api-path';
 import {UIHelper} from '../../../helpers/ui-helper';
 import {AppPath} from '../../../app-path';
@@ -9,9 +9,8 @@ import {Utils} from '../../../helpers/utils';
 import {JwtKvEnum} from '../../../helpers/enum/jwt-kv-enum';
 import {ThemeEnum} from '../../../helpers/enum/theme-enum';
 import {environment} from '../../../../environments/environment';
-import {SimpleReuseStrategy} from '../../../helpers/simple-reuse-strategy';
-import {Constants} from '../../../helpers/constants';
 import {VMenuResp} from '../../../helpers/vo/resp/v-menu-resp';
+import {Constants} from '../../../helpers/constants';
 
 @Component({
   selector: 'app-header',
@@ -23,19 +22,55 @@ export class AppHeaderComponent implements OnInit {
               private api: Api,
               public utils: Utils,
               public uiHelper: UIHelper, private defaultBusService: DefaultBusService) {
-    this.uiHelper.storageCurrentTheme(environment.themeStyle);
   }
 
-  appName = '总后台';
+  @Output() currentTheme = new EventEmitter();  // 更改主题色调，弹射主题到父组件
+  @Output() asideTheme = new EventEmitter();  // 更改菜单抽屉主题，弹射主题到父组件
+
+  appName = Constants.appInfo.appName;
 
   jwtKvEnum: typeof  JwtKvEnum = JwtKvEnum;
   themeEnum: typeof  ThemeEnum = ThemeEnum;
 
   menusLastChildren: VMenuResp[] = []; // 所有最小级
 
+  // ====== 系统设置-抽屉
+  settingVisible: boolean;
+  sliderMenuThemeChecked = true;
+  themeRadioValue: string;
+
   ngOnInit() {
-    // const menus = JSON.parse(localStorage.getItem(Constants.localStorageKey.menus));
-    // this.expandMenusLastChildrenAll(menus);
+    debugger;
+    this.themeRadioValue = this.uiHelper.getCurrentTheme();
+  }
+
+  /**
+   * 变更菜单抽屉主题,并弹出到父组件。
+   * @param event 选定true，否者false
+   */
+  asideChangeTheme(event): void {
+    this.asideTheme.emit(event);
+  }
+
+  /**
+   * 更改系统主题色调。
+   * @param event 主题
+   */
+  changeTheme(event: any): void {
+    let theme = null;
+    switch (event) {
+      case ThemeEnum.Default:
+        theme = ThemeEnum.Default;
+        break;
+      case ThemeEnum.Orange:
+        theme = ThemeEnum.Orange;
+        break;
+      case ThemeEnum.Turquoise:
+        theme = ThemeEnum.Turquoise;
+        break;
+    }
+    this.uiHelper.changeTheme(theme);
+    this.currentTheme.emit(theme);
   }
 
   /**
@@ -47,8 +82,9 @@ export class AppHeaderComponent implements OnInit {
         this.defaultBusService.showLoading(true);
         this.api.get(ApiPath.logout).ok(data => {
           if (data) {
-            localStorage.clear();
-            this.router.navigateByUrl(AppPath.login); // 退出成功
+            localStorage.removeItem(Constants.localStorageKey.token);
+            localStorage.removeItem(Constants.localStorageKey.menus);
+            this.router.navigate([AppPath.login]); // 退出成功
           } else {
             this.uiHelper.msgTipError('退出失败');
           }
@@ -76,4 +112,11 @@ export class AppHeaderComponent implements OnInit {
     });
   }
 
+  openSettingDrawer() {
+    this.settingVisible = true;
+  }
+
+  closeSettingDrawer() {
+    this.settingVisible = false;
+  }
 }

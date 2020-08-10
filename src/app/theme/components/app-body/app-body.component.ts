@@ -1,10 +1,12 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Title} from '@angular/platform-browser';
 import {filter, map, mergeMap} from 'rxjs/operators';
 import {SimpleReuseStrategy} from '../../../helpers/simple-reuse-strategy';
 import {NzContextMenuService, NzDropdownMenuComponent} from 'ng-zorro-antd';
 import {AppPath} from '../../../app-path';
+import {environment} from '../../../../environments/environment';
+import {ThemeEnum} from '../../../helpers/enum/theme-enum';
 
 @Component({
   selector: 'app-body',
@@ -17,6 +19,8 @@ export class AppBodyComponent implements OnInit {
 
   menuList = [];
   currentMenuTab = -1;
+
+  currentTabClasses: {};  // tab 样式类
 
   constructor(private router: Router,
               private activatedRoute: ActivatedRoute,
@@ -54,6 +58,20 @@ export class AppBodyComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.setCurrentTabClasses(environment.themeStyle); // 初始主题
+  }
+
+  /**
+   * 根据不同主题，变更菜单tab的样式。
+   * @param theme 主题
+   */
+  setCurrentTabClasses(theme: ThemeEnum) {
+    // CSS classes: added/removed per current state of component properties
+    this.currentTabClasses =  {
+      'tab-navigation-default': theme === ThemeEnum.Default,
+      'tab-navigation-orange': theme === ThemeEnum.Orange,
+      'tab-navigation-turquoise':  theme === ThemeEnum.Turquoise
+    };
   }
 
   /**

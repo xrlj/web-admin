@@ -1,38 +1,45 @@
+@app-aside-width: 230px;  // 左边菜单抽屉打开的宽度
+@app-aside-collapsed-width: 50px; // 左边菜单抽屉收缩后的宽度
+@app-header-height: 50px; // 顶部导航栏的高度
+
 .default-layout {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  //height: 100%;
   background: #f0f2f5;
 
   app-aside {
     position: fixed;
-    top: 50px;
+    top: @app-header-height;
     left: 0;
     z-index: 1019;
-    width: 230px;
+    width: @app-aside-width;
     height: calc(100vh - 50px);
+    //height: 100%;
   }
 
   app-body {
-    margin-top: 50px;
-    margin-left: 230px;
+    margin-top: @app-header-height;
+    margin-left: @app-aside-width;
   }
 
   app-footer {
     margin-left: 200px;
   }
 
+  /*收缩侧边菜单抽屉样式*/
   &.aside-collapsed {
     app-aside {
-      width: 50px;
+      width: @app-aside-collapsed-width;
     }
 
     app-body {
-      margin-left: 50px;
+      margin-left: @app-aside-collapsed-width;
     }
 
     app-footer {
-      margin-left: 50px;
+      margin-left: @app-aside-collapsed-width;
     }
   }
 }

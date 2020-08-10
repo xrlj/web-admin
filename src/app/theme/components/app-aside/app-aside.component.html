@@ -1,4 +1,4 @@
-<div class="app-aside">
+<div class="app-aside" [style.background]="theme ? '#263238' : '#fff'">
   <div class="app-aside-list">
     <ul nz-menu [nzInlineCollapsed]="collapsed" [nzTheme]="theme ? 'dark' : 'light'" nzMode="inline">
       <ng-container *ngFor="let menu of menus">

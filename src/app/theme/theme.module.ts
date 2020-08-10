@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { NgZorroAntdModule } from 'ng-zorro-antd';
+import {NgZorroAntdModule, NzDrawerModule} from 'ng-zorro-antd';
 import { ThemeRoutingModule } from './theme-routing.module';
 import {
   AppHeaderComponent,
@@ -10,6 +10,7 @@ import {
   AppFooterComponent
 } from './components';
 import { DefaultComponent, BlankComponent } from './layouts';
+import {FormsModule} from '@angular/forms';
 
 const COMPONENTS = [
   DefaultComponent,
@@ -22,6 +23,6 @@ const COMPONENTS = [
 
 @NgModule({
   declarations: [...COMPONENTS],
-  imports: [CommonModule, NgZorroAntdModule, ThemeRoutingModule]
+    imports: [CommonModule, NgZorroAntdModule, ThemeRoutingModule, NzDrawerModule, FormsModule]
 })
 export class ThemeModule {}

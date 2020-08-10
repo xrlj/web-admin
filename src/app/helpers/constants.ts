@@ -4,12 +4,14 @@ export const Constants = {
     timeOut: 5000
   },
   appInfo: {
+    appName: '小睿链金总后台',
     clientId: '0a9cbbbb4f130988',
     clientDeviceType: 'web'
   },
   localStorageKey: {
     token: 'm-jwt-token',
-    menus: 'user-menus' // 菜单
+    menus: 'user-menus', // 菜单
+    currentTheme: 'current-theme' // 当前主题色调风格
   },
   nzFormItem: {
     nzFormLabel: {

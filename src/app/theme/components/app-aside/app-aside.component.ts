@@ -52,9 +52,9 @@ export class AppAsideComponent implements OnInit {
   }
 
   /**
-   * TODO 更改主题方法。
+   * 更改菜单主题
    */
-  changeTheme() {
-    this.theme  = false;
+  changeAsideMenuTheme(theme: boolean) {
+    this.theme  = theme;
   }
 }

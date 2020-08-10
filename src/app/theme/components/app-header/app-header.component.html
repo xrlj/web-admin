@@ -42,15 +42,24 @@
     <ul nz-menu>
       <li nz-menu-item>个人中心</li>
       <li nz-menu-item>修改密码</li>
-      <li nz-submenu nzTitle="设置主题">
-        <ul nz-menu nzSelectable>
-          <li nz-menu-item [nzSelected]="" (click)="uiHelper.changeTheme(themeEnum.Default)">default 默认主题</li>
-          <li nz-menu-item (click)="uiHelper.changeTheme(themeEnum.Orange)">orange 橙色主题</li>
-          <li nz-menu-item (click)="uiHelper.changeTheme(themeEnum.Turquoise)">turquoise 蓝绿色主题</li>
-<!--          <li nz-menu-item (click)="changeTheme(themeEnum.Dark)">dark 黑暗主题</li>--><!--如果要定制黑暗主题，去掉注释即可-->
-        </ul>
-      </li>
+      <li nz-menu-item (click)="openSettingDrawer()">系统设置</li>
       <li nz-menu-item (click)="logout()">退出登录</li>
     </ul>
   </nz-dropdown-menu>
 </div>
+
+<nz-drawer class="setting-drawer" [nzClosable]="false" [nzVisible]="settingVisible" nzPlacement="right" nzTitle="系统设置" (nzOnClose)="closeSettingDrawer()">
+  <div class="setting-drawer-slider">
+    <h4>抽屉菜单</h4>
+    <label nz-checkbox (ngModelChange)="asideChangeTheme($event)" [(ngModel)]="sliderMenuThemeChecked">dark 黑色</label>
+  </div>
+  <nz-divider></nz-divider>
+  <div class="setting-drawer-theme">
+    <h4>主题色调</h4>
+    <nz-radio-group (ngModelChange)="changeTheme($event)" [(ngModel)]="themeRadioValue">
+      <label nz-radio [nzValue]="themeEnum.Default">default 默认</label>
+      <label nz-radio [nzValue]="themeEnum.Orange">orange 橙色</label>
+      <label nz-radio [nzValue]="themeEnum.Turquoise">turquoise 蓝绿色</label>
+    </nz-radio-group>
+  </div>
+</nz-drawer>

@@ -1,5 +1,5 @@
 <div class="app-body">
-  <div class="tab-navigation" [style.left]="collapsed ? '50px' : '230px'">
+  <div [ngClass]="currentTabClasses" [style.left]="collapsed ? '50px' : '230px'">
     <nz-tabset style="margin-left: -1px;" [nzAnimated]="true"
                [nzType]="'card'"
                [nzTabBarGutter]="0"
@@ -9,10 +9,9 @@
                (nzSelectChange)="nzSelectChange($event)">
       <nz-tab *ngFor="let menu of menuList" [nzTitle]="titleTemplate">
         <ng-template #titleTemplate>
-          <div *ngIf="menu.isRemove">
+          <div *ngIf="menu.isRemove" (contextmenu)="contextMenu($event, contextTabManageMenu)">
             {{ menu.title }}
-            <i nz-icon nzType="close" (click)="closeUrl(menu.url)" class="ant-tabs-close-x"
-               (contextmenu)="contextMenu($event, contextTabManageMenu)"></i>
+            <i nz-icon nzType="close" (click)="closeUrl(menu.url)" class="ant-tabs-close-x"></i>
           </div>
           <div *ngIf="!menu.isRemove">
             <i style="padding-left: 0; width: 0;" nz-icon nzType="home"></i>

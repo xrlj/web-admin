@@ -321,10 +321,10 @@ export class UIHelper {
   }
 
   /**
-   * 更改系统主题风格。
+   * 更改系统主题风格。添加更多主题，记得修改这里代码
    * @param theme 主题。default 默认主题；orange 橙色主题；turquoise蓝绿色主题
    */
-  changeTheme(theme: ThemeEnum): void {
+  changeTheme(theme: string): void {
     const style = document.createElement('link');
     style.type = 'text/css';
     style.rel = 'stylesheet';
@@ -357,6 +357,9 @@ export class UIHelper {
         }
       }
     };
+
+    debugger;
+    this.storageCurrentTheme(theme);
   }
 
   /*changeTheme(theme: string) {
@@ -406,14 +409,16 @@ export class UIHelper {
    * @param currentTheme 选定的当前主题，默认为default
    */
   storageCurrentTheme(currentTheme: string): void {
-    localStorage.setItem('currentTheme', currentTheme);
+    debugger;
+    localStorage.setItem(Constants.localStorageKey.currentTheme, currentTheme);
   }
 
   /**
    * 获取当前设定的主题。
    */
   getCurrentTheme(): string {
-    const currentTheme = localStorage.getItem('currentTheme');
+    debugger;
+    const currentTheme = localStorage.getItem(Constants.localStorageKey.currentTheme);
     return currentTheme;
   }
 
