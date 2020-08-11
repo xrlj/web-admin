@@ -2,9 +2,6 @@ import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core'
 import {Router} from '@angular/router';
 import {UIHelper} from '../../../helpers/ui-helper';
 import {DefaultBusService} from '../../../helpers/event-bus/default-bus.service';
-import {Constants} from '../../../helpers/constants';
-import {ThemeEnum} from '../../../helpers/enum/theme-enum';
-import {environment} from '../../../../environments/environment';
 import {AppAsideComponent, AppBodyComponent} from '../../components';
 
 @Component({
@@ -21,9 +18,6 @@ export class DefaultComponent implements OnInit {
 
   @Output() toggleCollapsed = new EventEmitter();
 
-  // 当前主题
-  currentTheme = environment.themeStyle;
-
   @ViewChild(AppBodyComponent)
   private appBodyComponent: AppBodyComponent;
   @ViewChild(AppAsideComponent)
@@ -38,7 +32,7 @@ export class DefaultComponent implements OnInit {
 
   ngOnInit() {
     // 服务端处理token是否过期，避免客户端和服务器时间不一致，或者改动客户端系统时间变成未过期
-    // this.uiHelper.verifyLoginAndJumpToLogin();
+    this.uiHelper.verifyLoginAndJumpToLogin();
   }
 
   onToggleCollapsed(evt) {

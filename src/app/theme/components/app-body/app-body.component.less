@@ -57,6 +57,8 @@
   height: @tab-height - 1.2;
 }
 
+/*======================== default样式下 ==============*/
+
 /*tab-bar样式*/
 .@{tab-navigation-default} ::ng-deep .ant-tabs-card .ant-tabs-bar {
   height: @tab-height;
@@ -72,6 +74,12 @@
   background: transparent;
   height: @tab-height;
   color: #5F6266;
+  &:hover { // 鼠标悬停高亮样式
+    border-bottom-color: #409DFD;
+    border-bottom-width: 1.5px;
+    background: #F5F7FA;
+    color: #303133;
+  }
 }
 
 /*tab激活的样式*/
@@ -82,6 +90,8 @@
   background: #F5F7FA;
   color: #303133;
 }
+
+/*======================== orange样式下 ==============*/
 
 /*tab-bar样式*/
 .@{tab-navigation-orange} ::ng-deep .ant-tabs-card .ant-tabs-bar {
@@ -98,6 +108,12 @@
   background: transparent;
   height: @tab-height;
   color: #5F6266;
+  &:hover { // 鼠标悬停高亮样式
+    border-bottom-color: #EB6609;
+    border-bottom-width: 1.5px;
+    background: #F5F7FA;
+    color: #303133;
+  }
 }
 
 /*tab激活的样式*/
@@ -108,6 +124,8 @@
   background: #F5F7FA;
   color: #303133;
 }
+
+/*======================== turquoise样式下 ==============*/
 
 /*tab-bar样式*/
 .@{tab-navigation-turquoise} ::ng-deep .ant-tabs-card .ant-tabs-bar {
@@ -124,6 +142,12 @@
   background: transparent;
   height: @tab-height;
   color: #5F6266;
+  &:hover { // 鼠标悬停高亮样式
+    color: #303133;
+    border-bottom-color: #15B3A3;
+    border-bottom-width: 1.5px;
+    background: #F5F7FA;
+  }
 }
 
 /*tab激活的样式*/

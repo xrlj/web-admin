@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Api} from '../../../helpers/http/api';
 import {Router} from '@angular/router';
 import {ApiPath} from '../../../api-path';
@@ -24,6 +24,8 @@ export class AppHeaderComponent implements OnInit {
               public uiHelper: UIHelper, private defaultBusService: DefaultBusService) {
   }
 
+  @Input() collapsed: boolean;
+
   @Output() currentTheme = new EventEmitter();  // 更改主题色调，弹射主题到父组件
   @Output() asideTheme = new EventEmitter();  // 更改菜单抽屉主题，弹射主题到父组件
 
@@ -32,7 +34,7 @@ export class AppHeaderComponent implements OnInit {
   jwtKvEnum: typeof  JwtKvEnum = JwtKvEnum;
   themeEnum: typeof  ThemeEnum = ThemeEnum;
 
-  menusLastChildren: VMenuResp[] = []; // 所有最小级
+  // menusLastChildren: VMenuResp[] = []; // 所有最小级
 
   // ====== 系统设置-抽屉
   settingVisible: boolean;
@@ -40,7 +42,6 @@ export class AppHeaderComponent implements OnInit {
   themeRadioValue: string;
 
   ngOnInit() {
-    debugger;
     this.themeRadioValue = this.uiHelper.getCurrentTheme();
   }
 
@@ -82,8 +83,7 @@ export class AppHeaderComponent implements OnInit {
         this.defaultBusService.showLoading(true);
         this.api.get(ApiPath.logout).ok(data => {
           if (data) {
-            localStorage.removeItem(Constants.localStorageKey.token);
-            localStorage.removeItem(Constants.localStorageKey.menus);
+            this.uiHelper.logoutLocalStorageClean();
             this.router.navigate([AppPath.login]); // 退出成功
           } else {
             this.uiHelper.msgTipError('退出失败');
@@ -100,7 +100,7 @@ export class AppHeaderComponent implements OnInit {
    * 遍历菜单树，把所有最小级菜单放到数组。
    * @param menus 菜单树
    */
-  expandMenusLastChildrenAll(menus: VMenuResp[]): void {
+  /*expandMenusLastChildrenAll(menus: VMenuResp[]): void {
     menus.forEach((menu, index) => {
       if (menu.children && menu.children.length > 0) {
         this.expandMenusLastChildrenAll(menu.children);
@@ -110,7 +110,7 @@ export class AppHeaderComponent implements OnInit {
         }
       }
     });
-  }
+  }*/
 
   openSettingDrawer() {
     this.settingVisible = true;
@@ -118,5 +118,12 @@ export class AppHeaderComponent implements OnInit {
 
   closeSettingDrawer() {
     this.settingVisible = false;
+  }
+
+  /**
+   * 个人中心。
+   */
+  openUserCentre() {
+    this.router.navigate(['/pages/user-centre']);
   }
 }

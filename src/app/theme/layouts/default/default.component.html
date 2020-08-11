@@ -1,6 +1,6 @@
 <nz-spin [nzSpinning]="isSpinning" nzTip="努力加载中...">
   <div class="default-layout" [class.aside-collapsed]="collapsed">
-    <app-header (currentTheme)="setCurrentTheme($event)" (asideTheme)="setAsideTheme($event)"></app-header>
+    <app-header (currentTheme)="setCurrentTheme($event)" (asideTheme)="setAsideTheme($event)" [collapsed]="collapsed"></app-header>
     <app-body [collapsed]="collapsed">
       <router-outlet></router-outlet>
     </app-body>

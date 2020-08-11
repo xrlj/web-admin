@@ -52,8 +52,8 @@
     </ul>
   </div>
 
-  <div class="app-aside-collapsed">
-    <div class="collapsed-icon" (click)="toggle()">
+  <div [style.background]="theme ? 'rgba(0, 0, 0, 0.1)' : 'rgba(0, 0, 0, 0.1)'" class="app-aside-collapsed">
+    <div [style.color]="theme ? '#fff' : 'grey'" class="collapsed-icon" (click)="toggle()">
       <i
         nz-icon
         [nzType]="collapsed ? 'arrow-right' : 'arrow-left'"

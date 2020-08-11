@@ -36,7 +36,6 @@ export class AppAsideComponent implements OnInit {
     for (const i of this.menus) {
       this.openMap[i.title] = false;
     }
-    console.log(this.openMap);
   }
 
   /**

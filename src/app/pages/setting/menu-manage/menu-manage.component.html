@@ -1,6 +1,6 @@
 <!--菜单列表-->
-<nz-card class="content" nzTitle="应用菜单列表" [nzExtra]="extraTemplate">
-  <div class="content-action">
+<nz-card class="card-list" nzTitle="应用菜单列表" [nzExtra]="extraTemplate">
+  <div class="card-list-action">
     <nz-select
       nzShowSearch
       nzAllowClear
@@ -15,7 +15,7 @@
     <button nz-button nzType="primary" (click)="addMenu()"><i nz-icon nzType="plus"></i>新增</button>
   </div>
   <!--列表-->
-  <nz-table #expandTable [nzData]="menuList" [nzShowPagination]="false" [nzLoading]="isRefreshMenuList" nzBordered>
+  <nz-table class="card-list-table" #expandTable [nzData]="menuList" [nzShowPagination]="false" [nzLoading]="isRefreshMenuList" nzBordered>
     <thead>
     <tr>
       <th nzWidth="18%" nzAlign="center">名称</th>

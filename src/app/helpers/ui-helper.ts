@@ -206,9 +206,12 @@ export class UIHelper {
    */
   verifyLoginAndJumpToLogin() {
     const authToken = localStorage.getItem(Constants.localStorageKey.token);
-    if (!authToken || this.utils.jwtTokenIsExpired()) { // 未登录或者已失效
-      localStorage.clear();
-      this.router.navigateByUrl(AppPath.login);
+    /*if (!authToken || this.utils.jwtTokenIsExpired()) { // 未登录或者已失效
+      this.logoutLocalStorageClean();
+      this.router.navigate([AppPath.login]);
+    }*/
+    if (!authToken) { // 未登录或者已失效
+      this.router.navigate([AppPath.login]);
     }
   }
 
@@ -220,7 +223,7 @@ export class UIHelper {
     if (authToken) { // 已登录
       this.router.navigateByUrl(AppPath.pages);
     } else {
-      localStorage.clear();
+      this.logoutLocalStorageClean();
     }
   }
 
@@ -357,8 +360,6 @@ export class UIHelper {
         }
       }
     };
-
-    debugger;
     this.storageCurrentTheme(theme);
   }
 
@@ -409,7 +410,6 @@ export class UIHelper {
    * @param currentTheme 选定的当前主题，默认为default
    */
   storageCurrentTheme(currentTheme: string): void {
-    debugger;
     localStorage.setItem(Constants.localStorageKey.currentTheme, currentTheme);
   }
 
@@ -417,7 +417,6 @@ export class UIHelper {
    * 获取当前设定的主题。
    */
   getCurrentTheme(): string {
-    debugger;
     const currentTheme = localStorage.getItem(Constants.localStorageKey.currentTheme);
     return currentTheme;
   }
@@ -425,5 +424,11 @@ export class UIHelper {
   isCurrentTheme(themeEnum: ThemeEnum): boolean {
     const currentTheme = this.getCurrentTheme();
     return currentTheme === themeEnum;
+  }
+
+  /*=========== 登出，需要清理本地缓存 =============*/
+  logoutLocalStorageClean(): void  {
+    localStorage.removeItem(Constants.localStorageKey.token);
+    localStorage.removeItem(Constants.localStorageKey.menus);
   }
 }

@@ -46,6 +46,10 @@ const routes: Routes = [
       {
         path: 'sys-log',
         loadChildren: () =>import('./sys-log/sys-log.module').then(m => m.SysLogModule)
+      },
+      {
+        path: 'user-centre',
+        loadChildren: () =>import('./user-centre/user-centre.module').then(m => m.UserCentreModule)
       }
     ]
   },

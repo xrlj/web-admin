@@ -6,27 +6,28 @@
   width: 100%;
   height: 50px;
   flex: 0 0 50px;
-  //background: #fff;
-  //border-bottom: 0px solid #c8ced3;
   display: flex;
   flex-direction: row;
-  color: #ffffff;
+  color: #fff;
 
   >.brand {
     display: inline-block;
     display: flex;
     align-items: center;
-    width: 240px;
+    width: 230px;
     height: 100%;
-    font-size: 18px;
-    padding: 0 24px;
-    font-weight: bold;
+    padding: 0 20px;
     text-decoration: none;
-    color: #ffffff;
 
     &>img {
       margin-right: 10px;
       height: 30px;
+    }
+
+    &>span {
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
     }
   }
 
@@ -38,7 +39,7 @@
     padding: 0;
     margin: 0;
 
-    .nav-item {
+    >.nav-item {
       position: relative;
       min-width: 50px;
       margin: 0;
@@ -54,12 +55,18 @@
       }
     }
 
-    .nav-icon {
+    >.nav-icon {
       padding: 0 10px;
+
+      // 鼠标悬停效果
+      &:hover {
+        color: #CCCCCC;
+        cursor:pointer; // 出现小手
+      }
 
       i {
         font-size: 16px;
-        padding: 0 10px;
+        padding: 0 8px;
       }
     }
   }

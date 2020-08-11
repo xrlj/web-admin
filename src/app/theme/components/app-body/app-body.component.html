@@ -1,12 +1,12 @@
 <div class="app-body">
   <div [ngClass]="currentTabClasses" [style.left]="collapsed ? '50px' : '230px'">
-    <nz-tabset style="margin-left: -1px;" [nzAnimated]="true"
+    <nz-tabset [nzAnimated]="true"
                [nzType]="'card'"
                [nzTabBarGutter]="0"
                [nzShowPagination]="true"
                [(nzSelectedIndex)]="currentMenuTab"
-               [nzTabBarExtraContent]="extraTemplate"
                (nzSelectChange)="nzSelectChange($event)">
+<!--               [nzTabBarExtraContent]="extraTemplate">-->
       <nz-tab *ngFor="let menu of menuList" [nzTitle]="titleTemplate">
         <ng-template #titleTemplate>
           <div *ngIf="menu.isRemove" (contextmenu)="contextMenu($event, contextTabManageMenu)">
