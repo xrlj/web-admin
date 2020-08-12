@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Title} from '@angular/platform-browser';
 import {filter, map, mergeMap} from 'rxjs/operators';
@@ -7,13 +7,16 @@ import {NzContextMenuService, NzDropdownMenuComponent} from 'ng-zorro-antd';
 import {AppPath} from '../../../app-path';
 import {environment} from '../../../../environments/environment';
 import {ThemeEnum} from '../../../helpers/enum/theme-enum';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-body',
   templateUrl: './app-body.component.html',
   styleUrls: ['./app-body.component.less']
 })
-export class AppBodyComponent implements OnInit {
+export class AppBodyComponent implements OnInit, OnDestroy {
+
+  subscription: Subscription;
 
   @Input() collapsed: boolean;
 
@@ -26,7 +29,7 @@ export class AppBodyComponent implements OnInit {
               private activatedRoute: ActivatedRoute,
               private titleService: Title,
               private nzContextMenuService: NzContextMenuService) {
-    this.router.events.pipe(
+    this.subscription = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       map(() => this.activatedRoute),
       map(route => {
@@ -59,6 +62,12 @@ export class AppBodyComponent implements OnInit {
 
   ngOnInit() {
     this.setCurrentTabClasses(environment.themeStyle); // 初始主题
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe(); // 取消订阅
+    }
   }
 
   /**

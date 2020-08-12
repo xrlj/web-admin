@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {ApiPath} from '../api-path';
 import {Api} from './http/api';
-import {UserStatusEnum} from './enum/user-status-enum';
 
 @Injectable({
   providedIn: 'root'
