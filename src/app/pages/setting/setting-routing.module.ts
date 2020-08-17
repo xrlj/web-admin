@@ -11,7 +11,6 @@ import {DictionaryTypeComponent} from './dictionary-manage/dictionary-type/dicti
 import {FileManageComponent} from './file-manage/file-manage.component';
 import {ZhAreaManageComponent} from './zh-area-manage/zh-area-manage.component';
 import {DictionaryManageComponent} from './dictionary-manage/dictionary-manage.component';
-import {EtpManageComponent} from '../customer/etp-manage/etp-manage.component';
 
 const routes: Routes = [
   { path: 'user', component: UserManageComponent, data: {title: '用户管理', isRemove: true} },

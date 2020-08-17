@@ -103,10 +103,8 @@
     <!--引用名称-->
     <nz-form-item>
       <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="appName" nzRequired>名称</nz-form-label>
-      <nz-form-control [nzSm]="10" [nzXs]="24">
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
         <input nz-input id="appName" formControlName="appName" placeholder="应用名称"/>
-        <nz-form-explain *ngIf="addOrEditForm.get('appName')?.dirty && addOrEditForm.get('appName')?.errors">应用名称不为空!
-        </nz-form-explain>
       </nz-form-control>
     </nz-form-item>
     <!--应用类别-->

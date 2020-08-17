@@ -92,10 +92,8 @@
   <form nz-form [formGroup]="addMenuForm">
     <nz-form-item>
       <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="menuName" nzRequired>名称</nz-form-label>
-      <nz-form-control [nzSm]="10" [nzXs]="24">
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
         <input nz-input id="menuName" formControlName="menuName" placeholder="菜单名称"/>
-        <nz-form-explain *ngIf="addMenuForm.get('menuName')?.dirty && addMenuForm.get('menuName')?.errors">请输入菜单名称!
-        </nz-form-explain>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
