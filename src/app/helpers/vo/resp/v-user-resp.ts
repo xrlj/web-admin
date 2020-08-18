@@ -34,7 +34,7 @@ export interface VUserResp {
   /**
    * 个人认证账号。
    */
-  accoutId: string;
+  accountId: string;
   /**
    * 真实姓名。
    */

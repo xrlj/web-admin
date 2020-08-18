@@ -1,4 +1,4 @@
-export enum EtpTypeEnum { // 企业类型
+export enum UserTypeEnum { // 企业类型
   ADMIN = 0, // 总后台
   FACTOR, // 保理商
   CORE , // 核心企业

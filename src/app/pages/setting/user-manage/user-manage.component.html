@@ -174,10 +174,8 @@
     <!--真实姓名-->
     <nz-form-item>
       <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="realName" nzRequired>真实姓名</nz-form-label>
-      <nz-form-control [nzSm]="10" [nzXs]="24">
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
         <input nz-input id="realName" formControlName="realName" placeholder="真实姓名"/>
-        <nz-form-explain *ngIf="addOrEditForm.get('realName')?.dirty && addOrEditForm.get('realName')?.errors">真实姓名不为空!
-        </nz-form-explain>
       </nz-form-control>
     </nz-form-item>
     <!--手机号码-->
@@ -185,13 +183,6 @@
       <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="mobile" nzRequired>手机号码</nz-form-label>
       <nz-form-control [nzSm]="10" [nzXs]="24">
         <input nz-input id="mobile" formControlName="mobile" maxlength="11" placeholder="11位手机号码"/>
-        <nz-form-explain *ngIf="addOrEditForm.get('mobile')?.dirty && addOrEditForm.get('mobile')?.errors">请输入正确手机号码!
-        </nz-form-explain>
-        <!--<ng-template #mobileErrorTpl let-control>
-          <ng-container *ngIf="control.hasError('maxLength')">
-            11位手机号码!
-          </ng-container>
-        </ng-template>-->
       </nz-form-control>
     </nz-form-item>
     <!--性别-->

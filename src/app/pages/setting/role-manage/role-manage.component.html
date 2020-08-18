@@ -87,18 +87,15 @@
   <form nz-form [formGroup]="addOrEditForm">
     <nz-form-item>
       <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="roleName" nzRequired>名称</nz-form-label>
-      <nz-form-control [nzSm]="10" [nzXs]="24">
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
         <input nz-input id="roleName" formControlName="roleName" placeholder="角色名称"/>
-        <nz-form-explain *ngIf="addOrEditForm.get('roleName')?.dirty && addOrEditForm.get('roleName')?.errors">角色名称不为空!
-        </nz-form-explain>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
       <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="roleDesc" nzRequired>备注</nz-form-label>
-      <nz-form-control [nzSm]="10" [nzXs]="24">
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
         <input nz-input id="roleDesc" formControlName="roleDesc"
                placeholder="备注"/>
-        <nz-form-explain *ngIf="addOrEditForm.get('roleDesc')?.dirty && addOrEditForm.get('roleDesc')?.errors">备注不能为空!</nz-form-explain>
       </nz-form-control>
     </nz-form-item>
   </form>

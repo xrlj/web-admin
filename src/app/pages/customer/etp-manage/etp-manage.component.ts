@@ -6,7 +6,7 @@ import {DefaultBusService} from '../../../helpers/event-bus/default-bus.service'
 import {VCustomerEtpResp} from '../../../helpers/vo/resp/v-customer-etp-resp';
 import {VCustomerEtpReq} from '../../../helpers/vo/req/v-customer-etp-req';
 import {EtpManageService} from './etp-manage.service';
-import {EtpTypeEnum} from '../../../helpers/enum/etp-type-enum';
+import {UserTypeEnum} from '../../../helpers/enum/user-type-enum';
 
 @Component({
   selector: 'app-etp-manage',
@@ -40,7 +40,7 @@ export class EtpManageComponent implements OnInit {
   isModalOkLoading = false;
   vCustomerEtpResp: VCustomerEtpResp; // 详情
 
-  enterpriseType: number; // 企业类型。
+  userType: number; // 企业类型。
 
   constructor(private fb: FormBuilder, private etpManageService: EtpManageService,
               public uiHelper: UIHelper, private utils: Utils,
@@ -67,7 +67,7 @@ export class EtpManageComponent implements OnInit {
     reset ? this.etpSearchVo.pageIndex = 1 : this.etpSearchVo.pageIndex = this.pageIndex;
     this.etpSearchVo.pageSize = this.pageSize;
     this.setEtpType();
-    this.etpSearchVo.enterpriseType = this.enterpriseType;
+    this.etpSearchVo.userType = this.userType;
     this.utils.print(this.etpSearchVo);
     this.loading = true;
     this.etpManageService.getAll(this.etpSearchVo)
@@ -130,19 +130,19 @@ export class EtpManageComponent implements OnInit {
   private setEtpType(): void {
     switch (this.tabIndex) {
       case 0: // 保理商
-        this.enterpriseType = EtpTypeEnum.FACTOR;
+        this.userType = UserTypeEnum.FACTOR;
         break;
       case 1: // 核心企业
-        this.enterpriseType = EtpTypeEnum.CORE;
+        this.userType = UserTypeEnum.CORE;
         break;
       case 2:
-        this.enterpriseType = EtpTypeEnum.MEMBER;
+        this.userType = UserTypeEnum.MEMBER;
         break;
       case 3:
-        this.enterpriseType = EtpTypeEnum.SUPPLIER;
+        this.userType = UserTypeEnum.SUPPLIER;
         break
       case 4:
-        this.enterpriseType = EtpTypeEnum.SPV;
+        this.userType = UserTypeEnum.SPV;
         break;
       default:
     }
@@ -169,7 +169,7 @@ export class EtpManageComponent implements OnInit {
   handleOk(modalType: number) {
     if (this.addOrEditForm.valid) { // 前端通过所有输入校验
       const value = this.addOrEditForm.value;
-      value.enterpriseType = this.enterpriseType;
+      value.userType = this.userType;
       this.utils.print(`请求参数：${value}`);
       this.isModalOkLoading = true;
       if (modalType === 1) { // 新增

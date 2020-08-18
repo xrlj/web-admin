@@ -15,6 +15,7 @@ import {VUserResp} from '../../../helpers/vo/resp/v-user-resp';
 import {UserSexEnum} from '../../../helpers/enum/user-sex-enum';
 import {VUserPwdReq} from '../../../helpers/vo/req/v-user-pwd-req';
 import {Observable, Observer} from 'rxjs';
+import {MyValidators} from '../../../helpers/MyValidators';
 
 @Component({
   selector: 'app-user-manage',
@@ -70,17 +71,18 @@ export class UserManageComponent implements OnInit {
               private uiHelper: UIHelper, private utils: Utils,
               private userManageService: UserManageService,
               private defaultBusService: DefaultBusService) {
+    const { required, maxLength, minLength, email, mobile } = MyValidators;
     // 新增编辑对话框
     this.addOrEditForm = this.fb.group({
       // username: [null, [Validators.required], [this.userNameAsyncValidator]],
-      username: [null, [Validators.required]],
+      username: [{value: '', disable: true}, [required, maxLength(10)]],
       deptId: [null, [Validators.required]],
       password: [null, [Validators.required]],
       confirm: [null, [this.confirmValidator]],
       realName: [null, [Validators.required]],
       sex: ['1', null], // 性别选择。1-男；2-女；0-保密
-      email: [null, [Validators.email]],
-      mobile: [null, [Validators.required]],
+      email: [null, [email]],
+      mobile: [null, [required, mobile]],
       status: ['1', null] // 用户状态。0=停用；1-正常
     });
 
@@ -199,6 +201,7 @@ export class UserManageComponent implements OnInit {
           this.isModalOkLoading = false;
         });
       } else { // 编辑
+        console.log(par);
         this.userManageService.updateSystemUser(par)
           .ok(data => {
             if (data) {
@@ -343,8 +346,8 @@ export class UserManageComponent implements OnInit {
           this.addOrEditForm.patchValue({
             username: this.userInfo.username,
             deptId: this.userInfo.deptName,
-            password: '123456',
-            confirm: '123456',
+            password: '111111',
+            confirm: '111111',
             realName: this.userInfo.realName,
             sex: String(this.userInfo.sexType),
             email: this.userInfo.email,
@@ -361,7 +364,6 @@ export class UserManageComponent implements OnInit {
    * 删除用户。
    */
   delUser(): void {
-    // console.log(this.mapOfCheckedId);
     const checkIds: string[] = []; // 待删除角色
     for (const key in this.mapOfCheckedId) {
       if (this.mapOfCheckedId[key]) {
@@ -475,7 +477,7 @@ export class UserManageComponent implements OnInit {
    * 设置用户角色。
    */
   showSetUserRole(): void {
-    const checkIds: string[] = []; // 待删除角色
+    const checkIds: string[] = []; // 选定用户
     for (const key in this.mapOfCheckedId) {
       if (this.mapOfCheckedId[key]) {
         checkIds.push(key);

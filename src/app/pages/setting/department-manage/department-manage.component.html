@@ -58,10 +58,8 @@
   <form nz-form [formGroup]="addOrEditForm">
     <nz-form-item>
       <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="name" nzRequired>名称</nz-form-label>
-      <nz-form-control [nzSm]="10" [nzXs]="24">
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
         <input nz-input id="name" formControlName="name" placeholder="部门名称"/>
-        <nz-form-explain *ngIf="addOrEditForm.get('name')?.dirty && addOrEditForm.get('name')?.errors">部门名称不为空!
-        </nz-form-explain>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>

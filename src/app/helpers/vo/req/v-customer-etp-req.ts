@@ -10,7 +10,7 @@ export interface VCustomerEtpReq extends VPageReq {
    */
   etpCode?: string;
   /**
-   * 企业类型。
+   * 邀请注册类型。
    */
-  enterpriseType?: number;
+  userType?: number;
 }

@@ -218,7 +218,7 @@ export class RoleManageComponent implements OnInit {
               this.uiHelper.msgTipError('删除失败');
             }
           }).fail(error => {
-            this.uiHelper.msgTipError('删除失败');
+            this.uiHelper.msgTipError(error.msg);
         }).final(() => {
           this.defaultBusService.showLoading(false);
         });
