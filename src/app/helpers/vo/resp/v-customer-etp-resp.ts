@@ -22,11 +22,11 @@ export interface VCustomerEtpResp {
   /**
    * 企业状态
    */
-  status: number;
+  etpStatus: number;
   /**
    * 企业状态名称
    */
-  statusName: string;
+  etpStatusName: string;
   /**
    * 创建时间。
    */

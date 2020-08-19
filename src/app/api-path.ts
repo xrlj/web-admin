@@ -22,8 +22,8 @@ export const ApiPath = {
       resetUserPassword: `/${usercentral}/user/resetUserPassword`
     },
     enterpriseApi: {
-      add: `/${usercentral}/enterprise/add`,
-      getAll: `/${usercentral}/enterprise/getAll`
+      addByAdminSystemInvitation: `/${usercentral}/enterprise/addByAdminSystemInvitation`,
+      getAllByAdmin: `/${usercentral}/enterprise/getAllByAdmin`
     },
     menuApi: {
       saveOrUpdate: `/${usercentral}/menu/saveOrUpdate`,

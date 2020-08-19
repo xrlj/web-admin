@@ -17,11 +17,11 @@
               <input type="text" nz-input [(ngModel)]="etpSearchVo.etpName" placeholder="企业名称"/>
             </nz-input-group>
             <button nz-button nzType="default" (click)="search(true)"><i nz-icon nzType="search"></i>查询</button>
-            <button nz-button nzType="primary" (click)="addModalShow(1)" *ngIf="tabIndex === 0 || tabIndex === 1"><i nz-icon nzType="plus"></i>新增</button>
-            <button nz-button nzType="primary" (click)="addModalShow(1)" *ngIf="tabIndex === 0 || tabIndex === 1"><i nz-icon nzType="edit"></i>编辑</button>
-            <button nz-button nzType="primary" nzDanger *ngIf="tabIndex === 0 || tabIndex === 1"><i nz-icon nzType="delete"></i>删除</button>
+            <button nz-button nzType="primary" (click)="addModalShow(1)" *ngIf="tabIndex === 0"><i nz-icon nzType="plus"></i>新增</button>
+            <button nz-button nzType="primary" (click)="addModalShow(2)" *ngIf="tabIndex === 0"><i nz-icon nzType="edit"></i>编辑</button>
+            <button nz-button nzType="primary" nzDanger *ngIf="tabIndex === 0"><i nz-icon nzType="delete"></i>删除</button>
             <button nz-button nzType="default"><i nz-icon nzType="export" nzTheme="outline"></i>导出</button>
-            <button nz-button nzType="dashed"><i nz-icon nzType="export" nzTheme="outline"></i>短信邀请注册</button>
+            <button nz-button nzType="dashed" *ngIf="tabIndex === 0"><i nz-icon nzType="export" nzTheme="outline"></i>短信邀请注册</button>
           </div>
           <!--列表-->
           <div class="tab-card-list-table">
@@ -74,7 +74,9 @@
                 <td nzAlign="center">{{ data.etpName }}</td>
                 <td nzAlign="center">{{ data.contactName }}</td>
                 <td nzAlign="center">{{ data.contactMobile }}</td>
-                <td nzAlign="center">{{ data.statusName}}</td>
+                <td nzAlign="center">
+                  <nz-tag [nzColor]="setEtpStatusColor(data.etpStatus)" [style.color]="setEtpStatusColor(data.etpStatus)">{{ data.etpStatusName}}</nz-tag>
+                </td>
                 <td nzAlign="center">{{ data.registerInvitationUrl}}</td>
                 <td nzAlign="center">{{ data.registerStatus}}</td>
                 <td nzAlign="center">{{ data.dateCreated }}</td>

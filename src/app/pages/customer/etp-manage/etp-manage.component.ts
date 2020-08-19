@@ -7,6 +7,8 @@ import {VCustomerEtpResp} from '../../../helpers/vo/resp/v-customer-etp-resp';
 import {VCustomerEtpReq} from '../../../helpers/vo/req/v-customer-etp-req';
 import {EtpManageService} from './etp-manage.service';
 import {UserTypeEnum} from '../../../helpers/enum/user-type-enum';
+import {ThemeEnum} from '../../../helpers/enum/theme-enum';
+import {EtpStatusEnum} from '../../../helpers/enum/etp-status-enum';
 
 @Component({
   selector: 'app-etp-manage',
@@ -70,7 +72,7 @@ export class EtpManageComponent implements OnInit {
     this.etpSearchVo.userType = this.userType;
     this.utils.print(this.etpSearchVo);
     this.loading = true;
-    this.etpManageService.getAll(this.etpSearchVo)
+    this.etpManageService.getAllByAdmin(this.etpSearchVo)
       .ok(data => {
         this.pageIndex = data.pageIndex;
         this.pageSize = data.pageSize;
@@ -120,7 +122,6 @@ export class EtpManageComponent implements OnInit {
   addModalShow(modalType: number) {
     this.modalType = modalType;
     this.isShowAddOrEditModal = true;
-
     this.setEtpType();
   }
 
@@ -140,7 +141,7 @@ export class EtpManageComponent implements OnInit {
         break;
       case 3:
         this.userType = UserTypeEnum.SUPPLIER;
-        break
+        break;
       case 4:
         this.userType = UserTypeEnum.SPV;
         break;
@@ -181,7 +182,7 @@ export class EtpManageComponent implements OnInit {
           }, 100);
           this.search(false);
         }).fail(error => {
-          this.uiHelper.modalError(error.msg);
+          this.uiHelper.msgTipError(error.msg);
         }).final(() => {
           this.isModalOkLoading = false;
         });
@@ -203,5 +204,92 @@ export class EtpManageComponent implements OnInit {
     this.isShowAddOrEditModal = false;
     this.isModalOkLoading = false;
     this.addOrEditForm.reset();
+  }
+
+  /**
+   * 设置企业状态标签再不同主题下，不同状态的颜色。
+   * @param etpStatus 企业状态。
+   */
+  setEtpStatusColor(etpStatus: number): string {
+    let color = '';
+    const theme = this.uiHelper.getCurrentTheme();
+    switch (theme) {
+      case ThemeEnum.Turquoise:
+        switch (etpStatus) {
+          case EtpStatusEnum.CHECK_WAIT:
+            color = '';
+            break;
+          case EtpStatusEnum.CHECK_PASS:
+            color = 'green'
+            break;
+          case EtpStatusEnum.CHECK_FAILURE:
+            color = 'red';
+            break;
+          case EtpStatusEnum.VERIFIED_WAITING:
+            color = '';
+            break;
+          case EtpStatusEnum.VERIFIED_PASS:
+            color = 'green';
+            break;
+          case EtpStatusEnum.DISABLE:
+            color = 'red';
+            break;
+          case EtpStatusEnum.BLACK:
+            color = 'red';
+            break;
+        }
+        break;
+      case ThemeEnum.Orange:
+        switch (etpStatus) {
+          case EtpStatusEnum.CHECK_WAIT:
+            color = '';
+            break;
+          case EtpStatusEnum.CHECK_PASS:
+            color = 'gold';
+            break;
+          case EtpStatusEnum.CHECK_FAILURE:
+            color = 'red';
+            break;
+          case EtpStatusEnum.VERIFIED_WAITING:
+            color = '';
+            break;
+          case EtpStatusEnum.VERIFIED_PASS:
+            color = 'gold';
+            break;
+          case EtpStatusEnum.DISABLE:
+            color = 'red';
+            break;
+          case EtpStatusEnum.BLACK:
+            color = 'red';
+            break;
+        }
+        break;
+      case ThemeEnum.Default:
+        switch (etpStatus) {
+          case EtpStatusEnum.CHECK_WAIT:
+            color = '';
+            break;
+          case EtpStatusEnum.CHECK_PASS:
+            color = 'blue';
+            break;
+          case EtpStatusEnum.CHECK_FAILURE:
+            color = 'red';
+            break;
+          case EtpStatusEnum.VERIFIED_WAITING:
+            color = '';
+            break;
+          case EtpStatusEnum.VERIFIED_PASS:
+            color = 'blue';
+            break;
+          case EtpStatusEnum.DISABLE:
+            color = 'red';
+            break;
+          case EtpStatusEnum.BLACK:
+            color = 'red';
+            break;
+        }
+        break;
+    }
+    return color;
   }
 }

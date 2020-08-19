@@ -17,14 +17,14 @@ export class EtpManageService {
    * @param body 请求json对象。
    */
   addEtp(body: any): any {
-    return this.api.post(ApiPath.usercentral.enterpriseApi.add, body);
+    return this.api.post(ApiPath.usercentral.enterpriseApi.addByAdminSystemInvitation, body);
   }
 
   /**
    * 分页查询列表。
    * @param vCustomerEtpReq 查询条件。
    */
-  getAll(vCustomerEtpReq: VCustomerEtpReq): any {
-    return this.api.post(ApiPath.usercentral.enterpriseApi.getAll, vCustomerEtpReq);
+  getAllByAdmin(vCustomerEtpReq: VCustomerEtpReq): any {
+    return this.api.post(ApiPath.usercentral.enterpriseApi.getAllByAdmin, vCustomerEtpReq);
   }
 }
