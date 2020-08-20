@@ -75,7 +75,7 @@
                 <td nzAlign="center">{{ data.contactName }}</td>
                 <td nzAlign="center">{{ data.contactMobile }}</td>
                 <td nzAlign="center">
-                  <nz-tag [nzColor]="setEtpStatusColor(data.etpStatus)" [style.color]="setEtpStatusColor(data.etpStatus)">{{ data.etpStatusName}}</nz-tag>
+                  <nz-tag [nzColor]="themeHelper.setEtpStatusColor(data.etpStatus).background" [style.color]="themeHelper.setEtpStatusColor(data.etpStatus).color">{{ data.etpStatusName}}</nz-tag>
                 </td>
                 <td nzAlign="center">{{ data.registerInvitationUrl}}</td>
                 <td nzAlign="center">{{ data.registerStatus}}</td>

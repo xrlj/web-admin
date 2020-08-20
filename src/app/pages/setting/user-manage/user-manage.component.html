@@ -65,7 +65,11 @@
         <td nzAlign="center">{{ data.email }}</td>
         <td nzAlign="center">{{ data.mobile }}</td>
         <td nzAlign="center">{{ data.sexTypeName }}</td>
-        <td nzAlign="center"><span [style.color]="setUserStatusNameColor(data.status)">{{ data.statusName}}</span></td>
+        <td nzAlign="center">
+          <nz-tag [nzColor]="themeHelper.setUserStatusNameColor(data.status).background" [style.color]="themeHelper.setUserStatusNameColor(data.status).color">
+            {{ data.statusName}}
+          </nz-tag>
+        </td>
         <td nzAlign="center">{{ data.dateCreated }}</td>
         <td nzAlign="center" [ngSwitch]="data?.status">
           <div *ngSwitchCase="userStatus.DISABLE">
@@ -118,7 +122,7 @@
           nzWidth="800"
           [nzMaskClosable]="false"
           [nzTitle]="modalType === 1 ? '新增' : '修改'"
-          (nzOnCancel)="handleCancel(modalType)"
+          (nzOnCancel)="handleCancel()"
           (nzOnOk)="handleOk()"
           [nzOkLoading]="isModalOkLoading">
 

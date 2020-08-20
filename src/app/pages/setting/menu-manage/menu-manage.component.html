@@ -47,11 +47,15 @@
               <nz-tag>菜单</nz-tag>
             </td>
             <td *ngIf="item.type === 2" nzAlign="center">
-              <nz-tag [nzColor]="'green'">按钮</nz-tag>
+              <nz-tag [nzColor]="'#F6F6F6'" style="color: #505654; border-width: 1px;border-color: rgba(128,128,128,0.5);">按钮</nz-tag>
             </td>
             <td nzAlign="center">{{ item.sort }}</td>
-            <td *ngIf="item.show" nzAlign="center"><nz-tag [nzColor]="">显示</nz-tag></td>
-            <td *ngIf="!item.show" nzAlign="center"><nz-tag [nzColor]="">不显示</nz-tag></td>
+            <td *ngIf="item.show" nzAlign="center">
+              <nz-tag [nzColor]="">显示</nz-tag>
+            </td>
+            <td *ngIf="!item.show" nzAlign="center">
+              <nz-tag [nzColor]="'#F6F6F6'" style="color: #505654; border-width: 1px;border-color: rgba(128,128,128,0.5);">不显示</nz-tag>
+            </td>
             <td nzAlign="center">{{ item.link }}</td>
             <td nzAlign="center">{{ item.perms }}</td>
             <td nzAlign="center">

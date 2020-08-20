@@ -16,6 +16,7 @@ import {UserSexEnum} from '../../../helpers/enum/user-sex-enum';
 import {VUserPwdReq} from '../../../helpers/vo/req/v-user-pwd-req';
 import {Observable, Observer} from 'rxjs';
 import {MyValidators} from '../../../helpers/MyValidators';
+import {ThemeHelper} from '../../../helpers/theme-helper';
 
 @Component({
   selector: 'app-user-manage',
@@ -69,7 +70,7 @@ export class UserManageComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private departmentService: DepartmentService,
               private uiHelper: UIHelper, private utils: Utils,
-              private userManageService: UserManageService,
+              private userManageService: UserManageService, public themeHelper: ThemeHelper,
               private defaultBusService: DefaultBusService) {
     const { required, maxLength, minLength, email, mobile } = MyValidators;
     // 新增编辑对话框
@@ -130,37 +131,12 @@ export class UserManageComponent implements OnInit {
     });
   }
 
-  setUserStatusNameColor(status: number): string {
-    let color = '';
-    switch (status) {
-      case UserStatusEnum.BLACK:
-        color = 'red';
-        break;
-      case UserStatusEnum.DISABLE:
-        color = 'red';
-        break;
-      case UserStatusEnum.CHECK_FAILURE:
-        color = 'red';
-        break;
-      case UserStatusEnum.CHECK_PASS:
-        color = 'green';
-        break;
-      case UserStatusEnum.VERIFIED_PASS:
-        color = 'green';
-        break;
-      default:
-        color = 'gray';
-        break;
-    }
-    return color;
-  }
-
   addModalShow(): void {
     this.modalType = 1;
     this.isShowAddOrEditModal = true;
   }
 
-  handleCancel(modalType: number): void {
+  handleCancel(): void {
     this.resetAddOrEditModal();
   }
 
