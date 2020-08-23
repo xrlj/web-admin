@@ -24,6 +24,8 @@ export class AppHeaderComponent implements OnInit {
               public uiHelper: UIHelper, private defaultBusService: DefaultBusService) {
   }
 
+  isFullScreen = false; // 是否全屏显示，true全屏，false退出全屏
+
   @Input() collapsed: boolean;
 
   @Output() currentTheme = new EventEmitter();  // 更改主题色调，弹射主题到父组件
@@ -43,6 +45,10 @@ export class AppHeaderComponent implements OnInit {
 
   ngOnInit() {
     this.themeRadioValue = this.uiHelper.getCurrentTheme();
+
+    window.addEventListener('resize', () => {
+      this.checkFull();
+    });
   }
 
   /**
@@ -125,5 +131,61 @@ export class AppHeaderComponent implements OnInit {
    */
   openUserCentre() {
     this.router.navigate(['/pages/user-centre']);
+  }
+
+  /**
+   * 设置全屏显示。
+   */
+  fullScreen() {
+    if (!this.isFullScreen) {
+      const docElmWithBrowsersFullScreenFunctions = document.documentElement as HTMLElement & {
+        mozRequestFullScreen(): Promise<void>;
+        webkitRequestFullscreen(): Promise<void>;
+        msRequestFullscreen(): Promise<void>;
+      };
+
+      if (docElmWithBrowsersFullScreenFunctions.requestFullscreen) {
+        docElmWithBrowsersFullScreenFunctions.requestFullscreen();
+      } else if (docElmWithBrowsersFullScreenFunctions.mozRequestFullScreen) { /* Firefox */
+        docElmWithBrowsersFullScreenFunctions.mozRequestFullScreen();
+      } else if (docElmWithBrowsersFullScreenFunctions.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+        docElmWithBrowsersFullScreenFunctions.webkitRequestFullscreen();
+      } else if (docElmWithBrowsersFullScreenFunctions.msRequestFullscreen) { /* IE/Edge */
+        docElmWithBrowsersFullScreenFunctions.msRequestFullscreen();
+      }
+      this.isFullScreen = true;
+    } else {
+      const docWithBrowsersExitFunctions = document as Document & {
+        mozCancelFullScreen(): Promise<void>;
+        webkitExitFullscreen(): Promise<void>;
+        msExitFullscreen(): Promise<void>;
+      };
+      if (docWithBrowsersExitFunctions.exitFullscreen) {
+        docWithBrowsersExitFunctions.exitFullscreen();
+      } else if (docWithBrowsersExitFunctions.mozCancelFullScreen) { /* Firefox */
+        docWithBrowsersExitFunctions.mozCancelFullScreen();
+      } else if (docWithBrowsersExitFunctions.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+        docWithBrowsersExitFunctions.webkitExitFullscreen();
+      } else if (docWithBrowsersExitFunctions.msExitFullscreen) { /* IE/Edge */
+        docWithBrowsersExitFunctions.msExitFullscreen();
+      }
+      this.isFullScreen = false;
+    }
+  }
+
+  /**
+   * 监听全屏显示。
+   */
+  checkFull() {
+    const fullStatus = document['fullscreen'] || document['webkitIsFullScreen'] || document['mozFullScreen'] || false;
+    if (!fullStatus) {
+      this.isFullScreen = false;
+    } else {
+      this.isFullScreen = true;
+    }
+  }
+
+  showMyNotify() {
+    this.router.navigate([AppPath['announcement-my']])
   }
 }

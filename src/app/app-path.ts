@@ -1,5 +1,6 @@
 export const AppPath = {
   login: '/login',
   init: '/init',
-  pages: '/pages'
+  pages: '/pages',
+  'announcement-my': '/pages/announcement/my'
 };

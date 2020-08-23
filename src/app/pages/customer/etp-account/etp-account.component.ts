@@ -1,10 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import {VCustomerEtpResp} from '../../../helpers/vo/resp/v-customer-etp-resp';
-import {VCustomerEtpReq} from '../../../helpers/vo/req/v-customer-etp-req';
+import {Component, OnInit} from '@angular/core';
 import {VCustomerAccountResp} from '../../../helpers/vo/resp/v-customer-account-resp';
 import {VCustomerAccountReq} from '../../../helpers/vo/req/v-customer-account-req';
 import {UIHelper} from '../../../helpers/ui-helper';
-import { FormBuilder } from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 
 @Component({
   selector: 'app-etp-account',
@@ -36,6 +34,7 @@ export class EtpAccountComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.search();
   }
 
   search(reset: boolean = false): void {
