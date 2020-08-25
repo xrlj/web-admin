@@ -9,4 +9,8 @@ export interface VCustomerAccountReq extends VPageReq {
    * 真实姓名
    */
   realName?: string;
+  /**
+   * 邀请注册类型。
+   */
+  userType?: number;
 }

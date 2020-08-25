@@ -27,8 +27,9 @@ export class HttpUtils {
     } else if (errorCode === 410 || errorCode === 411 || errorCode === 412) { // 无效token或者已退出登录
       isUnifiedError = true;
       this.uiHelper.msgTipWarning(msg);
-      this.router.navigateByUrl(AppPath.login);
       this.uiHelper.logoutLocalStorageClean();
+      this.router.navigate([AppPath.login]);
+      window.location.reload();
     } else if (errorCode === 405) { // 对接口无访问权限
       isUnifiedError = true;
       this.uiHelper.msgTipWarning(msg);

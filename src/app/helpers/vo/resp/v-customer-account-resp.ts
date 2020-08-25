@@ -1,8 +1,12 @@
 export interface VCustomerAccountResp {
   /**
+   * 用户id。
+   */
+  userId: string;
+  /**
    * 企业id。
    */
-  id: string;
+  etpId: string;
   /**
    * 账号名称。
    */
@@ -14,7 +18,7 @@ export interface VCustomerAccountResp {
   /**
    * 企业全称。
    */
-  etpFullName: string;
+  etpName: string;
   /**
    * 账户手机号码。
    */
@@ -22,11 +26,11 @@ export interface VCustomerAccountResp {
   /**
    * 账号状态。
    */
-  userStatus: number;
+  status: number;
   /**
    * 账号状态名称。
    */
-  userStatusName: string;
+  statusName: string;
   /**
    * 创建时间。
    */

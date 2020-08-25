@@ -76,7 +76,7 @@ export class UserManageComponent implements OnInit {
     // 新增编辑对话框
     this.addOrEditForm = this.fb.group({
       // username: [null, [Validators.required], [this.userNameAsyncValidator]],
-      username: [{value: '', disable: true}, [required, maxLength(10)]],
+      username: [null, [required, maxLength(10)]],
       deptId: [null, [Validators.required]],
       password: [null, [Validators.required]],
       confirm: [null, [this.confirmValidator]],
