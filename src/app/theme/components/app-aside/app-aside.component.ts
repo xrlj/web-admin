@@ -33,8 +33,10 @@ export class AppAsideComponent implements OnInit {
    * 用key-value对象，记录每个菜单展开状态，收缩是false（默认），展开是true。
    */
   initOpenMap() {
-    for (const i of this.menus) {
-      this.openMap[i.title] = false;
+    if (this.menus && this.menus.length > 0) {
+      for (const i of this.menus) {
+        this.openMap[i.title] = false;
+      }
     }
   }
 

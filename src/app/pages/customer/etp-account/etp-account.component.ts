@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {VCustomerAccountResp} from '../../../helpers/vo/resp/v-customer-account-resp';
 import {VCustomerAccountReq} from '../../../helpers/vo/req/v-customer-account-req';
 import {UIHelper} from '../../../helpers/ui-helper';
@@ -6,6 +6,8 @@ import {FormBuilder} from '@angular/forms';
 import {EtpAccountService} from './etp-account.service';
 import {UserTypeEnum} from '../../../helpers/enum/user-type-enum';
 import {ThemeHelper} from '../../../helpers/theme-helper';
+import {DefaultBusService} from '../../../helpers/event-bus/default-bus.service';
+import {EtpAccountMenuComponent} from './etp-account-menu/etp-account-menu.component';
 
 @Component({
   selector: 'app-etp-account',
@@ -35,8 +37,13 @@ export class EtpAccountComponent implements OnInit {
 
   userType: number;
 
+  // 子组件
+  @ViewChild(EtpAccountMenuComponent)
+  etpAccountMenuComponent: EtpAccountMenuComponent;
+
   constructor(private fb: FormBuilder, public uiHelper: UIHelper,
-              private etpAccountService: EtpAccountService, public themeHelper: ThemeHelper) {
+              private etpAccountService: EtpAccountService, public themeHelper: ThemeHelper,
+              private defaultBusService: DefaultBusService) {
   }
 
   ngOnInit() {
@@ -118,12 +125,6 @@ export class EtpAccountComponent implements OnInit {
   }
 
   /**
-   * 新增保理商
-   */
-  addModalShow() {
-  }
-
-  /**
    * 查看详情。
    * @param id 账号id
    */
@@ -134,6 +135,7 @@ export class EtpAccountComponent implements OnInit {
    * 设置企业管理员菜单权限
    * @param userId 用户id
    */
-  setEtpMenus(userId: any) {
+  setEtpMenus(userId: string, clientId: string) {
+    this.etpAccountMenuComponent.editRole(userId, clientId);
   }
 }

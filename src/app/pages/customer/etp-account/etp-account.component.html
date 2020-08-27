@@ -74,7 +74,7 @@
                   <div>
                     <a (click)="details(data.userId)">查看</a>
                     <nz-divider nzType="vertical"></nz-divider>
-                    <a (click)="setEtpMenus(data.userId)">设置菜单权限</a>
+                    <a (click)="setEtpMenus(data.userId, data.clientId)">设置菜单权限</a>
                   </div>
                 </td>
               </tr>
@@ -108,3 +108,5 @@
     </nz-tabset>
   </div>
 </nz-card>
+
+<app-etp-account-menu></app-etp-account-menu>

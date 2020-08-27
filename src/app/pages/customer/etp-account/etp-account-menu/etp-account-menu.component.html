@@ -1,0 +1,40 @@
+<nz-modal [(nzVisible)]="isShowDialog"
+          nzWidth="800"
+          [nzTitle]="'编辑菜单'"
+          (nzOnCancel)="handleCancelDialog()"
+          (nzOnOk)="handleOkDialog()"
+          [nzOkLoading]="isAddOkLoading">
+
+  <form nz-form [formGroup]="addOrEditForm">
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="roleName" nzRequired>名称</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
+        <input nz-input id="roleName" formControlName="roleName" placeholder="角色名称"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="roleDesc" nzRequired>备注</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
+        <input nz-input id="roleDesc" formControlName="roleDesc"
+               placeholder="备注"/>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+  <div class="per">
+    <div class="per-menu">
+      <label><span>菜单授权:</span></label>
+      <nz-tree  #nzTreeComponent class="per-menu-tree"
+                [nzData]="nzTreeMenusData"
+                nzCheckable
+                [nzCheckedKeys]="checkedKeys"
+                [nzExpandedKeys]="expandedKeys"
+                [nzSelectedKeys]="checkedKeys"
+                (nzClick)="nzTreeMenusClick($event)"
+                (nzCheckBoxChange)="nzTreeMenusCheck($event)"
+                (nzExpandChange)="nzTreeMenusCheck($event)"
+      >
+      </nz-tree>
+    </div>
+  </div>
+
+</nz-modal>

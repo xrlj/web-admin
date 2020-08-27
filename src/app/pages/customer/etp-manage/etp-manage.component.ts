@@ -174,7 +174,6 @@ export class EtpManageComponent implements OnInit {
       this.isModalOkLoading = true;
       if (modalType === 1) { // 新增
         this.etpManageService.addEtp(value).ok(data => {
-          this.uiHelper.msgTipSuccess('新增成功');
           this.handleCancel();
           setTimeout(() => {
             this.search();

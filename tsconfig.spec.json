@@ -9,7 +9,8 @@
   },
   "files": [
     "src/test.ts",
-    "src/polyfills.ts"
+    "src/polyfills.ts",
+    "src/app/helpers/vo/resp/v-base-resp.ts"
   ],
   "include": [
     "src/**/*.spec.ts",
