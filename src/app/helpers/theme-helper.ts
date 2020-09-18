@@ -15,6 +15,30 @@ export class ThemeHelper {
   constructor(private uiHelper: UIHelper) { }
 
   /**
+   * 获取系统当前主题主色调值。
+   */
+  getCurrentThemePrimaryColor(): string {
+    let primaryColor;
+    const theme = this.uiHelper.getCurrentTheme();
+    switch (theme) {
+      case ThemeEnum.Turquoise:
+        primaryColor = '#17B3A3';
+        break;
+      case ThemeEnum.Orange:
+        primaryColor = '#EB6709';
+        break;
+      case ThemeEnum.Default:
+        primaryColor = '#409EFF';
+        break;
+      default:
+        primaryColor = '#409EFF';
+        break;
+    }
+
+    return primaryColor;
+  }
+
+  /**
    * 用户管理列表。用户状态字段样式
    * @param status 用户状态
    */

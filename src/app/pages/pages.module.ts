@@ -10,17 +10,19 @@ import {DashboardComponent} from './dashboard/dashboard.component';
 import {LoginComponent} from './login/login.component';
 import { InitComponent } from './init/init.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import {DirectivesModule} from '../directives/directives.module';
 
 @NgModule({
   declarations: [DashboardComponent, LoginComponent, InitComponent, NotFoundComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    NgZorroAntdModule,
-    ReactiveFormsModule,
-    PagesRoutingModule,
-    ThemeModule,
-    NgxEchartsModule
-  ]
+    imports: [
+        CommonModule,
+        FormsModule,
+        NgZorroAntdModule,
+        ReactiveFormsModule,
+        PagesRoutingModule,
+        ThemeModule,
+        NgxEchartsModule,
+        DirectivesModule
+    ]
 })
 export class PagesModule {}

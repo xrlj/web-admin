@@ -1,14 +1,12 @@
-import {Component, OnInit, EventEmitter, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MenuManageService} from './menu-manage.service';
 import {Utils} from '../../../helpers/utils';
-import {JwtKvEnum} from '../../../helpers/enum/jwt-kv-enum';
 import {UIHelper} from '../../../helpers/ui-helper';
 import {VMenuResp} from '../../../helpers/vo/resp/v-menu-resp';
 import {NzModalService} from 'ng-zorro-antd/modal';
 import {CommonService} from '../../../helpers/common.service';
 import {VAppInfoResp} from '../../../helpers/vo/resp/v-app-info-resp';
-import {EventBusService} from '../../../helpers/event-bus/event-bus.service';
 import {VMenuReq} from '../../../helpers/vo/req/v-menu-req';
 
 @Component({
