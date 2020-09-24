@@ -162,7 +162,6 @@ export class FileManageComponent implements OnInit {
   }
 
   uploadFileHandleChange({ file, fileList }: UploadChangeParam): void {
-    // debugger;
     const status = file.status;
     if (status !== 'uploading') {
       console.log(file, fileList);
