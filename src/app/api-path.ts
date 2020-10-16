@@ -1,6 +1,7 @@
 const serviceauth = 'serviceauth'; // 服务名称
 const usercentral = 'usercentral';
 const sysfilesystem = 'sysfilesystem'; // 文件系统服务
+const syscommon = 'syscommon';
 
 export const ApiPath = {
   login: `/${serviceauth}/auth/sysLogin`,
@@ -66,5 +67,12 @@ export const ApiPath = {
     sysFiles: {
       uploadFile: `/${sysfilesystem}/sysFiles/uploadFile`
     }
-  }
+  },
+  syscommon: {
+    areaDic: {
+      getProvinceList: `/${syscommon}/areaDic/getProvinceList`,
+      getChildrenList: `/${syscommon}/areaDic/getChildrenList`,
+    }
+  },
+
 };

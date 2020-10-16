@@ -1,0 +1,93 @@
+<div class="etp-info">
+  <div class="info-line-title">
+    <nz-divider nzType="vertical"></nz-divider>
+    <span>企业信息</span>
+  </div>
+  <div class="etp-info-details">
+    <ul>
+      <li><p><label class="label-name">统一社会信用代码：</label><span class="val"> 91310000MA1H34UW4P</span></p></li>
+      <li><p><label class="label-name">企业法人：</label><span class="val">刘同美</span></p></li>
+      <li><p><label class="label-name">企业法人身份证号码：</label><span class="val"> 310109198204172426</span></p>
+      </li>
+      <li><p><label class="label-name">联系人手机号码：</label><span class="val"> 13918900117</span></p>
+      </li>
+      <li>
+        <div style="clear: both;"></div>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="etp-pic">
+  <div class="info-line-title">
+    <nz-divider nzType="vertical"></nz-divider>
+    <span>证件照片</span>
+  </div>
+
+  <div class="etp-pic-pic">
+    <div class="license">
+      <p><label>营业执照</label></p>
+      <a
+        href="http://192.168.0.3:9020/xrlj-20200620/2020-10-12/882b1ad1-418e-4ac8-8179-a0004cfe1198.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIOSFODNN7EXAMPLE%2F20201012%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201012T051055Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=828d6cfbf6aa9defd16e8473798c851f26ada6820003963f1fc1e2e9e295c471"
+        target=_blank>
+        <img
+          src="http://192.168.0.3:9020/xrlj-20200620/2020-10-12/882b1ad1-418e-4ac8-8179-a0004cfe1198.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIOSFODNN7EXAMPLE%2F20201012%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201012T051055Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=828d6cfbf6aa9defd16e8473798c851f26ada6820003963f1fc1e2e9e295c471"/>
+      </a>
+    </div>
+    <div class="idno-card">
+      <p><label>法人身份证正反面</label></p>
+      <a
+        href="http://192.168.0.3:9020/xrlj-20200620/2020-10-12/882b1ad1-418e-4ac8-8179-a0004cfe1198.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIOSFODNN7EXAMPLE%2F20201012%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201012T051055Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=828d6cfbf6aa9defd16e8473798c851f26ada6820003963f1fc1e2e9e295c471"
+        target=_blank>
+        <img
+          src="http://192.168.0.3:9020/xrlj-20200620/2020-10-12/882b1ad1-418e-4ac8-8179-a0004cfe1198.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIOSFODNN7EXAMPLE%2F20201012%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201012T051055Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=828d6cfbf6aa9defd16e8473798c851f26ada6820003963f1fc1e2e9e295c471"/>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="etp-bank">
+  <div class="info-line-title">
+    <nz-divider nzType="vertical"></nz-divider>
+    <span>企业对公银行开户信息</span>
+  </div>
+
+  <div class="etp-bank-details">
+    <ul>
+      <li><p><label class="label-name">开户银行名称：</label><span class="val">刘同美</span></p></li>
+      <li><p><label class="label-name">开户名：</label><span class="val"> 91310000MA1H34UW4P</span></p></li>
+      <li><p><label class="label-name">开户账号：</label><span class="val"> 310109198204172426</span></p></li>
+      <li>
+        <div style="position:relative;">
+          <label class="label-name" style="float: left;">开户许可证：</label>
+          <div style="float: left;width: 150px;height: 120px;">
+            <a href="http://47.94.81.13/data/hlt/2020-08-25/1c505478319c42bcb700ed5efabf2e1d.png" target="_blank">
+              <img class="up-img" src="http://47.94.81.13/data/hlt/2020-08-25/1c505478319c42bcb700ed5efabf2e1d.png" alt=""
+                   width="100%" height="100%">
+            </a>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div style="clear: both;"></div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="check-action">
+  <div class="info-line-title"></div>
+
+  <div class="check-action-select">
+    <nz-radio-group [(ngModel)]="radioValue">
+      <label nz-radio nzValue="A">提交到E签宝认证</label>
+      <label style="margin-left: 40px;" nz-radio nzValue="B">认证不通过</label>
+    </nz-radio-group>
+
+    <nz-input-group *ngIf="radioValue === 'B'" style="width: 240px;" [nzSize]="'small'" [nzSuffix]="inputClearTpl">
+      <input type="text" nz-input [(ngModel)]="inputValue" placeholder="不通过原因" />
+    </nz-input-group>
+    <ng-template #inputClearTpl
+    ><i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="inputValue" (click)="inputValue = null"></i
+    ></ng-template>
+  </div>
+</div>

@@ -95,6 +95,7 @@ export class MenuManageComponent implements OnInit {
       })
       .final(() => {
         this.isRefreshMenuList = false;
+        console.log(JSON.stringify(this.menuListOfExpandedData));
       });
   }
 
@@ -365,9 +366,9 @@ export class MenuManageComponent implements OnInit {
    * @param $event 事件。
    */
   onChange($event: string): void {
-    console.log($event);
-    console.log(this.selectMenuKey);
-    console.log(this.addMenuForm.value.parentMenu);
+    // console.log($event);
+    // console.log(this.selectMenuKey);
+    // console.log(this.addMenuForm.value.parentMenu);
   }
 
   collapse(array: VMenuResp[], data: VMenuResp, $event: boolean): void {

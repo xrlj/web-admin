@@ -1,0 +1,96 @@
+@label-name-color: #262626;
+@img-size: 120px;
+
+.etp-info {
+  &-details {
+    margin-top: 20px;
+
+    &>ul {
+      &>li {
+        list-style: none; // 去掉前面点
+
+        &>p>label {
+          color: @label-name-color;
+        }
+      }
+    }
+  }
+}
+
+.label-name {
+  min-width: 150px;
+  text-align: right;
+  display: inline-block;
+  color: @label-name-color;
+}
+
+.etp-pic {
+  margin-top: 20px;
+
+  &-pic {
+    margin-top: 20px;
+    height: 200px;
+
+    >.license {
+      position: relative;
+      top: 0px;
+      left: 40px;
+
+      &>p {
+        width: @img-size;
+        text-align: center;
+        color: @label-name-color;
+      }
+
+      &>a>img {
+        width: @img-size;
+        height: @img-size;
+      }
+    }
+
+    >.idno-card {
+      position: relative;
+      top: -155px;
+      left: @img-size + 100px;
+
+      &>p {
+        width: @img-size;
+        text-align: center;
+        color: @label-name-color;
+      }
+
+      &>a>img {
+        width: @img-size;
+        height: @img-size;
+      }
+    }
+  }
+}
+
+.etp-bank {
+
+  &-details {
+    margin-top: 20px;
+
+    &>ul>li {
+      list-style: none;
+
+      &>p>label {
+        color: @label-name-color;
+      }
+
+      &>p>a>img {
+        width: @img-size;
+        height: @img-size;
+      }
+    }
+  }
+}
+
+.check-action {
+  &-select {
+    margin-top: 30px;
+    margin-left: 40px;
+    margin-bottom: 5px;
+  }
+}

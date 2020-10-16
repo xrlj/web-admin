@@ -4,20 +4,27 @@ import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/c
 import {Observable, throwError} from 'rxjs';
 import {catchError, retry} from 'rxjs/operators';
 import {Constants} from '../constants';
-import {HandleError, HttpErrorHandler} from './http-error-handler';
+import {HttpErrorHandler} from './http-error-handler';
 import {environment} from '../../../environments/environment';
 import {UIHelper} from '../ui-helper';
-import { Router } from '@angular/router';
-import {AppPath} from '../../app-path';
+import {Router} from '@angular/router';
 import {HttpUtils} from './HttpUtils';
 
-const httpOptionsCommon = {
+/*const httpOptionsCommon = {
   headers: new HttpHeaders({
     'Content-Version': '0'
   }),
   params: new HttpParams(),
   withCredentials: true // 跨域设置
-};
+};*/
+
+function createHttpOptions(refresh = false) {
+  const params = new HttpParams();
+  const headerMap = refresh ? {'x-refresh': 'true'} : {};
+  let headers = new HttpHeaders(headerMap) ;
+  headers = headers.set('Content-Version', '0')
+  return { headers, params, withCredentials: true };
+}
 
 @Injectable({
   providedIn: 'root'
@@ -45,11 +52,11 @@ export class Api {
    * @param params 请求参数。
    * @param contentType 请求内容类型，和params同时存在。参考枚举类:ContentTypeEnum
    */
-  post(path: string, body?: any, version?: number, params?: HttpParams | {}, contentType?: string, headers?: HttpHeaders): any {
+  post(path: string, body?: any, version?: number, params?: HttpParams | {}, contentType?: string, headers?: HttpHeaders,  refresh = false): any {
     if (path === null || path === undefined) {
       throw new Error('url缺少path');
     }
-    const httpOptions = httpOptionsCommon;
+    const httpOptions = createHttpOptions(refresh);
     if (headers) {
       httpOptions.headers = headers;
     }
@@ -134,12 +141,12 @@ export class Api {
     return result;
   }
 
-  get(path: string, params?: HttpParams | {}, version?: number): any {
+  get(path: string, params?: HttpParams | {}, version?: number,  refresh = false): any {
     if (!path) {
       throw new Error('url缺少path');
     }
     const url = environment.apiUrl.concat(path);
-    const httpOptions = httpOptionsCommon;
+    const httpOptions = createHttpOptions(refresh);
     if (version) {
       httpOptions.headers = httpOptions.headers.set('Content-Version', version.toString());
     }
@@ -218,7 +225,7 @@ export class Api {
     if (!path) {
       throw new Error('url缺少path');
     }
-    const httpOptions = httpOptionsCommon;
+    const httpOptions = createHttpOptions();
     if (version) {
       httpOptions.headers = httpOptions.headers.set('Content-Version', version.toString());
     }

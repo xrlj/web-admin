@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UIHelper} from '../../../helpers/ui-helper';
 import {Utils} from '../../../helpers/utils';
@@ -42,6 +42,9 @@ export class EtpManageComponent implements OnInit {
   vCustomerEtpResp: VCustomerEtpResp; // 详情
 
   userType: number; // 企业类型。
+
+  @Output()
+  showVerifyCheckModal = false;
 
   constructor(private fb: FormBuilder, private etpManageService: EtpManageService,
               public uiHelper: UIHelper, private utils: Utils,
@@ -202,5 +205,19 @@ export class EtpManageComponent implements OnInit {
     this.isShowAddOrEditModal = false;
     this.isModalOkLoading = false;
     this.addOrEditForm.reset();
+  }
+
+  /**
+   * 企业实名认证审核。
+   */
+  verifyCheck() {
+    this.showVerifyCheckModal = true;
+  }
+
+  verifyCheckHandleCancel() {
+    this.showVerifyCheckModal = false;
+  }
+
+  verifyCheckHandleOk() {
   }
 }

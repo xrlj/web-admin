@@ -1,1 +1,53 @@
-<p>zh-area-manage works!</p>
+<!--菜单列表-->
+<nz-card class="card-list" nzTitle="行政区域管理" [nzExtra]="extraTemplate">
+  <div class="card-list-action">
+    <button nz-button nzType="primary" (click)="add()"><i nz-icon nzType="plus"></i>新增</button>
+  </div>
+  <!--列表-->
+  <nz-table class="card-list-table" #expandTable [nzData]="listOfMapData" [nzShowPagination]="false" nzPageSize="1000" nzTableLayout="fixed"
+            [nzLoading]="isRefreshList" nzBordered>
+    <thead>
+    <tr>
+      <th nzWidth="20%" nzAlign="center">区域名称</th>
+      <th nzWidth="15%" nzAlign="center">区域标识</th>
+      <th nzWidth="20%" nzAlign="center">区域类型</th>
+      <th nzWidth="15%" nzAlign="center">排序</th>
+      <th nzWidth="20%" nzAlign="center">更新时间</th>
+      <th nzAlign="center">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <ng-container *ngFor="let data of expandTable['data']">
+      <ng-container *ngFor="let item of mapOfExpandedData[data.id]">
+        <tr *ngIf="(item.parent && item.parent.expand) || !item.parent">
+          <td
+            [nzIndentSize]="item.level * 20"
+            [nzShowExpand]="!!item.children"
+            [(nzExpand)]="item.expand"
+            (nzExpandChange)="collapse(mapOfExpandedData[data.id], item, $event)"
+          >
+            {{ item.name }}
+          </td>
+          <td nzAlign="center">{{item.code}}</td>
+          <td nzAlign="center">{{item.areaType}}</td>
+          <td nzAlign="center">{{ item.code }}</td>
+          <td nzAlign="center">{{item.lastUpdated}}</td>
+          <td nzAlign="center">
+            <a (click)="update(item.id)">修改</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="del(item.id, item.name)">删除</a>
+          </td>
+        </tr>
+      </ng-container>
+    </ng-container>
+    </tbody>
+  </nz-table>
+</nz-card>
+<ng-template #extraTemplate>
+  <span style="cursor: pointer;" (click)="refresh()">
+    <i nz-icon [nzType]="'sync'" [nzSpin]="isRefreshList"></i><!--动态加载的，点击刷新的时候把false改成true-->
+    <span style="margin-left: 5px;">刷新数据</span>
+  </span>
+</ng-template>
+
+<!--新增菜单对话框-->

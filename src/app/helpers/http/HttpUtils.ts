@@ -26,7 +26,7 @@ export class HttpUtils {
       this.uiHelper.msgTipError('请求不存在');
     } else if (errorCode === 410 || errorCode === 411 || errorCode === 412) { // 无效token或者已退出登录
       isUnifiedError = true;
-      this.uiHelper.msgTipWarning(msg);
+      // this.uiHelper.msgTipWarning(msg);
       this.uiHelper.logoutLocalStorageClean();
       this.router.navigate([AppPath.login]);
       window.location.reload();
