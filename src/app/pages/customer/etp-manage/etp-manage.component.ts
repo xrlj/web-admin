@@ -1,4 +1,4 @@
-import {Component, OnInit, Output} from '@angular/core';
+import {Component, OnInit, Output, ViewContainerRef} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UIHelper} from '../../../helpers/ui-helper';
 import {Utils} from '../../../helpers/utils';
@@ -8,6 +8,8 @@ import {VCustomerEtpReq} from '../../../helpers/vo/req/v-customer-etp-req';
 import {EtpManageService} from './etp-manage.service';
 import {UserTypeEnum} from '../../../helpers/enum/user-type-enum';
 import {ThemeHelper} from '../../../helpers/theme-helper';
+import {EtpDetailsComponent} from './etp-details/etp-details.component';
+import {NzModalService} from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-etp-manage',
@@ -27,7 +29,7 @@ export class EtpManageComponent implements OnInit {
   listOfAllData: VCustomerEtpResp[] = []; // 列表数据
   mapOfCheckedId: { [key: string]: boolean } = {}; // 记录选择角色
   numberOfChecked = 0;
-  loading = false; // 列表加载等待指示器状态
+  listLoading = false; // 列表加载等待指示器状态
   pageIndex = 1; // 页码
   pageSize = 10; // 每页条数
   total = 0; // 总条数
@@ -43,11 +45,9 @@ export class EtpManageComponent implements OnInit {
 
   userType: number; // 企业类型。
 
-  @Output()
-  showVerifyCheckModal = false;
-
   constructor(private fb: FormBuilder, private etpManageService: EtpManageService,
               public uiHelper: UIHelper, private utils: Utils,
+              private modal: NzModalService,  private viewContainerRef: ViewContainerRef,
               private defaultBusService: DefaultBusService, public themeHelper: ThemeHelper) {
     // 新增编辑对话框
     this.addOrEditForm = this.fb.group({
@@ -73,7 +73,7 @@ export class EtpManageComponent implements OnInit {
     this.setEtpType();
     this.etpSearchVo.userType = this.userType;
     this.utils.print(this.etpSearchVo);
-    this.loading = true;
+    this.listLoading = true;
     this.etpManageService.getAllByAdmin(this.etpSearchVo)
       .ok(data => {
         this.pageIndex = data.pageIndex;
@@ -83,7 +83,7 @@ export class EtpManageComponent implements OnInit {
       }).fail(error => {
       this.uiHelper.msgTipError(error.msg);
     }).final(() => {
-      this.loading = false;
+      this.listLoading = false;
     });
   }
 
@@ -210,14 +210,36 @@ export class EtpManageComponent implements OnInit {
   /**
    * 企业实名认证审核。
    */
-  verifyCheck() {
-    this.showVerifyCheckModal = true;
-  }
-
-  verifyCheckHandleCancel() {
-    this.showVerifyCheckModal = false;
-  }
-
-  verifyCheckHandleOk() {
+  verifyCheck(id: string): void {
+    const modal = this.modal.create({
+      nzTitle: '企业认证审核',
+      nzWidth: '800px',
+      nzMask: true,
+      nzMaskClosable: false,
+      nzContent: EtpDetailsComponent,
+      nzViewContainerRef: this.viewContainerRef,
+      nzComponentParams: {
+        etpId: id
+      },
+      nzFooter: [
+        {
+          label: '取消',
+          onClick(): void {
+            modal.destroy();
+          }
+        },
+        {
+          label: '确定',
+          type: 'primary',
+          loading: false,
+          onClick(instance): void {
+            this.loading = true;
+          }
+        }
+      ]
+    });
+    modal.afterOpen.subscribe(() => console.log('[afterOpen] emitted!'));
+    // Return a result when closed
+    modal.afterClose.subscribe(result => console.log('[afterClose] The result is:', result));
   }
 }

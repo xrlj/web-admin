@@ -31,7 +31,7 @@
               nzBordered
               [nzFrontPagination]="false"
               [nzData]="listOfAllData"
-              [nzLoading]="loading"
+              [nzLoading]="listLoading"
               [nzTotal]="total"
               [(nzPageIndex)]="pageIndex"
               [(nzPageSize)]="pageSize"
@@ -82,7 +82,7 @@
                 <td nzAlign="center">{{ data.dateCreated }}</td>
                 <td nzAlign="center" [ngSwitch]="data?.etpStatus">
                   <div *ngSwitchCase="1">
-                    <a (click)="verifyCheck()">审核</a>
+                    <a (click)="verifyCheck(data.id)">审核</a>
                   </div>
                   <div *ngSwitchDefault>
                     <a>查看</a>
@@ -199,7 +199,7 @@
   </form>
 </nz-modal>
 
-<nz-modal *ngIf="showVerifyCheckModal"
+<!--<nz-modal *ngIf="showVerifyCheckModal"
           [(nzVisible)]="showVerifyCheckModal"
           nzWidth="800"
           [nzMaskClosable]="false"
@@ -209,4 +209,4 @@
           [nzOkLoading]="isModalOkLoading">
 
   <app-etp-details></app-etp-details>
-</nz-modal>
+</nz-modal>-->

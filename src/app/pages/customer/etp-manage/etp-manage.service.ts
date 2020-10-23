@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Api} from '../../../helpers/http/api';
 import {Utils} from '../../../helpers/utils';
 import {ApiPath} from '../../../api-path';
-import {VUserSearchReq} from '../../../helpers/vo/req/v-user-search-req';
 import {VCustomerEtpReq} from '../../../helpers/vo/req/v-customer-etp-req';
 
 @Injectable({
@@ -26,5 +25,12 @@ export class EtpManageService {
    */
   getAllByAdmin(vCustomerEtpReq: VCustomerEtpReq): any {
     return this.api.post(ApiPath.usercentral.enterpriseApi.getAllByAdmin, vCustomerEtpReq);
+  }
+
+  /**
+   * 获取企业详情。
+   */
+  getEtpInfo(id: string): any {
+    return this.api.get(`${ApiPath.usercentral.enterpriseApi.getEtpInfo}/${id}`)
   }
 }
