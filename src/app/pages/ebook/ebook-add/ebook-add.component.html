@@ -1,7 +1,7 @@
 <nz-card class="ebook-add-card">
   <form nz-form [formGroup]="addOrEditForm">
     <nz-form-item>
-      <nz-form-label [nzSpan]="2" nzFor="parentCategory" nzRequired>上级分类</nz-form-label>
+      <nz-form-label [nzSpan]="2" nzFor="parentCategory" nzRequired>分类</nz-form-label>
       <nz-form-control [nzSpan]="8">
         <nz-tree-select id="parentCategory" formControlName="parentCategory"
                         [nzNodes]="selectCategoryList"
