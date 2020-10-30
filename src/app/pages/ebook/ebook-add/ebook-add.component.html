@@ -1,0 +1,22 @@
+<nz-card class="ebook-add-card">
+  <form nz-form [formGroup]="addOrEditForm">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="3" nzFor="parentCategory" nzRequired>上级分类</nz-form-label>
+      <nz-form-control [nzSpan]="8">
+        <nz-tree-select id="parentCategory" formControlName="parentCategory"
+                        [nzNodes]="selectCategoryList"
+                        nzShowSearch
+                        nzPlaceHolder="一级分类"
+                        [(ngModel)]="selectCategory"
+                        (ngModelChange)="onChange($event)">
+        </nz-tree-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="3" nzFor="bookName" nzRequired>书名</nz-form-label>
+      <nz-form-control [nzSpan]="8" nzErrorTip="必填项">
+        <input nz-input id="bookName" formControlName="bookName" placeholder="书籍名称"/>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-card>

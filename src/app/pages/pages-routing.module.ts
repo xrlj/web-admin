@@ -1,12 +1,11 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 
-import { DefaultComponent, BlankComponent } from '../theme/layouts';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { LoginComponent } from './login/login.component';
-import { NotFoundComponent } from './not-found/not-found.component';
+import {BlankComponent, DefaultComponent} from '../theme/layouts';
+import {DashboardComponent} from './dashboard/dashboard.component';
+import {LoginComponent} from './login/login.component';
+import {NotFoundComponent} from './not-found/not-found.component';
 import {InitComponent} from './init/init.component';
-import {ParameterManageComponent} from './setting/parameter-manage/parameter-manage.component';
 
 const routes: Routes = [
   {
@@ -50,6 +49,10 @@ const routes: Routes = [
       {
         path: 'user-centre',
         loadChildren: () =>import('./user-centre/user-centre.module').then(m => m.UserCentreModule)
+      },
+      {
+        path: 'ebook',
+        loadChildren: () => import('./ebook/ebook.module').then(m => m.EbookModule)
       }
     ]
   },

@@ -1,0 +1,90 @@
+<nz-card class="card-list" nzTitle="字典管理">
+  <div class="card-list-action">
+    <nz-input-group [nzSuffix]="bookNameSuffixTemplate">
+      <input type="text" nz-input [(ngModel)]="bookName" placeholder="书籍中文或英文名称"/>
+    </nz-input-group>
+    <nz-input-group [nzSuffix]="authorSuffixTemplate">
+      <input type="text" nz-input [(ngModel)]="author" placeholder="作者名称"/>
+    </nz-input-group>
+    <button nz-button nzType="default" (click)="search(true)"><i nz-icon nzType="search"></i>查询</button>
+    <button nz-button nzType="primary" (click)="add()"><i nz-icon nzType="plus"></i>新增</button>
+    <button nz-button nzType="danger" (click)="del()"><i nz-icon nzType="delete"></i>删除</button>
+  </div>
+  <div class="card-list-table">
+    <nz-table
+      #table
+      nzShowPagination
+      nzShowSizeChanger
+      nzBordered
+      [nzFrontPagination]="false"
+      [nzData]="listOfAllData"
+      [nzLoading]="loading"
+      [nzTotal]="total"
+      [(nzPageIndex)]="pageIndex"
+      [(nzPageSize)]="pageSize"
+      (nzPageIndexChange)="search()"
+      (nzPageSizeChange)="search(true)"
+      (nzCurrentPageDataChange)="currentPageDataChange($event)"
+    >
+      <thead>
+      <tr>
+        <th
+          nzShowCheckbox
+          [(nzChecked)]="isAllDisplayDataChecked"
+          [nzIndeterminate]="isIndeterminate"
+          (nzCheckedChange)="checkAll($event)"
+        ></th>
+        <th nzWidth="20%" nzAlign="center">书名</th>
+        <th nzWidth="15%" nzAlign="center">封面</th>
+        <th nzWidth="10%" nzAlign="center">作者</th>
+        <th nzWidth="15%" nzAlign="center">书号</th>
+        <th nzWidth="15%" nzAlign="center">最小分类</th>
+        <th nzWidth="15%" nzAlign="center"  nzShowSort>出版时间</th>
+        <th nzWidth="10%" nzAlign="center">操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of table['data']">
+        <td
+          nzShowCheckbox
+          [(nzChecked)]="mapOfCheckedId[data.id]"
+          [nzDisabled]="data.disabled"
+          (nzCheckedChange)="refreshStatus()"
+        ></td>
+        <td nzAlign="center">{{ data.dicName }}</td>
+        <td nzAlign="center">{{ data.dicType }}</td>
+        <td nzAlign="center">{{ data.dicSort }}</td>
+        <td nzAlign="center">{{ data.remark }}</td>
+        <td nzAlign="center">{{ data.remark }}</td>
+        <td nzAlign="center">{{ data.dateCreated }}</td>
+        <td nzAlign="center">
+          <a>编辑</a>
+        </td>
+      </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</nz-card>
+
+<ng-template #bookNameSuffixTemplate
+><i
+  nz-icon
+  nz-tooltip
+  class="ant-input-clear-icon"
+  nzTheme="fill"
+  nzType="close-circle"
+  *ngIf="bookName"
+  (click)="bookName = null"
+></i
+></ng-template>
+<ng-template #authorSuffixTemplate
+><i
+  nz-icon
+  nz-tooltip
+  class="ant-input-clear-icon"
+  nzTheme="fill"
+  nzType="close-circle"
+  *ngIf="author"
+  (click)="author = null"
+></i
+></ng-template>
