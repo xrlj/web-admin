@@ -7,7 +7,7 @@ import {EbookAddComponent} from './ebook-add/ebook-add.component';
 
 const routes: Routes = [
   {path: 'list', component: EbookListComponent, data: {title: '书籍列表', isRemove: true}},
-  {path: 'edit', component: EbookAddComponent, data: {title: '编辑书籍', isRemove: true}},
+  {path: 'edit/:id', component: EbookAddComponent, data: {title: '书籍维护', isRemove: true}},
   {path: 'folder', component: EbookFolderComponent, data: {title: '分类维护', isRemove: true}}
 ];
 

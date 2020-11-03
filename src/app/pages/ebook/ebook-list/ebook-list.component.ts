@@ -34,7 +34,7 @@ export class EbookListComponent implements OnInit {
   }
 
   add() {
-    this.router.navigateByUrl(AppPath.ebook['ebook-add']).then(r => {});
+    this.router.navigate([AppPath.ebook['ebook-add'], '0']).then(r => {});
   }
 
   del() {

@@ -1,8 +1,8 @@
-<nz-card class="ebook-add-card">
+<nz-card class="ebook-add-card" [nzTitle]="id === '0' ? '新增书籍' : '编辑书籍'">
   <form nz-form [formGroup]="addOrEditForm">
     <nz-form-item>
-      <nz-form-label [nzSpan]="2" nzFor="parentCategory" nzRequired>分类</nz-form-label>
-      <nz-form-control [nzSpan]="8">
+      <nz-form-label [nzSpan]="labelSpan" nzFor="parentCategory" nzRequired>分类</nz-form-label>
+      <nz-form-control [nzSpan]="formControlSpan">
         <nz-tree-select id="parentCategory" formControlName="parentCategory"
                         [nzNodes]="selectCategoryList"
                         nzShowSearch
@@ -13,9 +13,97 @@
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label [nzSpan]="2" nzFor="bookName" nzRequired>书名</nz-form-label>
-      <nz-form-control [nzSpan]="8" nzErrorTip="必填项">
+      <nz-form-label [nzSpan]="labelSpan" nzFor="languageType" nzRequired>语言</nz-form-label>
+      <nz-form-control [nzSpan]="formControlSpan">
+        <nz-tree-select id="languageType" formControlName="languageType"
+                        [nzNodes]="selectLanguageList"
+                        nzShowSearch
+                        nzPlaceHolder="请选择"
+                        [(ngModel)]="selectLanguage"
+                        (ngModelChange)="onChange($event)">
+        </nz-tree-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="labelSpan" nzFor="bookName" nzRequired>书名</nz-form-label>
+      <nz-form-control [nzSpan]="formControlSpan" nzErrorTip="必填项">
         <input nz-input id="bookName" formControlName="bookName" placeholder="书籍名称"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="labelSpan" nzRequired>子标题</nz-form-label>
+      <nz-form-control [nzSpan]="formControlSpan" nzErrorTip="必填项">
+        <textarea formControlName="bookSubName" nz-input rows="2" placeholder="二级书名"></textarea>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="labelSpan" nzFor="author" nzRequired>作者</nz-form-label>
+      <nz-form-control [nzSpan]="formControlSpan" nzErrorTip="必填项">
+        <input nz-input id="author" formControlName="author" placeholder="作者"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="labelSpan" nzFor="publishTime" nzRequired>出版时间</nz-form-label>
+      <nz-form-control [nzSpan]="formControlSpan" nzErrorTip="必填项">
+        <nz-date-picker formControlName="publishTime"></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="labelSpan" nzFor="isbn">书号</nz-form-label>
+      <nz-form-control [nzSpan]="formControlSpan">
+        <input nz-input id="isbn" formControlName="isbn" placeholder="国际标准书号"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="labelSpan">总页数</nz-form-label>
+      <nz-form-control [nzSpan]="formControlSpan">
+        <nz-input-number id="pages" formControlName="pages" [nzMin]="1" [nzMax]="10000" [nzStep]="1"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="labelSpan" nzRequired>封面</nz-form-label>
+      <nz-form-control [nzSpan]="formControlSpan" nzErrorTip="必填项">
+        <nz-upload
+          [nzAction]="uploadFileUrl"
+          nzListType="picture-card"
+          [nzShowUploadList]="false"
+          [nzBeforeUpload]="beforeUpload"
+          (nzChange)="handleChange($event)"
+        >
+          <ng-container *ngIf="!coverUrl">
+            <i class="upload-icon" nz-icon [nzType]="coverLoading ? 'loading' : 'plus'"></i>
+            <div class="ant-upload-text">上传</div>
+          </ng-container>
+          <img *ngIf="coverUrl" [src]="coverUrl" style="width: 100%" />
+        </nz-upload>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="labelSpan" nzRequired>描述</nz-form-label>
+      <nz-form-control [nzSpan]="formControlSpan" nzErrorTip="必填项">
+        <ueditor id="description" formControlName="description" [config] = "uEditorConfig"></ueditor>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="labelSpan" nzRequired>PDF电子书</nz-form-label>
+      <nz-form-control [nzSpan]="formControlSpan" nzErrorTip="必填项">
+        <nz-upload [nzAction]="uploadFileUrl" [nzFileList]="pdfFileList" [nzLimit]="1" (nzChange)="pdfUploadHandleChange($event)">
+          <button nz-button><i nz-icon nzType="upload"></i>上传</button>
+        </nz-upload>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="labelSpan">ePub电子书</nz-form-label>
+      <nz-form-control [nzSpan]="formControlSpan" nzErrorTip="必填项">
+        <nz-upload [nzAction]="uploadFileUrl" [nzLimit]="1" [nzFileList]="ePubFileList" (nzChange)="ePubUploadHandleChange($event)">
+          <button nz-button><i nz-icon nzType="upload"></i>上传</button>
+        </nz-upload>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control [nzOffset]="9" [nzSpan]="12">
+        <button nz-button nzType="primary">{{id === '0' ? '保存' : '修改'}}</button>
+        <button style="margin-left: 20px;" nz-button (click)="resetForm($event)">重置</button>
       </nz-form-control>
     </nz-form-item>
   </form>
