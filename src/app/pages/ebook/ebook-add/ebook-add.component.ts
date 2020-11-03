@@ -45,12 +45,6 @@ export class EbookAddComponent implements OnInit {
   ];
 
   ePubFileList: NzUploadFile[] = [
-    /*{
-      uid: '-1',
-      name: 'xxx.png',
-      status: 'done',
-      url: 'http://www.baidu.com/xxx.png'
-    }*/
   ];
 
   id = '0'; // 书籍id，默认0=新增，否则编辑
