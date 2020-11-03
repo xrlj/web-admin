@@ -44,6 +44,7 @@ export class EbookAddComponent implements OnInit {
     }*/
   ];
 
+  // ePub电子书
   ePubFileList: NzUploadFile[] = [
   ];
 
