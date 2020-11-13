@@ -79,7 +79,8 @@
                         nzShowSearch
                         nzPlaceHolder="一级分类"
                         [(ngModel)]="selectCategory"
-                        (ngModelChange)="onChange($event)">
+                        (ngModelChange)="onChange($event)"
+                        nzVirtualHeight="300px">
         </nz-tree-select>
       </nz-form-control>
     </nz-form-item>

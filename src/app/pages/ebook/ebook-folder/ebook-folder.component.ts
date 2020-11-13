@@ -1,6 +1,60 @@
-import { Component, OnInit } from '@angular/core';
-import {VMenuResp} from '../../../helpers/vo/resp/v-menu-resp';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+
+const listData = [
+  {
+    title: 'aa',
+    key: '11111',
+    expanded: false,
+    isLeaf: false,
+    children: [
+      {
+        title: 'aabb',
+        key: '4545444',
+        expanded: false,
+        isLeaf: true,
+        children: []
+      },
+      {
+        title: 'aarrrr',
+        key: '456545454',
+        expanded: false,
+        isLeaf: false,
+        children: []
+      }
+    ]
+  },
+  {
+    title: 'bbb',
+    key: '234324324',
+    expanded: false,
+    isLeaf: false,
+    children: [
+      {
+        title: 'dddd',
+        key: '4545444',
+        expanded: false,
+        isLeaf: true,
+        children: []
+      }
+    ]
+  },
+  {
+    title: 'cccc',
+    key: '123223',
+    expanded: false,
+    isLeaf: false,
+    children: [
+      {
+        title: 'fff',
+        key: '4545444',
+        expanded: false,
+        isLeaf: true,
+        children: []
+      }
+    ]
+  }
+]
 
 @Component({
   selector: 'app-ebook-folder',
@@ -32,13 +86,14 @@ export class EbookFolderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.selectCategoryList = listData;
   }
 
   resetAddOrEditModal(): void {
     this.isShowModal = false;
     this.dialogType = 1;
     this.isOkLoading = false;
-    this.selectCategoryList = null;
+    this.selectCategoryList = [];
     this.selectCategory = null;
     this.addOrEditForm.reset();
   }
