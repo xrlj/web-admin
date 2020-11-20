@@ -164,7 +164,7 @@ export class UIHelper {
    */
   modalDel(content: string, title?: string) {
     const handlers = {};
-    this.modalService.confirm({
+    this.modalService.error({
       nzTitle: title ? title : '删除提示',
       nzContent: content,
       nzOkText: '确定',
@@ -263,6 +263,25 @@ export class UIHelper {
         value.isLeaf = true;
       } else {
         this.setSelectTreeLeaf(children);
+      }
+    });
+  }
+
+  /**
+   * 补全下拉树需要属性。
+   */
+  patchSelectTree(treeDataList: any): void {
+    if (!treeDataList) {
+      return;
+    }
+    treeDataList.forEach(value => {
+      value.key = value.id;
+      value.expand = false;
+      const children = value.children;
+      if (children === null || children === undefined || children.length === 0) {
+        value.isLeaf = true;
+      } else {
+        this.patchSelectTree(children);
       }
     });
   }

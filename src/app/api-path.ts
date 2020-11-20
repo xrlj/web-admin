@@ -2,6 +2,7 @@ const serviceauth = 'serviceauth'; // 服务名称
 const usercentral = 'usercentral';
 const sysfilesystem = 'sysfilesystem'; // 文件系统服务
 const syscommon = 'syscommon';
+const serviceebook = 'serviceebook';
 
 export const ApiPath = {
   login: `/${serviceauth}/auth/sysLogin`,
@@ -75,5 +76,16 @@ export const ApiPath = {
       getChildrenList: `/${syscommon}/areaDic/getChildrenList`,
     }
   },
+  serviceebook: {
+    bookInfo: {},
+    bookMenu: {
+      save: `/${serviceebook}/bookMenu/save`,
+      update: `/${serviceebook}/bookMenu/update`,
+      delete: `/${serviceebook}/bookMenu/delete`,
+      get: `/${serviceebook}/bookMenu/get`,
+      getListPage: `/${serviceebook}/bookMenu/getListPage`,
+      getListTree: `/${serviceebook}/bookMenu/getListTree`
+    }
+  }
 
 };

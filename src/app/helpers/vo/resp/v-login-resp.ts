@@ -1,3 +1,5 @@
+import {VBaseResp} from './v-base-resp';
+
 export interface VLoginResp extends VBaseResp {
   data: VLoginRespData;
 }
