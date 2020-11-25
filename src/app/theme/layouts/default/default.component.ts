@@ -14,8 +14,6 @@ export class DefaultComponent implements OnInit {
   // 控制目录的展开/折叠
   collapsed = false;
 
-  isSpinning = false;
-
   @Output() toggleCollapsed = new EventEmitter();
 
   @ViewChild(AppBodyComponent)
@@ -23,12 +21,7 @@ export class DefaultComponent implements OnInit {
   @ViewChild(AppAsideComponent)
   private appAsideComponent: AppAsideComponent;
 
-  constructor(private router: Router, private uiHelper: UIHelper, private defaultBusService: DefaultBusService) {
-    // 订阅是否显示加载对话框事件
-    this.defaultBusService.loadingSpin$.subscribe(isLoadingSpin => {
-      this.isSpinning = isLoadingSpin;
-    });
-  }
+  constructor(private router: Router, private uiHelper: UIHelper) { }
 
   ngOnInit() {
     // 服务端处理token是否过期，避免客户端和服务器时间不一致，或者改动客户端系统时间变成未过期

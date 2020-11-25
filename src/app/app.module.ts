@@ -9,7 +9,6 @@ import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HashLocationStrategy, LocationStrategy, registerLocaleData} from '@angular/common';
 import zh from '@angular/common/locales/zh';
-import {CustomBtnComponent} from './components/custom-btn/custom-btn.component';
 import {httpInterceptorProviders} from './interceptors';
 import { UEditorModule } from 'ngx-ueditor';
 import {IconsProviderModule} from './icons-provider.module';
@@ -19,7 +18,7 @@ import {SimpleReuseStrategy} from './helpers/simple-reuse-strategy';
 registerLocaleData(zh);
 
 @NgModule({
-  declarations: [AppComponent, CustomBtnComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -45,9 +44,7 @@ registerLocaleData(zh);
     {provide: RouteReuseStrategy, useClass: SimpleReuseStrategy},
     {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
-  exports: [
-    CustomBtnComponent
-  ],
+  exports: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

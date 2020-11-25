@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Constants} from '../../../helpers/constants';
 import {VMenuResp} from '../../../helpers/vo/resp/v-menu-resp';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-aside',
@@ -16,7 +17,8 @@ export class AppAsideComponent implements OnInit {
   // menus = APP_MENUS;
   menus: VMenuResp[];
 
-  theme  = true;  // 主题
+  // theme  = true;  // 主题
+  theme  = environment.asideTheme === 'dark' ? true : false;  // 主题
 
   openMap: { [name: string]: boolean } = {};  // 类似hashMap
 

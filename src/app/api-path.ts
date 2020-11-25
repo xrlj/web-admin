@@ -77,7 +77,12 @@ export const ApiPath = {
     }
   },
   serviceebook: {
-    bookInfo: {},
+    bookInfo: {
+      save: `/${serviceebook}/bookInfo/save`,
+      update: `/${serviceebook}/bookInfo/update`,
+      get: `/${serviceebook}/bookInfo/get`,
+      getListPage: `/${serviceebook}/bookInfo/getListPage`
+    },
     bookMenu: {
       save: `/${serviceebook}/bookMenu/save`,
       update: `/${serviceebook}/bookMenu/update`,

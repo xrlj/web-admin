@@ -11,6 +11,7 @@ import {
 } from './components';
 import { DefaultComponent, BlankComponent } from './layouts';
 import {FormsModule} from '@angular/forms';
+import {ComponentsModule} from '../components/components.module';
 
 const COMPONENTS = [
   DefaultComponent,
@@ -23,6 +24,6 @@ const COMPONENTS = [
 
 @NgModule({
   declarations: [...COMPONENTS],
-    imports: [CommonModule, NgZorroAntdModule, ThemeRoutingModule, NzDrawerModule, FormsModule]
+    imports: [CommonModule, NgZorroAntdModule, ThemeRoutingModule, NzDrawerModule, FormsModule, ComponentsModule]
 })
 export class ThemeModule {}

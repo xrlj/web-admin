@@ -46,7 +46,6 @@ export class EbookFolderComponent implements OnInit {
     this.ebookFolderService.getListTree({bookMenuName: this.folderName})
       .ok(data => {
         this.patchSelectTree(data);
-        this.selectCategoryList = data;
         this.listOfMapData = data;
         this.listOfMapData.forEach(item => {
           this.mapOfExpandedData[item.key] = this.convertTreeToList(item);
@@ -115,6 +114,7 @@ export class EbookFolderComponent implements OnInit {
     if (item) {
       this.parentId = item.id;
     }
+    this.initSelectTreeList();
   }
 
   edit(item: VBookMenuResp) {
@@ -123,6 +123,15 @@ export class EbookFolderComponent implements OnInit {
     this.editId = item.id;
     this.parentId = item.parentId;
     this.addOrEditForm.patchValue({nameZh: item.nameZh, nameEn: item.nameEn, parentId: item.parentId});
+    this.initSelectTreeList();
+  }
+
+  initSelectTreeList(): void {
+    this.ebookFolderService.getListTree({bookMenuName: ''})
+      .ok(data => {
+        this.patchSelectTree(data);
+        this.selectCategoryList = data;
+      })
   }
 
   del(id: any) {

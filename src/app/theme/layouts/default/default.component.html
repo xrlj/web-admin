@@ -1,4 +1,4 @@
-<nz-spin [nzSpinning]="isSpinning" nzTip="努力加载中...">
+<!--<nz-spin [nzSpinning]="isSpinning" nzTip="努力加载中...">
   <div class="default-layout" [class.aside-collapsed]="collapsed">
     <app-header (currentTheme)="setCurrentTheme($event)" (asideTheme)="setAsideTheme($event)" [collapsed]="collapsed"></app-header>
     <app-body [collapsed]="collapsed">
@@ -10,5 +10,18 @@
     ></app-aside>
     <app-footer></app-footer>
   </div>
-</nz-spin>
+</nz-spin>-->
+
+<div class="default-layout" [class.aside-collapsed]="collapsed">
+  <app-header (currentTheme)="setCurrentTheme($event)" (asideTheme)="setAsideTheme($event)" [collapsed]="collapsed"></app-header>
+  <app-body [collapsed]="collapsed">
+    <router-outlet></router-outlet>
+  </app-body>
+  <app-aside
+    [collapsed]="collapsed"
+    (toggleCollapsed)="onToggleCollapsed($event)"
+  ></app-aside>
+  <app-footer></app-footer>
+</div>
+<app-custom-loading></app-custom-loading>
 
