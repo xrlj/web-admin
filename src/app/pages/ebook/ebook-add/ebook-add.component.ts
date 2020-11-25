@@ -32,6 +32,7 @@ export class EbookAddComponent implements OnInit {
   selectLanguage: string;
 
   uEditorConfig = new UEditorConfig();
+  description: any;
 
   uploadFileUrl = environment.apiUrl.concat(ApiPath.sysfilesystem.sysFiles.uploadFile);
 
@@ -60,7 +61,7 @@ export class EbookAddComponent implements OnInit {
       publishTime: [null, [Validators.required]],
       isbn: [null, [MyValidators.maxLength(50)]],
       pages: [null, null],
-      description: [null, [Validators.required]]
+      description: [null, null]
     });
   }
 
@@ -96,8 +97,13 @@ export class EbookAddComponent implements OnInit {
     });
   }
 
-  resetForm(e: MouseEvent): void {
-    e.preventDefault();
+  resetForm(): void {
+    this.coverFileId = null;
+    this.coverImg = null;
+    this.pdfFileList = [];
+    this.ePubFileList = [];
+    this.description = '';
+
     this.addOrEditForm.reset();
     for (const key in this.addOrEditForm.controls) {
       this.addOrEditForm.controls[key].markAsPristine();
@@ -222,24 +228,36 @@ export class EbookAddComponent implements OnInit {
   }
 
   submit(id?: string): void {
-    this.defaultBusService.showLoading(true);
-    /*if (this.addOrEditForm.valid) {
+    if (this.addOrEditForm.valid) {
       if (!this.coverFileId) {
         this.uiHelper.msgTipWarning('请上传封面图片！');
         return;
       }
-      if (this.pdfFileList && this.pdfFileList.length === 0) {
-        this.uiHelper.msgTipWarning('请上传pdf格式电子书！');
+      if (!this.description || this.description === '') {
+        this.uiHelper.msgTipWarning('请输入描述！');
         return;
       }
+      const b = (this.pdfFileList && this.pdfFileList.length === 0) && (this.ePubFileList && this.ePubFileList.length === 0);
+      if (b) {
+        this.uiHelper.msgTipWarning('请上传相应电子书');
+        return;
+      }
+
       const values = this.addOrEditForm.value;
       values.coverFileId = this.coverFileId;
-      values.pdfFileId = this.pdfFileList[0].response.data.id;
+      values.description = this.description;
+
+      if (this.pdfFileList && this.pdfFileList.length > 0) {
+        values.pdfFileId = this.pdfFileList[0].response.data.id;
+      } else {
+        values.epubFileId = null;
+      }
       if (this.ePubFileList && this.ePubFileList.length > 0) {
         values.epubFileId = this.ePubFileList[0].response.data.id;
       } else {
         values.epubFileId = null;
       }
+
       if (id === '0') { // 新增
         console.log(values);
       } else { // 编辑
@@ -249,18 +267,22 @@ export class EbookAddComponent implements OnInit {
       this.ebookAddService.save(values)
         .ok(data => {
           console.log(data);
+          this.uiHelper.msgTipSuccess(id === '0' ? '新增成功' : '修改成功');
         })
         .fail(error => {
           this.uiHelper.msgTipError(error.msg);
-        })
-        .final(b => {
+          // tslint:disable-next-line:no-shadowed-variable
+        }).final(b => {
           this.defaultBusService.showLoading(false);
-        });
+          if (b) {
+            this.resetForm();
+          }
+      });
     } else {
       for (const key in this.addOrEditForm.controls) {
         this.addOrEditForm.controls[key].markAsDirty();
         this.addOrEditForm.controls[key].updateValueAndValidity();
       }
-    }*/
+    }
   }
 }

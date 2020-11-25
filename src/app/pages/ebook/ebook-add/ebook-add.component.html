@@ -80,12 +80,12 @@
     <nz-form-item>
       <nz-form-label [nzSpan]="labelSpan" nzRequired>描述</nz-form-label>
       <nz-form-control [nzSpan]="formControlSpan" nzErrorTip="必填项">
-        <ueditor style="z-index: 0;float: inside" id="description" formControlName="description" [config] = "uEditorConfig"></ueditor>
+        <ueditor id="description" formControlName="description" [(ngModel)]="description" [config] = "uEditorConfig"></ueditor>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label [nzSpan]="labelSpan" nzRequired>PDF电子书</nz-form-label>
-      <nz-form-control [nzSpan]="formControlSpan" nzErrorTip="必填项">
+      <nz-form-label [nzSpan]="labelSpan">PDF电子书</nz-form-label>
+      <nz-form-control [nzSpan]="formControlSpan">
         <nz-upload [nzAction]="uploadFileUrl"
                    [nzFileList]="pdfFileList"
                    [nzBeforeUpload]="beforeUploadPdf"
@@ -96,7 +96,7 @@
     </nz-form-item>
     <nz-form-item>
       <nz-form-label [nzSpan]="labelSpan">ePub电子书</nz-form-label>
-      <nz-form-control [nzSpan]="formControlSpan" nzErrorTip="必填项">
+      <nz-form-control [nzSpan]="formControlSpan">
         <nz-upload [nzAction]="uploadFileUrl"
                    [nzFileList]="ePubFileList"
                    [nzBeforeUpload]="beforeUploadEPub"
@@ -108,7 +108,7 @@
     <nz-form-item>
       <nz-form-control [nzOffset]="9" [nzSpan]="12">
         <button nz-button nzType="primary" (click)="submit(id)">{{id === '0' ? '保存' : '修改'}}</button>
-        <button style="margin-left: 20px;" nz-button (click)="resetForm($event)">重置</button>
+        <button style="margin-left: 20px;" nz-button (click)="resetForm()">重置</button>
       </nz-form-control>
     </nz-form-item>
   </form>
