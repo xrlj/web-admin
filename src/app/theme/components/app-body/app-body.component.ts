@@ -8,6 +8,7 @@ import {AppPath} from '../../../app-path';
 import {environment} from '../../../../environments/environment';
 import {ThemeEnum} from '../../../helpers/enum/theme-enum';
 import {Subscription} from 'rxjs';
+import {DefaultBusService} from '../../../helpers/event-bus/default-bus.service';
 
 @Component({
   selector: 'app-body',
@@ -17,6 +18,8 @@ import {Subscription} from 'rxjs';
 export class AppBodyComponent implements OnInit, OnDestroy {
 
   subscription: Subscription;
+
+  defaultBusServiceSubscribe: Subscription;
 
   @Input() collapsed: boolean;
 
@@ -28,7 +31,8 @@ export class AppBodyComponent implements OnInit, OnDestroy {
   constructor(private router: Router,
               private activatedRoute: ActivatedRoute,
               private titleService: Title,
-              private nzContextMenuService: NzContextMenuService) {
+              private nzContextMenuService: NzContextMenuService,
+              private defaultBusService: DefaultBusService) {
     this.subscription = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       map(() => this.activatedRoute),
@@ -58,6 +62,11 @@ export class AppBodyComponent implements OnInit, OnDestroy {
       }
       this.currentMenuTab = this.menuList.findIndex(p => p.url === url);
     });
+
+    // 订阅是否显示加载对话框事件
+    this.defaultBusServiceSubscribe = this.defaultBusService.closeTab$.subscribe(url => {
+      this.closeUrl(url);
+    });
   }
 
   ngOnInit() {
@@ -67,6 +76,9 @@ export class AppBodyComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe(); // 取消订阅
+    }
+    if (this.defaultBusServiceSubscribe) {
+      this.defaultBusServiceSubscribe.unsubscribe(); // 取消订阅
     }
   }
 

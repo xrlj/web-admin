@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import {AppPath} from '../../../app-path';
+import {EbookListService} from './ebook-list.service';
+import {UIHelper} from '../../../helpers/ui-helper';
 
 @Component({
   selector: 'app-ebook-list',
@@ -24,17 +26,36 @@ export class EbookListComponent implements OnInit {
   pageSize = 10;
   total = 0;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private ebookListService: EbookListService,
+              private uiHelper: UIHelper) { }
 
   ngOnInit(): void {
+    this.search(true);
   }
 
-  search(b: boolean = false) {
-
+  search(reset: boolean = false) {
+    if (reset) {
+      this.pageIndex = 1;
+    }
+    this.loading = true;
+    const body = {pageIndex: this.pageIndex, pageSize: this.pageSize, bookName: this.bookName, author: this.author};
+    this.ebookListService.getListPage(body)
+      .ok(data => {
+        this.pageIndex = data.pageIndex;
+        this.pageSize = data.pageSize;
+        this.total = data.total;
+        this.listOfAllData = data.list;
+      })
+      .fail(error => {
+        this.uiHelper.msgTipError(error.msg);
+      })
+      .final(b => {
+        this.loading = false;
+      });
   }
 
-  add() {
-    this.router.navigate([AppPath.ebook['ebook-add'], '0']).then(r => {});
+  addOrEdit(id: string) {
+    this.router.navigate([AppPath.ebook['ebook-add'], id]).then(r => {});
   }
 
   del() {

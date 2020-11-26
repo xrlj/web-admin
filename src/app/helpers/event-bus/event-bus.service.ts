@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import {Injectable} from '@angular/core';
 
 /**
  * 整个应用的事件总线。父组件与子孙组件整个组件家族双向通讯。

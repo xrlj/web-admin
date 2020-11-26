@@ -13,8 +13,17 @@ export class DefaultBusService {
   private loadingSpin = new Subject<boolean>();
   loadingSpin$ = this.loadingSpin.asObservable();
 
+  // 关闭body上的快捷tab
+  private closeTab = new Subject<string>();
+  closeTab$ = this.closeTab.asObservable();
+
   // 是否显示加载等待对话框
   showLoading(isLoading: boolean) {
     this.loadingSpin.next(isLoading);
+  }
+
+  // 关闭快捷tab
+  closeTabUrl(url: string) {
+    this.closeTab.next(url);
   }
 }

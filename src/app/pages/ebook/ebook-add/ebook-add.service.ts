@@ -22,4 +22,8 @@ export class EbookAddService {
   update(body: any): any {
     return this.api.post(ApiPath.serviceebook.bookInfo.update, body);
   }
+
+  get(id: string): any {
+    return this.api.get(`${ApiPath.serviceebook.bookInfo.get}/${id}`);
+  }
 }

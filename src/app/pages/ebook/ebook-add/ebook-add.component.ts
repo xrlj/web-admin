@@ -4,7 +4,7 @@ import {UEditorConfig} from '../../../helpers/ueditor-config';
 import {NzUploadChangeParam, NzUploadFile} from 'ng-zorro-antd';
 import {Observable, Observer} from 'rxjs';
 import {UIHelper} from '../../../helpers/ui-helper';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {environment} from '../../../../environments/environment';
 import {ApiPath} from '../../../api-path';
 import {HttpUtils} from '../../../helpers/http/HttpUtils';
@@ -50,7 +50,8 @@ export class EbookAddComponent implements OnInit {
   constructor(private fb: FormBuilder, private uiHelper: UIHelper,
               private activatedRoute: ActivatedRoute, private httpUtils: HttpUtils,
               private ebookFolderService: EbookFolderService, private fileUploadHelper: FileUploadHelper,
-              private defaultBusService: DefaultBusService, private ebookAddService: EbookAddService) {
+              private defaultBusService: DefaultBusService, private ebookAddService: EbookAddService,
+              private router: Router) {
     // 新增对话框
     this.addOrEditForm = this.fb.group({
       bookMenuId: [null, [Validators.required]],
@@ -67,16 +68,64 @@ export class EbookAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
-
     this.initSelectCategoryList();
+    this.initEditFrom();
   }
 
+  initEditFrom(): void {
+    if (this.id === '0') {
+      return;
+    }
+    this.ebookAddService.get(this.id)
+      .ok(data => {
+        console.log(data);
+        this.addOrEditForm.patchValue({
+          bookMenuId: data.bookMenuId,
+          languageType: data.languageType,
+          bookName: data.bookName,
+          bookSubName: data.bookSubName,
+          author: data.author,
+          publishTime: data.publishTime,
+          isbn: data.isbn,
+          pages: data.pages,
+          description: data.description
+        });
+        this.selectCategory = data.bookMenuId;
+        this.description = data.description;
+        this.coverFileId = data.coverFileId;
+        // tslint:disable-next-line:no-non-null-assertion
+        const coverFileInfo = data.extra.coverFileInfo!;
+        this.coverImg = coverFileInfo.url;
+        if (data.extra.pdfFileInfo) {
+          const pdfFileInfo = data.extra.pdfFileInfo;
+          const pdfFile: NzUploadFile = {name: pdfFileInfo.oriName, uid: pdfFileInfo.id, status: 'done', url: pdfFileInfo.url, response: {data: pdfFileInfo}};
+          this.pdfFileList = [pdfFile];
+        }
+        if (data.extra.epubFileInfo) {
+          const epubFileInfo = data.extra.epubFileInfo;
+          const epubFile: NzUploadFile = {name: epubFileInfo.oriName, uid: epubFileInfo.id, status: 'done', url: epubFileInfo.url, response: {data: epubFileInfo}};
+          this.ePubFileList = [epubFile];
+        }
+      })
+      .fail(error => {
+      })
+      .final(b => {
+      });
+  }
+
+  /**
+   * 初始化获取书籍类别选择列表。
+   */
   initSelectCategoryList(): void {
     this.ebookFolderService.getListTree({bookMenuName: ''})
       .ok(data => {
         this.patchSelectTree(data);
         this.selectCategoryList = data;
-      });
+      }).final(b => {
+      if (b) {
+
+      }
+    });
   }
 
   patchSelectTree(dataList: VBookMenuResp[]): void {
@@ -237,8 +286,8 @@ export class EbookAddComponent implements OnInit {
         this.uiHelper.msgTipWarning('请输入描述！');
         return;
       }
-      const b = (this.pdfFileList && this.pdfFileList.length === 0) && (this.ePubFileList && this.ePubFileList.length === 0);
-      if (b) {
+      const bb = (this.pdfFileList && this.pdfFileList.length === 0) && (this.ePubFileList && this.ePubFileList.length === 0);
+      if (bb) {
         this.uiHelper.msgTipWarning('请上传相应电子书');
         return;
       }
@@ -258,31 +307,47 @@ export class EbookAddComponent implements OnInit {
         values.epubFileId = null;
       }
 
+      this.defaultBusService.showLoading(true);
       if (id === '0') { // 新增
-        console.log(values);
+        this.ebookAddService.save(values)
+          .ok(data => {
+            this.uiHelper.msgTipSuccess('新增成功');
+          })
+          .fail(error => {
+            this.uiHelper.msgTipError(error.msg);
+          })
+          .final(b => {
+            this.defaultBusService.showLoading(false);
+            if (b) {
+              this.resetForm();
+            }
+          });
       } else { // 编辑
         values.id = id;
+        console.log(values);
+        this.ebookAddService.update(values)
+          .ok(data => {
+            console.log(data);
+            if (data) {
+              this.uiHelper.msgTipSuccess('修改成功');
+            }
+          })
+          .fail(error => {
+            this.uiHelper.msgTipError(error.ms);
+          })
+          .final(b => {
+            this.defaultBusService.showLoading(false);
+          });
       }
-      this.defaultBusService.showLoading(true);
-      this.ebookAddService.save(values)
-        .ok(data => {
-          console.log(data);
-          this.uiHelper.msgTipSuccess(id === '0' ? '新增成功' : '修改成功');
-        })
-        .fail(error => {
-          this.uiHelper.msgTipError(error.msg);
-          // tslint:disable-next-line:no-shadowed-variable
-        }).final(b => {
-          this.defaultBusService.showLoading(false);
-          if (b) {
-            this.resetForm();
-          }
-      });
     } else {
       for (const key in this.addOrEditForm.controls) {
         this.addOrEditForm.controls[key].markAsDirty();
         this.addOrEditForm.controls[key].updateValueAndValidity();
       }
     }
+  }
+
+  close() {
+    this.defaultBusService.closeTabUrl(this.router.url);
   }
 }

@@ -87,7 +87,7 @@
       <nz-form-label [nzSpan]="labelSpan">PDF电子书</nz-form-label>
       <nz-form-control [nzSpan]="formControlSpan">
         <nz-upload [nzAction]="uploadFileUrl"
-                   [nzFileList]="pdfFileList"
+                   [(nzFileList)]="pdfFileList"
                    [nzBeforeUpload]="beforeUploadPdf"
                    (nzChange)="pdfUploadHandleChange($event)">
           <button nz-button><i nz-icon nzType="upload"></i>上传</button>
@@ -108,7 +108,7 @@
     <nz-form-item>
       <nz-form-control [nzOffset]="9" [nzSpan]="12">
         <button nz-button nzType="primary" (click)="submit(id)">{{id === '0' ? '保存' : '修改'}}</button>
-        <button style="margin-left: 20px;" nz-button (click)="resetForm()">重置</button>
+        <button style="margin-left: 20px;" nz-button (click)="id === '0' ? resetForm() : close()">{{id === '0' ? '重置' : '关闭'}}</button>
       </nz-form-control>
     </nz-form-item>
   </form>
