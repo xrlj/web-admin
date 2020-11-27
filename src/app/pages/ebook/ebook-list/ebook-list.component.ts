@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {AppPath} from '../../../app-path';
 import {EbookListService} from './ebook-list.service';
 import {UIHelper} from '../../../helpers/ui-helper';
+import {DefaultBusService} from '../../../helpers/event-bus/default-bus.service';
 
 @Component({
   selector: 'app-ebook-list',
@@ -27,7 +28,8 @@ export class EbookListComponent implements OnInit {
   total = 0;
 
   constructor(private router: Router, private ebookListService: EbookListService,
-              private uiHelper: UIHelper) { }
+              private uiHelper: UIHelper, private defaultBusService: DefaultBusService) {
+  }
 
   ngOnInit(): void {
     this.search(true);
@@ -55,11 +57,44 @@ export class EbookListComponent implements OnInit {
   }
 
   addOrEdit(id: string) {
-    this.router.navigate([AppPath.ebook['ebook-add'], id]).then(r => {});
+    this.router.navigate([AppPath.ebook['ebook-add'], id]).then(r => {
+    });
   }
 
-  del() {
-
+  del(id?: string) {
+    const checkIds: string[] = []; // 待删除角色
+    if (id) {
+      checkIds.push(id);
+    } else {
+      for (const key in this.mapOfCheckedId) {
+        if (this.mapOfCheckedId[key]) {
+          checkIds.push(key);
+        }
+      }
+      if (checkIds.length === 0) {
+        this.uiHelper.msgTipWarning('请选择待删除书籍!');
+        return;
+      }
+    }
+    this.uiHelper.modalDel('确定删除选择书籍信息？')
+      .ok(() => {
+        this.defaultBusService.showLoading(true);
+        this.ebookListService.delete(checkIds)
+          .ok(data => {
+            if (data) {
+              this.uiHelper.msgTipSuccess('删除成功');
+              setTimeout(() => {
+                this.search(true);
+              }, 200);
+            }
+          })
+          .fail(error => {
+            this.uiHelper.msgTipError(error.msg);
+          })
+          .final(b => {
+            this.defaultBusService.showLoading(false);
+          });
+      });
   }
 
   /**

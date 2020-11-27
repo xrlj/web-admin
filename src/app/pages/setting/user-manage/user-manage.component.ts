@@ -350,7 +350,7 @@ export class UserManageComponent implements OnInit {
       this.uiHelper.msgTipWarning('请选择用户!');
       return;
     }
-    this.uiHelper.modalDel(`确定删除用户${name ? `[${name}]` : ''}?`)
+    this.uiHelper.modalDel(`确定删除选择用户?`)
       .ok(() => {
         this.defaultBusService.showLoading(true);
         this.userManageService.delUser(checkIds)

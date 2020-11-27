@@ -61,6 +61,8 @@
         <td nzAlign="center">{{ data.publishTime | date:"yyyy-MM-dd" }}</td>
         <td nzAlign="center">
           <a (click)="addOrEdit(data.id)">编辑</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a (click)="del(data.id)">删除</a>
         </td>
       </tr>
       </tbody>
