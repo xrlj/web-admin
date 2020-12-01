@@ -32,7 +32,7 @@ export class EbookFolderComponent implements OnInit {
     // 新增对话框
     this.addOrEditForm = this.fb.group({
       nameZh: [null, [MyValidators.required, MyValidators.maxLength(20)]],
-      nameEn: [null, [MyValidators.required, MyValidators.maxLength(20), MyValidators.notChinese]],
+      nameEn: [null, [MyValidators.required, MyValidators.maxLength(40), MyValidators.notChinese]],
       parentId: [null, null]
     });
   }

@@ -11,7 +11,7 @@
     <button nz-button nzType="primary" (click)="add()"><i nz-icon nzType="plus"></i>新增</button>
   </div>
   <!--列表-->
-  <nz-table class="card-list-table" #expandTable [nzData]="listOfMapData" [nzShowPagination]="false"
+  <nz-table class="card-list-table" #expandTable [nzData]="listOfMapData" [nzShowPagination]="false" nzPageSize="100"
             [nzLoading]="isRefreshList" nzBordered>
     <thead>
     <tr>
