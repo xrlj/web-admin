@@ -6,6 +6,7 @@ export interface VBookMenuResp extends VBaseTreeResp {
   nameZh: string;
   extra: any;
   nameEn: string;
+  bookMenuSort: number;
   parentId: string;
   parent?: VBookMenuResp;
 }

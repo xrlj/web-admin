@@ -31,8 +31,9 @@ export class EbookFolderComponent implements OnInit {
               private uiHelper: UIHelper, private defaultBusService: DefaultBusService) {
     // 新增对话框
     this.addOrEditForm = this.fb.group({
-      nameZh: [null, [MyValidators.required, MyValidators.maxLength(20)]],
+      nameZh: [null, [MyValidators.required, MyValidators.maxLength(40)]],
       nameEn: [null, [MyValidators.required, MyValidators.maxLength(40), MyValidators.notChinese]],
+      bookMenuSort: [null, MyValidators.required],
       parentId: [null, null]
     });
   }
@@ -122,7 +123,7 @@ export class EbookFolderComponent implements OnInit {
     this.isShowModal = true;
     this.editId = item.id;
     this.parentId = item.parentId;
-    this.addOrEditForm.patchValue({nameZh: item.nameZh, nameEn: item.nameEn, parentId: item.parentId});
+    this.addOrEditForm.patchValue({nameZh: item.nameZh, nameEn: item.nameEn, bookMenuSort: item.bookMenuSort, parentId: item.parentId});
     this.initSelectTreeList();
   }
 

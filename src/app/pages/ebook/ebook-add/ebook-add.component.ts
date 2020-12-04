@@ -57,7 +57,7 @@ export class EbookAddComponent implements OnInit {
       bookMenuId: [null, [Validators.required]],
       languageType: [null, [Validators.required]],
       bookName: [null, [Validators.required, MyValidators.maxLength(120)]],
-      bookSubName: [null, [Validators.required, MyValidators.maxLength(150)]],
+      bookSubName: [null, [MyValidators.maxLength(150)]],
       author: [null, [Validators.required, MyValidators.maxLength(80)]],
       publishTime: [null, [Validators.required]],
       isbn: [null, [MyValidators.maxLength(50)]],

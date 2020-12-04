@@ -1,7 +1,7 @@
 <nz-card class="card-list" nzTitle="书籍分类维护">
   <div class="card-list-action">
     <nz-input-group [nzSuffix]="inputClearTpl">
-      <input type="text" nz-input [(ngModel)]="folderName" placeholder="分类中文或英文名称"/>
+      <input type="text" nz-input [(ngModel)]="folderName" (keydown.enter)="search()" placeholder="分类中文或英文名称"/>
     </nz-input-group>
     <ng-template #inputClearTpl
     ><i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="folderName"
@@ -15,8 +15,9 @@
             [nzLoading]="isRefreshList" nzBordered>
     <thead>
     <tr>
-      <th nzWidth="40%" nzAlign="center">中文名称</th>
-      <th nzWidth="40%" nzAlign="center">英文名称</th>
+      <th nzWidth="35%" nzAlign="center">中文名称</th>
+      <th nzWidth="35%" nzAlign="center">英文名称</th>
+      <th nzWidth="10%" nzAlign="center">排序</th>
       <th nzAlign="center">操作</th>
     </tr>
     </thead>
@@ -34,6 +35,9 @@
           </td>
           <td nzAlign="center">
             {{item.nameEn}}
+          </td>
+          <td nzAlign="center">
+            {{item.bookMenuSort}}
           </td>
           <td nzAlign="center">
             <a (click)="add(item)">新增</a>
@@ -72,7 +76,14 @@
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="parentCategory" nzRequired>上级分类</nz-form-label>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="bookMenuSort" nzRequired>排序</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
+        <nz-input-number id="bookMenuSort" formControlName="bookMenuSort" [nzMin]="0" [nzMax]="1000" [nzStep]="1" [ngModel]="0"
+                         style="width: 150px"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="parentCategory">上级分类</nz-form-label>
       <nz-form-control [nzSm]="10" [nzXs]="24">
         <nz-tree-select id="parentId" formControlName="parentId"
                         [nzNodes]="selectCategoryList"
