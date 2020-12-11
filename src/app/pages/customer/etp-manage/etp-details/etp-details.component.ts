@@ -1,7 +1,5 @@
-import {Component, EventEmitter, Input, OnInit} from '@angular/core';
-import {EtpManageService} from '../etp-manage.service';
-import {UIHelper} from '../../../../helpers/ui-helper';
-import {VCustomerEtpResp} from '../../../../helpers/vo/resp/v-customer-etp-resp';
+import {Component, Input, OnInit} from '@angular/core';
+import {NzModalRef} from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-etp-details',
@@ -12,25 +10,22 @@ export class EtpDetailsComponent implements OnInit {
 
   @Input() etpId?: string;
 
-  etpInfo: any;
+  @Input()
+  etpInfo: any; // 企业信息
+  @Input()
   bankCardInfo: any; // 对公银行信息
 
-  checkStatus = '3';
+  checkStatus = '1';
   failReason: string | null = null;
 
-  constructor(private etpManageService: EtpManageService, private uiHelper: UIHelper) {
+  constructor(private modal: NzModalRef) {
   }
 
   ngOnInit(): void {
-    this.etpManageService.getEtpInfo(this.etpId)
-      .ok(data => {
-        this.etpInfo = data;
-        this.bankCardInfo = this.etpInfo.extra.bankCardList.find(item => item.defaultCard === true);
-      })
-      .fail(error => {
-        this.uiHelper.msgTipError(error.msg);
-      })
-      .final(b => {
-      });
   }
+
+  destroyModal(): void {
+    this.modal.destroy({ data: 'this the result data' });
+  }
+
 }

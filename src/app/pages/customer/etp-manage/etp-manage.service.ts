@@ -33,4 +33,11 @@ export class EtpManageService {
   getEtpInfo(id: string): any {
     return this.api.get(`${ApiPath.usercentral.enterpriseApi.getEtpInfo}/${id}`)
   }
+
+  /**
+   * 审核企业信息。
+   */
+  checkEtpInfo(body: any): any {
+    return this.api.post(ApiPath.usercentral.enterpriseApi.checkEtpInfo, body);
+  }
 }

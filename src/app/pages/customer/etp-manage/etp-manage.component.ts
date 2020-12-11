@@ -47,7 +47,7 @@ export class EtpManageComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private etpManageService: EtpManageService,
               public uiHelper: UIHelper, private utils: Utils,
-              private modal: NzModalService,  private viewContainerRef: ViewContainerRef,
+              private modal: NzModalService, private viewContainerRef: ViewContainerRef,
               private defaultBusService: DefaultBusService, public themeHelper: ThemeHelper) {
     // 新增编辑对话框
     this.addOrEditForm = this.fb.group({
@@ -210,36 +210,64 @@ export class EtpManageComponent implements OnInit {
   /**
    * 企业实名认证审核。
    */
-  verifyCheck(id: string): void {
-    const modal = this.modal.create({
-      nzTitle: '企业认证审核',
-      nzWidth: '800px',
-      nzMask: true,
-      nzMaskClosable: false,
-      nzContent: EtpDetailsComponent,
-      nzViewContainerRef: this.viewContainerRef,
-      nzComponentParams: {
-        etpId: id
-      },
-      nzFooter: [
-        {
-          label: '取消',
-          onClick(): void {
-            modal.destroy();
-          }
-        },
-        {
-          label: '确定',
-          type: 'primary',
-          loading: false,
-          onClick(instance): void {
-            this.loading = true;
-          }
-        }
-      ]
-    });
-    modal.afterOpen.subscribe(() => console.log('[afterOpen] emitted!'));
-    // Return a result when closed
-    modal.afterClose.subscribe(result => console.log('[afterClose] The result is:', result));
+  verifyCheck(_id: string): void {
+    this.defaultBusService.showLoading(true);
+    this.etpManageService.getEtpInfo(_id)
+      .ok(data => {
+        const etpManageService = this.etpManageService;
+        const uiHelper = this.uiHelper;
+        const modal = this.modal.create({
+          nzTitle: '企业认证审核',
+          nzWidth: '800px',
+          nzMask: true,
+          nzMaskClosable: false,
+          nzContent: EtpDetailsComponent,
+          nzViewContainerRef: this.viewContainerRef,
+          nzComponentParams: {
+            etpId: _id,
+            etpInfo: data,
+            bankCardInfo: data.extra.bankCardList.find(item => item.defaultCard === true)
+          },
+          nzFooter: [
+            {
+              label: '取消',
+              onClick: instance => {
+                modal.destroy();
+              }
+            },
+            {
+              label: '确定',
+              type: 'primary',
+              loading: false,
+              onClick(instance): void {
+                this.loading = true;
+                etpManageService.checkEtpInfo({id: _id, checkType: instance.checkStatus, checkFailReason: instance.failReason})
+                  .ok(data1 => {
+                    console.log(data1);
+                  })
+                  .fail(error => {
+                    uiHelper.msgTipError(error.msg);
+                  })
+                  .final(b => {
+                    this.loading = false;
+                    if (b) {
+                      modal.destroy();
+                    }
+                  });
+              }
+            }
+          ]
+        });
+        modal.afterOpen.subscribe(() => console.log('[afterOpen] emitted!'));
+        // Return a result when closed
+        modal.afterClose.subscribe(result => console.log('[afterClose] The result is:', result));
+
+      })
+      .fail(error => {
+        this.uiHelper.msgTipError(error.msg);
+      })
+      .final(b => {
+        this.defaultBusService.showLoading(false);
+      });
   }
 }
