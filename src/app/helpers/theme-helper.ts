@@ -60,9 +60,6 @@ export class ThemeHelper {
           case UserStatusEnum.CHECK_PASS:
             style = {background: 'green', color: 'green'};
             break;
-          case UserStatusEnum.VERIFIED_PASS:
-            style = {background: 'green', color: 'green'};
-            break;
           default:
             style = {background: '#F6F6F6', color: '#505654'};
             break;
@@ -82,9 +79,6 @@ export class ThemeHelper {
           case UserStatusEnum.CHECK_PASS:
             style = {background: 'gold', color: 'gold'};
             break;
-          case UserStatusEnum.VERIFIED_PASS:
-            style = {background: 'gold', color: 'gold'};
-            break;
           default:
             style = {background: '#F6F6F6', color: '#505654'};
             break;
@@ -102,9 +96,6 @@ export class ThemeHelper {
             style = {background: 'red', color: 'red'};
             break;
           case UserStatusEnum.CHECK_PASS:
-            style = {background: 'blue', color: 'blue'};
-            break;
-          case UserStatusEnum.VERIFIED_PASS:
             style = {background: 'blue', color: 'blue'};
             break;
           default:

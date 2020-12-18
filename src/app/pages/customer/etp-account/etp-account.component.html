@@ -70,11 +70,17 @@
                   <nz-tag [nzColor]="themeHelper.setUserStatusNameColor(data.status).background" [style.color]="themeHelper.setUserStatusNameColor(data.status).color">{{ data.statusName}}</nz-tag>
                 </td>
                 <td nzAlign="center">{{ data.dateCreated }}</td>
-                <td nzAlign="center">
-                  <div>
+                <td nzAlign="center" [ngSwitch]="data?.status">
+                  <div *ngSwitchCase="userStatusEnum.CHECK_WAIT">
+                    <a (click)="verifyCheck(data.userId)">审核</a>
+                  </div>
+                  <div *ngSwitchCase="userStatusEnum.CHECK_PASS">
                     <a (click)="details(data.userId)">查看</a>
                     <nz-divider nzType="vertical"></nz-divider>
                     <a (click)="setEtpMenus(data.userId, data.clientId)">设置菜单权限</a>
+                  </div>
+                  <div *ngSwitchDefault>
+                    <a>查看</a>
                   </div>
                 </td>
               </tr>
@@ -110,3 +116,13 @@
 </nz-card>
 
 <app-etp-account-menu></app-etp-account-menu>
+
+<nz-modal [(nzVisible)]="checkModalVisible"
+          nzWidth="800"
+          nzMaskClosable = "false"
+          [nzTitle]="'经纪人认证-审核'"
+          (nzOnCancel)="CheckHandleCancel()"
+          (nzOnOk)="CheckHandleOk()"
+          [nzOkLoading]="checkModalOkLoading">
+  <app-etp-account-details></app-etp-account-details>
+</nz-modal>

@@ -8,6 +8,8 @@ import {UserTypeEnum} from '../../../helpers/enum/user-type-enum';
 import {ThemeHelper} from '../../../helpers/theme-helper';
 import {DefaultBusService} from '../../../helpers/event-bus/default-bus.service';
 import {EtpAccountMenuComponent} from './etp-account-menu/etp-account-menu.component';
+import {UserStatusEnum} from '../../../helpers/enum/user-status-enum';
+import {EtpAccountDetailsComponent} from './etp-account-details/etp-account-details.component';
 
 @Component({
   selector: 'app-etp-account',
@@ -15,6 +17,8 @@ import {EtpAccountMenuComponent} from './etp-account-menu/etp-account-menu.compo
   styleUrls: ['./etp-account.component.less']
 })
 export class EtpAccountComponent implements OnInit {
+
+  userStatusEnum: typeof  UserStatusEnum = UserStatusEnum;
 
   // tab
   tabIndex = 0;
@@ -40,6 +44,11 @@ export class EtpAccountComponent implements OnInit {
   // 子组件
   @ViewChild(EtpAccountMenuComponent)
   etpAccountMenuComponent: EtpAccountMenuComponent;
+  @ViewChild(EtpAccountDetailsComponent)
+  etpAccountDetailsComponent: EtpAccountDetailsComponent;
+
+  checkModalVisible = false;
+  checkModalOkLoading = false;
 
   constructor(private fb: FormBuilder, public uiHelper: UIHelper,
               private etpAccountService: EtpAccountService, public themeHelper: ThemeHelper,
@@ -137,5 +146,22 @@ export class EtpAccountComponent implements OnInit {
    */
   setEtpMenus(userId: string, clientId: string) {
     this.etpAccountMenuComponent.editRole(userId, clientId);
+  }
+
+  /**
+   * 审核用户信息。
+   * @param id 用户id
+   */
+  verifyCheck(id: string): void {
+    this.etpAccountDetailsComponent.initData(id);
+    this.checkModalVisible = true;
+  }
+
+  CheckHandleCancel() {
+    this.checkModalVisible = false;
+  }
+
+  CheckHandleOk() {
+
   }
 }

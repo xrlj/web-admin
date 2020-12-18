@@ -28,7 +28,8 @@ export const ApiPath = {
       addByAdminSystemInvitation: `/${usercentral}/enterprise/addByAdminSystemInvitation`,
       getAllByAdmin: `/${usercentral}/enterprise/getAllByAdmin`,
       getEtpInfo: `/${usercentral}/enterprise/getEtpInfo`,
-      checkEtpInfo: `/${usercentral}/enterprise/checkEtpInfo`
+      checkEtpInfo: `/${usercentral}/enterprise/checkEtpInfo`,
+      getEtpInfoByUser: `/${usercentral}/enterprise/getEtpInfoByUser`
     },
     menuApi: {
       saveOrUpdate: `/${usercentral}/menu/saveOrUpdate`,

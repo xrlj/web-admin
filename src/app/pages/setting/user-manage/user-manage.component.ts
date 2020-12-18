@@ -561,7 +561,7 @@ export class UserManageComponent implements OnInit {
   enableUser(userId: string, accoutId: string): void {
     let newStatus;
     if (accoutId) { // 已经实名认证过
-      newStatus = UserStatusEnum.VERIFIED_PASS;
+      newStatus = UserStatusEnum.CHECK_PASS;
     } else {
       newStatus = UserStatusEnum.CHECK_PASS;
     }
@@ -574,7 +574,7 @@ export class UserManageComponent implements OnInit {
   rmUserBlack(userId: string, accoutId: string): void {
     let newStatus;
     if (accoutId) { // 已经实名认证过
-      newStatus = UserStatusEnum.VERIFIED_PASS;
+      newStatus = UserStatusEnum.CHECK_PASS;
     } else {
       newStatus = UserStatusEnum.CHECK_PASS;
     }

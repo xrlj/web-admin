@@ -21,4 +21,20 @@ export class CommonService {
       return this.api.get(ApiPath.usercentral.appInfoApi.getAll, par);
     }
   }
+
+  /**
+   * 获取用户信息。
+   * @param userId 用户id
+   */
+  getUserInfoById(userId: string): any {
+    return this.api.get(`${ApiPath.usercentral.userApi.getUserInfoById}/${userId}`);
+  }
+
+  /**
+   * 获取用户所属企业信息。
+   * @param userId 用户id
+   */
+  getEtpInfoByUser(userId: string): any {
+    return this.api.get(`${ApiPath.usercentral.enterpriseApi.getEtpInfoByUser}/${userId}`);
+  }
 }

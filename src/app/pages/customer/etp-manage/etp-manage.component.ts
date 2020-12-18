@@ -214,8 +214,10 @@ export class EtpManageComponent implements OnInit {
     this.defaultBusService.showLoading(true);
     this.etpManageService.getEtpInfo(_id)
       .ok(data => {
-        const etpManageService = this.etpManageService;
+        const etpManage = this;
+        const etpService = this.etpManageService;
         const uiHelper = this.uiHelper;
+
         const modal = this.modal.create({
           nzTitle: '企业认证审核',
           nzWidth: '800px',
@@ -241,18 +243,24 @@ export class EtpManageComponent implements OnInit {
               loading: false,
               onClick(instance): void {
                 this.loading = true;
-                etpManageService.checkEtpInfo({id: _id, checkType: instance.checkStatus, checkFailReason: instance.failReason})
+                etpService.checkEtpInfo({id: _id, checkType: instance.checkStatus, checkFailReason: instance.failReason})
                   .ok(data1 => {
                     console.log(data1);
+                    if (data1.errCode === 0) {
+                      uiHelper.msgTipSuccess(data1.msg);
+                      modal.destroy();
+                      setTimeout(() => {
+                        etpManage.search();
+                      }, 200);
+                    } else {
+                      uiHelper.msgTipError(data1.msg);
+                    }
                   })
                   .fail(error => {
                     uiHelper.msgTipError(error.msg);
                   })
                   .final(b => {
                     this.loading = false;
-                    if (b) {
-                      modal.destroy();
-                    }
                   });
               }
             }
