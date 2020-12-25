@@ -10,6 +10,7 @@ import {DefaultBusService} from '../../../helpers/event-bus/default-bus.service'
 import {EtpAccountMenuComponent} from './etp-account-menu/etp-account-menu.component';
 import {UserStatusEnum} from '../../../helpers/enum/user-status-enum';
 import {EtpAccountDetailsComponent} from './etp-account-details/etp-account-details.component';
+import {EtpAccountDetailsService} from './etp-account-details/etp-account-details.service';
 
 @Component({
   selector: 'app-etp-account',
@@ -18,7 +19,7 @@ import {EtpAccountDetailsComponent} from './etp-account-details/etp-account-deta
 })
 export class EtpAccountComponent implements OnInit {
 
-  userStatusEnum: typeof  UserStatusEnum = UserStatusEnum;
+  userStatusEnum: typeof UserStatusEnum = UserStatusEnum;
 
   // tab
   tabIndex = 0;
@@ -52,7 +53,8 @@ export class EtpAccountComponent implements OnInit {
 
   constructor(private fb: FormBuilder, public uiHelper: UIHelper,
               private etpAccountService: EtpAccountService, public themeHelper: ThemeHelper,
-              private defaultBusService: DefaultBusService) {
+              private defaultBusService: DefaultBusService,
+              private etpAccountDetailsService: EtpAccountDetailsService) {
   }
 
   ngOnInit() {
@@ -72,7 +74,7 @@ export class EtpAccountComponent implements OnInit {
         this.total = data.total;
         this.listOfAllData = data.list;
       }).fail(error => {
-        this.uiHelper.msgTipError(error.msg);
+      this.uiHelper.msgTipError(error.msg);
     }).final(() => {
       this.loading = false;
     });
@@ -149,7 +151,7 @@ export class EtpAccountComponent implements OnInit {
   }
 
   /**
-   * 审核用户信息。
+   * 显示审核用户信息对话框
    * @param id 用户id
    */
   verifyCheck(id: string): void {
@@ -157,11 +159,18 @@ export class EtpAccountComponent implements OnInit {
     this.checkModalVisible = true;
   }
 
-  CheckHandleCancel() {
+  /**
+   * 取消审核对话框。
+   */
+  checkHandleCancel() {
+    this.etpAccountDetailsComponent.resetUI();
     this.checkModalVisible = false;
   }
 
-  CheckHandleOk() {
-
+  /**
+   * 提交审核内容。
+   */
+  checkHandleOk() {
+    this.etpAccountDetailsComponent.submitCheckInfo(this);
   }
 }

@@ -1,3 +1,4 @@
+<!--企业信息-->
 <div class="etp-info">
   <div class="info-line-title">
     <nz-divider nzType="vertical"></nz-divider>
@@ -13,7 +14,7 @@
     </ul>
   </div>
 </div>
-
+<!--用户基础信息-->
 <div class="user-info">
   <div class="info-line-title">
     <nz-divider nzType="vertical"></nz-divider>
@@ -30,7 +31,7 @@
     </ul>
   </div>
 </div>
-
+<!--用户图片信息-->
 <div class="user-pic">
   <div class="info-line-title">
     <nz-divider nzType="vertical"></nz-divider>
@@ -41,34 +42,34 @@
     <div class="idcard">
       <p><label>法人身份证正反面</label></p>
       <a
-        href="https://file1.hlt-factoring.com/data/hlt/2020-12-14/2eb87cd73e5b4f139fb71da7fc76d0cf.jpg"
+        href="{{userInfo?.extra.idNoFileInfo?.url}}"
         target=_blank>
         <img class="p-img"
-             src="https://file1.hlt-factoring.com/data/hlt/2020-12-14/2eb87cd73e5b4f139fb71da7fc76d0cf.jpg"/>
+             src="{{userInfo?.extra.idNoFileInfo?.url}}"/>
       </a>
     </div>
     <div class="power-of-attorney">
       <p><label>授权委托书</label></p>
       <a
-        href="https://file1.hlt-factoring.com/data/hlt/2020-12-14/80ba7b0dbe43472ba31e2192eb17d974.jpg"
+        href="{{userInfo?.extra.powerOfAttorneyFileInfo?.url}}"
         target=_blank>
         <img class="p-img"
-             src="https://file1.hlt-factoring.com/data/hlt/2020-12-14/80ba7b0dbe43472ba31e2192eb17d974.jpg"/>
+             src="{{userInfo?.extra.powerOfAttorneyFileInfo?.url}}"/>
       </a>
     </div>
   </div>
 </div>
-
+<!--审核操作界面-->
 <div class="check-action">
   <div class="info-line-title"></div>
 
   <div class="check-action-select">
     <nz-radio-group [(ngModel)]="checkStatus">
-      <label nz-radio nzValue="1">认证通过</label>
-      <label style="margin-left: 40px;" nz-radio nzValue="2">认证不通过</label>
+      <label nz-radio [nzValue]="userStatusEnum.CHECK_PASS">认证通过</label>
+      <label style="margin-left: 40px;" nz-radio [nzValue]="userStatusEnum.CHECK_FAILURE">认证不通过</label>
     </nz-radio-group>
 
-    <nz-input-group *ngIf="checkStatus === '2'" style="width: 240px;" [nzSize]="'small'" [nzSuffix]="inputClearTpl">
+    <nz-input-group *ngIf="checkStatus === userStatusEnum.CHECK_FAILURE" style="width: 240px;" [nzSize]="'small'" [nzSuffix]="inputClearTpl">
       <input type="text" nz-input [(ngModel)]="failReason" placeholder="不通过原因"/>
     </nz-input-group>
     <ng-template #inputClearTpl

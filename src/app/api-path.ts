@@ -22,7 +22,8 @@ export const ApiPath = {
       getUserInfoById: `/${usercentral}/user/getUserInfoById`,
       updateUserPassword: `/${usercentral}/user/updateUserPassword`,
       resetUserPassword: `/${usercentral}/user/resetUserPassword`,
-      getEtpUserList: `/${usercentral}/user/getEtpUserList`
+      getEtpUserList: `/${usercentral}/user/getEtpUserList`,
+      saveCheckUserSeal: `/${usercentral}/user/saveCheckUserSeal`
     },
     enterpriseApi: {
       addByAdminSystemInvitation: `/${usercentral}/enterprise/addByAdminSystemInvitation`,
