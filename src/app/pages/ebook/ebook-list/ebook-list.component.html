@@ -57,7 +57,7 @@
         </td>
         <td nzAlign="center">{{ data.author }}</td>
         <td nzAlign="center">{{ data.isbn }}</td>
-        <td nzAlign="center">{{ data.extra.bookMenuName }}</td>
+        <td nzAlign="center">{{ data.extra.bookMenu?.nameZh }}</td>
         <td nzAlign="center">{{ data.publishTime | date:"yyyy-MM-dd" }}</td>
         <td nzAlign="center">
           <a (click)="addOrEdit(data.id)">编辑</a>
