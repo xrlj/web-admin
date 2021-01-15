@@ -6,5 +6,5 @@ export const environment = {
   themeStyle: ThemeEnum.Orange,
   asideTheme: 'light',  // 菜单抽屉主题，dark or light
   // apiUrl: 'http://api-dev.xrlj.com:5555'
-  apiUrl: 'http://3bda9085c06c.ngrok.io'
+  apiUrl: 'http://47.112.121.246:4369'
 };

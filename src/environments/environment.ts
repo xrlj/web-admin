@@ -11,7 +11,8 @@ export const environment = {
   themeStyle: ThemeEnum.Turquoise, // 设置系统默认风格
   asideTheme: 'light',  // 菜单抽屉主题，dark or light
   // apiUrl: 'http://api-dev.xrlj.com:5555'
-  apiUrl: 'http://localhost:5555'
+  // apiUrl: 'http://127.0.0.1:5555'
+  apiUrl: 'http://47.112.121.246:4369'
 };
 
 /*
