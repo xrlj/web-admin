@@ -8,6 +8,6 @@ RUN set -ex \
   && ng build --prod
 
 FROM nginx:stable-alpine
-COPY --from=builder /usr/src/app/dist/web-it-ebook /usr/share/nginx/html
+COPY --from=builder /usr/src/app/dist/web-admin /usr/share/nginx/html
 COPY ./nginx-angular.conf /etc/nginx/conf.d/default.conf
 
