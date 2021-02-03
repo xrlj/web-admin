@@ -1,0 +1,7 @@
+version: '3'
+services:
+  web-admin:
+    build: .
+    container_name: web-admin
+    ports:
+      - 88:80
