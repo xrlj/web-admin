@@ -5,7 +5,7 @@ export const Constants = {
   },
   appInfo: {
     // appName: '链金总后台',
-    appName: 'xxx',
+    appName: '链金科技总后台',
     clientId: '0a9cbbbb4f130988',
     clientDeviceType: 'web'
   },
