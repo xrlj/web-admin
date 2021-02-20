@@ -15,8 +15,9 @@
             [nzLoading]="isRefreshList" nzBordered>
     <thead>
     <tr>
-      <th nzWidth="35%" nzAlign="center">中文名称</th>
-      <th nzWidth="35%" nzAlign="center">英文名称</th>
+      <th nzWidth="30%" nzAlign="center">中文名称</th>
+      <th nzWidth="30%" nzAlign="center">英文名称</th>
+      <th nzWidth="10%" nzAlign="center">显示状态</th>
       <th nzWidth="10%" nzAlign="center">排序</th>
       <th nzAlign="center">操作</th>
     </tr>
@@ -35,6 +36,9 @@
           </td>
           <td nzAlign="center">
             {{item.nameEn}}
+          </td>
+          <td nzAlign="center">
+            {{item.showStatus ? '显示' : '不显示'}}
           </td>
           <td nzAlign="center">
             {{item.bookMenuSort}}
@@ -73,6 +77,15 @@
       <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="nameEn" nzRequired>类别英文名称</nz-form-label>
       <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
         <input nz-input id="nameEn" formControlName="nameEn" placeholder="分类英文名称"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="showStatus" nzRequired>是否显示</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <nz-select id="showStatus" formControlName="showStatus" [ngModel]="showStatus">
+          <nz-option nzLabel="显示" [nzValue]="true"></nz-option>
+          <nz-option nzLabel="不显示" [nzValue]='false'></nz-option>
+        </nz-select>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>

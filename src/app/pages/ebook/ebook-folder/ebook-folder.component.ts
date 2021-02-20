@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EbookFolderService} from './ebook-folder.service';
 import {UIHelper} from '../../../helpers/ui-helper';
 import {VBookMenuResp} from '../../../helpers/vo/resp/v-book-menu-resp';
@@ -27,12 +27,15 @@ export class EbookFolderComponent implements OnInit {
   parentId: string; // key即id
   editId: string; // 编辑记录id
 
+  showStatus = true;
+
   constructor(private fb: FormBuilder, private ebookFolderService: EbookFolderService,
               private uiHelper: UIHelper, private defaultBusService: DefaultBusService) {
     // 新增对话框
     this.addOrEditForm = this.fb.group({
       nameZh: [null, [MyValidators.required, MyValidators.maxLength(40)]],
       nameEn: [null, [MyValidators.required, MyValidators.maxLength(40), MyValidators.notChinese]],
+      showStatus: [null, [Validators.required]],
       bookMenuSort: [null, MyValidators.required],
       parentId: [null, null]
     });
@@ -123,7 +126,7 @@ export class EbookFolderComponent implements OnInit {
     this.isShowModal = true;
     this.editId = item.id;
     this.parentId = item.parentId;
-    this.addOrEditForm.patchValue({nameZh: item.nameZh, nameEn: item.nameEn, bookMenuSort: item.bookMenuSort, parentId: item.parentId});
+    this.addOrEditForm.patchValue({nameZh: item.nameZh, nameEn: item.nameEn, showStatus: item.showStatus, bookMenuSort: item.bookMenuSort, parentId: item.parentId});
     this.initSelectTreeList();
   }
 
@@ -171,6 +174,7 @@ export class EbookFolderComponent implements OnInit {
   handleOk() {
     if (this.addOrEditForm.valid) {
       this.isOkLoading = true;
+      debugger;
       if (this.dialogType === 1) { // 新增
         const value = this.addOrEditForm.value;
         this.ebookFolderService.save(value)
