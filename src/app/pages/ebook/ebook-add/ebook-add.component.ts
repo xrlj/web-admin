@@ -233,9 +233,9 @@ export class EbookAddComponent implements OnInit {
         return;
       }
       // tslint:disable-next-line:no-non-null-assertion
-      const isLtLimitM = file.size! / 1024 / 1024 < 150;
+      const isLtLimitM = file.size! / 1024 / 1024 < 200;
       if (!isLtLimitM) {
-        this.uiHelper.msgTipError(`文件大小不能超过150MB！`);
+        this.uiHelper.msgTipError(`文件大小不能超过200MB！`);
         observer.complete();
         return;
       }
