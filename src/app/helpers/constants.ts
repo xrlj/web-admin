@@ -23,5 +23,8 @@ export const Constants = {
       nzSm: 10,
       nzXs: 24
     }
+  },
+  fileUpload: {
+    ebookUploadSize: 200 // 电子书上传不超过200M
   }
 };

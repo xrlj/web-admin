@@ -14,6 +14,7 @@ import {MyValidators} from '../../../helpers/MyValidators';
 import {FileUploadHelper} from '../../../helpers/file-upload-helper';
 import {DefaultBusService} from '../../../helpers/event-bus/default-bus.service';
 import {EbookAddService} from './ebook-add.service';
+import {Constants} from '../../../helpers/constants';
 
 @Component({
   selector: 'app-ebook-add',
@@ -233,9 +234,9 @@ export class EbookAddComponent implements OnInit {
         return;
       }
       // tslint:disable-next-line:no-non-null-assertion
-      const isLtLimitM = file.size! / 1024 / 1024 < 200;
+      const isLtLimitM = file.size! / 1024 / 1024 < Constants.fileUpload.ebookUploadSize;
       if (!isLtLimitM) {
-        this.uiHelper.msgTipError(`文件大小不能超过200MB！`);
+        this.uiHelper.msgTipError(`文件大小不能超过${Constants.fileUpload.ebookUploadSize}MB！`);
         observer.complete();
         return;
       }
