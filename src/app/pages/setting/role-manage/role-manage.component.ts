@@ -128,7 +128,7 @@ export class RoleManageComponent implements OnInit {
   addRole(): void {
     this.dialogType = 1;
     this.isShowDialog = true;
-    this.menuManageService.getMenusByClientId(Constants.appInfo.clientId, 0).ok(data => {
+    this.menuManageService.getMenuList(Constants.appInfo.clientId, 0).ok(data => {
       this.nzTreeMenusData = data;
       this.uiHelper.setMenuPerDataLeaf(this.nzTreeMenusData);
     }).fail(error => {
@@ -161,7 +161,7 @@ export class RoleManageComponent implements OnInit {
           roleDesc: this.roleInfo.description
         });
         // 设置菜单授权
-        this.menuManageService.getMenusByClientId(Constants.appInfo.clientId, 0)
+        this.menuManageService.getMenuList(Constants.appInfo.clientId, 0)
           .ok(data1 => {
             this.nzTreeMenusData = data1;
             // 设置选中

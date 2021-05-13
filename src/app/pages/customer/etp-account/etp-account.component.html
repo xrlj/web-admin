@@ -75,12 +75,11 @@
                     <a (click)="verifyCheck(data.userId)">审核</a>
                   </div>
                   <div *ngSwitchCase="userStatusEnum.CHECK_PASS">
-                    <a (click)="details(data.userId)">查看</a>
-                    <nz-divider nzType="vertical"></nz-divider>
-                    <a (click)="setEtpMenus(data.userId, data.clientId)">设置菜单权限</a>
                   </div>
                   <div *ngSwitchDefault>
-                    <a>查看</a>
+                    <a (click)="details(data.userId)">查看</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a (click)="setEtpMenus(data.userId, data.clientId, userType)">设置菜单权限</a>
                   </div>
                 </td>
               </tr>

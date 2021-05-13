@@ -23,8 +23,8 @@ export class EtpManageService {
    * 分页查询列表。
    * @param vCustomerEtpReq 查询条件。
    */
-  getAllByAdmin(vCustomerEtpReq: VCustomerEtpReq): any {
-    return this.api.post(ApiPath.usercentral.enterpriseApi.getAllByAdmin, vCustomerEtpReq);
+  getAll(vCustomerEtpReq: VCustomerEtpReq): any {
+    return this.api.post(ApiPath.usercentral.enterpriseApi.getAll, vCustomerEtpReq);
   }
 
   /**

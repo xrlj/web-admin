@@ -146,8 +146,8 @@ export class EtpAccountComponent implements OnInit {
    * 设置企业管理员菜单权限
    * @param userId 用户id
    */
-  setEtpMenus(userId: string, clientId: string) {
-    this.etpAccountMenuComponent.editRole(userId, clientId);
+  setEtpMenus(userId: string, clientId: string, userType: UserTypeEnum) {
+    this.etpAccountMenuComponent.editRole(userId, clientId, userType);
   }
 
   /**

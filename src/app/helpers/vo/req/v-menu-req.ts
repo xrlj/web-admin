@@ -1,3 +1,5 @@
+import {UserTypeEnum} from '../../enum/user-type-enum';
+
 export interface VMenuReq {
   title: string;
   link: string;
@@ -6,6 +8,7 @@ export interface VMenuReq {
   isShow: boolean;
   perms: string;
   type: number;
+  userType: UserTypeEnum;
   id?: string;
   clientId?: string;
   parentId?: string;

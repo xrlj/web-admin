@@ -8,6 +8,8 @@ import {NzModalService} from 'ng-zorro-antd/modal';
 import {CommonService} from '../../../helpers/common.service';
 import {VAppInfoResp} from '../../../helpers/vo/resp/v-app-info-resp';
 import {VMenuReq} from '../../../helpers/vo/req/v-menu-req';
+import {UserTypeEnum} from '../../../helpers/enum/user-type-enum';
+import {Constants} from '../../../helpers/constants';
 
 @Component({
   selector: 'app-menu-manage',
@@ -16,8 +18,14 @@ import {VMenuReq} from '../../../helpers/vo/req/v-menu-req';
 })
 export class MenuManageComponent implements OnInit {
 
+  supperAppId = Constants.appInfo.clientId;
   appSelected: any;
   appDataList: VAppInfoResp[];
+
+  userTypeSelected: any
+  userTypeEnum: typeof  UserTypeEnum = UserTypeEnum; // 用户类型
+
+  pageSize = 50;
 
   // ===新增、编辑对话框相关
   isShowAdd = false;
@@ -59,7 +67,7 @@ export class MenuManageComponent implements OnInit {
         this.appSelected = this.appDataList[0].appId;
       }
 
-      this.getMenuByClientId(0);
+      this.getMenuList(0);
     }).fail((error) => {
       console.log(`获取应用列表失败:${error.code}`);
     });
@@ -69,20 +77,25 @@ export class MenuManageComponent implements OnInit {
    * 刷新菜单列表。
    */
   refreshMenuList() {
-    this.getMenuByClientId(0);
+    this.getMenuList(0);
+  }
+
+  appSelectChange(type: number) {
+    this.userTypeSelected = undefined;
+    this.getMenuList(type);
   }
 
   /**
    * 获取菜单列表。
    * @param type 菜单类型。
    */
-  getMenuByClientId(type: number) {
+  getMenuList(type: number) {
     if (!this.appSelected) {
       this.uiHelper.msgTipWarning('请先选择应用系统');
       return;
     }
     this.isRefreshMenuList = true;
-    this.menuManageService.getMenusByClientId(this.appSelected, type)
+    this.menuManageService.getMenuList(this.appSelected, type, this.userTypeSelected)
       .ok(data => {
         this.menuList = data;
         this.dealMenuList(this.menuList);
@@ -95,7 +108,7 @@ export class MenuManageComponent implements OnInit {
       })
       .final(() => {
         this.isRefreshMenuList = false;
-        console.log(JSON.stringify(this.menuListOfExpandedData));
+        // console.log(JSON.stringify(this.menuListOfExpandedData));
       });
   }
 
@@ -138,14 +151,17 @@ export class MenuManageComponent implements OnInit {
       this.uiHelper.msgTipWarning('请先选择应用系统');
       return;
     }
-    this.isShowAdd = true;
     // 获取上级菜单选择列表
-    this.menuManageService.getMenusByClientId(this.appSelected, 1).ok(data => {
+    this.menuManageService.getMenuList(this.appSelected, 1, this.userTypeSelected).ok(data => {
         this.selectMenuList = data;
         this.dealMenuList(this.selectMenuList);
         // this.setSelectMenuLeaf();
         this.uiHelper.setMenuPerDataLeaf(this.selectMenuList);
+
+        this.isShowAdd = true;
+        this.dialogType = 1;
       }).fail(error => {
+        this.uiHelper.msgTipError(error.msg);
     });
   }
 
@@ -154,22 +170,27 @@ export class MenuManageComponent implements OnInit {
       this.uiHelper.msgTipWarning('请先选择应用系统');
       return;
     }
-    this.isShowAdd = true;
     this.menuManageService.getMenuById(menuId)
       .ok(data => {
         // 设置上级菜单下拉
-        this.menuManageService.getMenusByClientId(this.appSelected, 1)
+        this.menuManageService.getMenuList(this.appSelected, 1, this.userTypeSelected)
           .ok(data1 => {
-          this.selectMenuList = data1;
-          this.dealMenuList(this.selectMenuList);
-          this.getMenuById(data.id, this.selectMenuList);
-          if (this.selectMenu) {
-            this.selectMenuKey = this.selectMenu.key;
-          }
-          this.uiHelper.setMenuPerDataLeaf(this.selectMenuList);
+            this.selectMenuList = data1;
+            this.dealMenuList(this.selectMenuList);
+            this.getMenuById(data.id, this.selectMenuList);
+            if (this.selectMenu) {
+              this.selectMenuKey = this.selectMenu.key;
+            }
+            this.uiHelper.setMenuPerDataLeaf(this.selectMenuList);
+
+            // 更改对话框可视
+            this.isShowAdd = true;
+            this.dialogType = 1;
         }).fail(error => {
+          this.uiHelper.msgTipError(error.msg);
         });
       }).fail(error => {
+        this.uiHelper.msgTipError(error.msg);
     });
   }
 
@@ -177,8 +198,6 @@ export class MenuManageComponent implements OnInit {
    * 编辑菜单。
    */
   editMenu(menuId: string) {
-    this.isShowAdd = true;
-    this.dialogType = 2;
     this.menuManageService.getMenuById(menuId)
       .ok(data => {
         this.menuDetails = data;
@@ -195,7 +214,7 @@ export class MenuManageComponent implements OnInit {
           icon: this.menuDetails.icon
         });
         // 设置上级菜单下拉
-        this.menuManageService.getMenusByClientId(this.appSelected, 1).ok(data1 => {
+        this.menuManageService.getMenuList(this.appSelected, 1, this.userTypeSelected).ok(data1 => {
             this.selectMenuList = data1;
             this.dealMenuList(this.selectMenuList);
             this.getMenuById(this.menuDetails.parentId, this.selectMenuList);
@@ -203,9 +222,15 @@ export class MenuManageComponent implements OnInit {
               this.selectMenuKey = this.selectMenu.key;
             }
             this.uiHelper.setMenuPerDataLeaf(this.selectMenuList);
+
+            // 更改对话框状态
+            this.isShowAdd = true;
+            this.dialogType = 2;
           }).fail(error => {
+            this.uiHelper.msgTipError(error.msg);
         });
       }).fail(error => {
+      this.uiHelper.msgTipError(error.msg);
     });
   }
 
@@ -296,6 +321,7 @@ export class MenuManageComponent implements OnInit {
   handleOk(): void {
     this.isAddOkLoading = true;
     const body: VMenuReq = {
+      userType: this.userTypeSelected,
       type: this.radioValue === 'A' ? 1 : 2,
       title: this.addMenuForm.value.menuName,
       isShow: this.addMenuForm.value.isShow === '1' ? true : false,

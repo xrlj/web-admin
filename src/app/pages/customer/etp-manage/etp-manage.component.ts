@@ -74,7 +74,7 @@ export class EtpManageComponent implements OnInit {
     this.etpSearchVo.userType = this.userType;
     this.utils.print(this.etpSearchVo);
     this.listLoading = true;
-    this.etpManageService.getAllByAdmin(this.etpSearchVo)
+    this.etpManageService.getAll(this.etpSearchVo)
       .ok(data => {
         this.pageIndex = data.pageIndex;
         this.pageSize = data.pageSize;
@@ -181,7 +181,6 @@ export class EtpManageComponent implements OnInit {
           setTimeout(() => {
             this.search();
           }, 100);
-          this.search(false);
         }).fail(error => {
           this.uiHelper.msgTipError(error.msg);
         }).final(() => {

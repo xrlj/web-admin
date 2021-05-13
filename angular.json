@@ -161,5 +161,8 @@
       }
     }
   },
-  "defaultProject": "web-admin"
+  "defaultProject": "web-admin",
+  "cli": {
+    "analytics": false
+  }
 }

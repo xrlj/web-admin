@@ -4,8 +4,8 @@ export const Constants = {
     timeOut: 5000
   },
   appInfo: {
-    // appName: '链金总后台',
-    appName: '链金科技总后台',
+    appName: 'xxxxxxx',
+    // appName: '链金科技总后台',
     clientId: '0a9cbbbb4f130988',
     clientDeviceType: 'web'
   },

@@ -10,6 +10,7 @@ import {UIHelper} from '../../../../helpers/ui-helper';
 import {EtpAccountService} from '../etp-account.service';
 import {NzFormatEmitEvent} from 'ng-zorro-antd';
 import {DefaultBusService} from '../../../../helpers/event-bus/default-bus.service';
+import {UserTypeEnum} from '../../../../helpers/enum/user-type-enum';
 
 @Component({
   selector: 'app-etp-account-menu',
@@ -47,7 +48,7 @@ export class EtpAccountMenuComponent implements OnInit {
    * 编辑修改角色。
    * @param id 角色id
    */
-  editRole(userId: string, clientId: string): void {
+  editRole(userId: string, clientId: string, userType: UserTypeEnum): void {
     this.defaultBusService.showLoading(true);
     this.etpAccountService.getRoleInfoByUserId(userId)
       .ok(data => {
@@ -55,7 +56,7 @@ export class EtpAccountMenuComponent implements OnInit {
           this.roleList = data;
           this.roleId = this.roleList[0].roleId;
           this.clientId = clientId;
-          this.showDialog(this.roleId, clientId);
+          this.showDialog(this.roleId, clientId, userType);
         } else {
           this.defaultBusService.showLoading(false);
         }
@@ -68,7 +69,7 @@ export class EtpAccountMenuComponent implements OnInit {
     });
   }
 
-  showDialog(roleId: string, clientId: string) {
+  showDialog(roleId: string, clientId: string, userType: UserTypeEnum) {
     this.etpAccountService.getRoleInfo(roleId)
       .ok(data => {
         this.isShowDialog = true;
@@ -77,7 +78,7 @@ export class EtpAccountMenuComponent implements OnInit {
           roleDesc: data.description
         });
         // 设置菜单授权
-        this.etpAccountService.getMenusByClientId(clientId, 0)
+        this.etpAccountService.getMenusByClientId(clientId, 0, userType)
           .ok(data1 => {
             this.nzTreeMenusData = data1;
             // 设置选中
