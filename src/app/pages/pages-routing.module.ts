@@ -53,6 +53,10 @@ const routes: Routes = [
       {
         path: 'ebook',
         loadChildren: () => import('./ebook/ebook.module').then(m => m.EbookModule)
+      },
+      {
+        path: 'basic-info',
+        loadChildren: () => import('./basic-information/basic-information.module').then(m => m.BasicInformationModule)
       }
     ]
   },
