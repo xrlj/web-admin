@@ -1,54 +1,66 @@
-<nz-card class="card-list" nzTitle="字典管理">
+<nz-card class="card-list" nzTitle="融资产品类型管理">
   <div class="card-list-action">
     <nz-input-group [nzSuffix]="typeNameSuffixTemplate">
-      <input type="text" nz-input [(ngModel)]="productTypeName" placeholder="产品类别名称"/>
+      <input type="text" nz-input [(ngModel)]="productTypeName" placeholder="融资产品类型名称"/>
     </nz-input-group>
     <button nz-button nzType="default" (click)="search(true)"><i nz-icon nzType="search"></i>查询</button>
     <button nz-button nzType="primary" (click)="addOrEdit('0')"><i nz-icon nzType="plus"></i>新增</button>
   </div>
   <div class="card-list-table">
-    <nz-table
-      #table
-      nzShowPagination
-      nzShowSizeChanger
-      nzBordered
-      [nzFrontPagination]="false"
-      [nzData]="listOfAllData"
-      [nzLoading]="loading"
-      [nzTotal]="total"
-      [(nzPageIndex)]="pageIndex"
-      [(nzPageSize)]="pageSize"
-      (nzPageIndexChange)="search()"
-      (nzPageSizeChange)="search(true)"
-      (nzCurrentPageDataChange)="currentPageDataChange($event)"
-    >
+    <nz-table #nestedTable [nzData]="vPdtTypes" [nzPageSize]="pageSize">
       <thead>
-      <tr>
-        <th nzWidth="20%" nzAlign="center">序号</th>
-        <th nzWidth="15%" nzAlign="center">类型名称</th>
-        <th nzWidth="10%" nzAlign="center">类型编号</th>
-        <th nzWidth="15%" nzAlign="center">书号</th>
-        <th nzWidth="15%" nzAlign="center">最小分类</th>
-        <th nzWidth="15%" nzAlign="center">出版时间</th>
-        <th nzWidth="10%" nzAlign="center">操作</th>
-      </tr>
+        <tr>
+          <th></th>
+          <th>类型名称</th>
+          <th>类型编号</th>
+          <th>是否显示</th>
+          <th>排序</th>
+          <th>类型描述</th>
+          <th>操作</th>
+        </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let data of table['data']">
-        <td nzAlign="center">{{ data.bookName }}</td>
-        <td nzAlign="center">
-          <img style="width: 80px; height: 100px;" src="{{ data.extra.coverFileInfo.url }}">
-        </td>
-        <td nzAlign="center">{{ data.author }}</td>
-        <td nzAlign="center">{{ data.isbn }}</td>
-        <td nzAlign="center">{{ data.extra.bookMenu?.nameZh }}</td>
-        <td nzAlign="center">{{ data.publishTime | date:"yyyy-MM-dd" }}</td>
-        <td nzAlign="center">
-          <a (click)="addOrEdit(data.id)">编辑</a>
-          <nz-divider nzType="vertical"></nz-divider>
-          <a (click)="del(data.id)">删除</a>
-        </td>
-      </tr>
+        <ng-template ngFor let-data [ngForOf]="nestedTable.data">
+          <tr>
+            <td [(nzExpand)]="data.expand"></td>
+            <td>{{ data.pdtTypeName }}</td>
+            <td>{{ data.pdtTypeCode }}</td>
+            <td>{{ data.pdtTypeShow }}</td>
+            <td>{{ data.pdtTypeSort }}</td>
+            <td>{{ data.pdtTypeDesc }}</td>
+            <td>
+              <a>编辑</a>
+              <nz-divider nzType="vertical"></nz-divider>
+              <a>删除</a>
+            </td>
+          </tr>
+          <tr [nzExpand]="data.expand">
+            <nz-table #innerTable [nzData]="data.templates" nzSize="middle" [nzShowPagination]="false">
+              <thead>
+                <tr>
+                  <th>模板编码</th>
+                  <th>合同名称</th>
+                  <th>合同大类</th>
+                  <th>合同类别</th>
+                  <th>合同版别</th>
+                  <th>版本号</th>
+                  <th>所属企业</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of innerTable.data">
+                  <td>{{ data.agrCode }}</td>
+                  <td>{{ data.agrName }}</td>
+                  <td>{{ data.agrBigTypeName }}</td>
+                  <td>{{ data.agrTypeName }}</td>
+                  <td>{{ data.agrSpecifyName }}</td>
+                  <td>{{ data.agrVersion }}</td>
+                  <td>{{ data.etpName }}</td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </tr>
+        </ng-template>
       </tbody>
     </nz-table>
   </div>
@@ -65,3 +77,45 @@
   (click)="productTypeName = null"
 ></i
 ></ng-template>
+
+<!--新增菜单对话框-->
+<nz-modal [(nzVisible)]="isShowModal"
+          nzMaskClosable=false
+          nzWidth="800"
+          [nzTitle]="dialogType === 1 ? '新增' : '修改'"
+          (nzOnCancel)="handleCancel()"
+          (nzOnOk)="handleOk()"
+          [nzOkLoading]="isOkLoading">
+
+  <form nz-form [formGroup]="addOrEditForm">
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="pdtTypeName" nzRequired>产品类型名称</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
+        <input nz-input id="pdtTypeName" formControlName="pdtTypeName" placeholder="请输入类型名称"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="pdtTypeCode" nzRequired>产品类型编号</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
+        <input nz-input id="pdtTypeCode" formControlName="pdtTypeCode" placeholder="请输入类型编号"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="pdtTypeShow" nzRequired>是否显示</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <nz-select id="pdtTypeShow" formControlName="pdtTypeShow" [ngModel]="pdtTypeShow">
+          <nz-option nzLabel="显示" [nzValue]="true"></nz-option>
+          <nz-option nzLabel="不显示" [nzValue]='false'></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="pdtTypeSort" nzRequired>排序</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
+        <nz-input-number id="pdtTypeSort" formControlName="pdtTypeSort" [nzMin]="0" [nzMax]="1000" [nzStep]="1"
+                         [ngModel]="0"
+                         style="width: 150px"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>

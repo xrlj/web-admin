@@ -40,7 +40,7 @@ export class AppHeaderComponent implements OnInit {
 
   // ====== 系统设置-抽屉
   settingVisible: boolean;
-  sliderMenuThemeChecked = true;
+  sliderMenuThemeChecked = false;
   themeRadioValue: string;
 
   ngOnInit() {

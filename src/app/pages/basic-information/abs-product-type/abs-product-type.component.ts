@@ -1,4 +1,28 @@
 import { Component, OnInit } from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MyValidators} from '../../../helpers/MyValidators';
+
+interface VPdtType {
+  key: string;
+  expand: boolean;
+  pdtTypeName: string;
+  pdtTypeCode: string;
+  pdtTypeSort: number;
+  pdtTypeShow: number | string;
+  pdtTypeDesc: string;
+  templates: VPdtTypeTemplate[];
+}
+
+interface VPdtTypeTemplate {
+  key: string;
+  agrCode: string;
+  agrName: string;
+  agrBigTypeName: string;
+  agrTypeName: string;
+  agrSpecifyName: string;
+  agrVersion: string;
+  etpName: string;
+}
 
 // ABS产品类别管理
 @Component({
@@ -16,11 +40,61 @@ export class AbsProductTypeComponent implements OnInit {
   pageSize = 10;
   total = 0;
 
-  listOfDisplayData: any[] = [];
+  isShowModal = false;
+  dialogType = 1;
+  isOkLoading = false;
+  addOrEditForm: FormGroup;
+  editId: string; // 编辑记录id
 
-  constructor() { }
+  pdtTypeShow = true;
+
+
+  vPdtTypes: VPdtType[] = [];
+
+  constructor(private fb: FormBuilder) {
+    // 新增对话框
+    this.addOrEditForm = this.fb.group({
+      pdtTypeName: [null, [MyValidators.required, MyValidators.maxLength(80)]],
+      pdtTypeCode: [null, [MyValidators.required, MyValidators.maxLength(80)]],
+      pdtTypeShow: [null, [Validators.required]],
+      pdtTypeSort: [null, MyValidators.required]
+    });
+  }
 
   ngOnInit(): void {
+    for (let i = 0; i < 3; ++i) {
+      this.vPdtTypes.push({
+        key: i.toString(),
+        pdtTypeCode: `${i}_`,
+        pdtTypeName: '',
+        pdtTypeShow: '',
+        pdtTypeSort: 0,
+        pdtTypeDesc: '',
+        templates: [
+          {
+            key: (i + 1).toString(),
+            agrCode: '1',
+            agrName: '',
+            agrBigTypeName: '',
+            agrTypeName: '',
+            agrSpecifyName: '',
+            agrVersion: '',
+            etpName: ''
+          },
+          {
+            key: (i + 1).toString(),
+            agrCode: '2',
+            agrName: '',
+            agrBigTypeName: '',
+            agrTypeName: '',
+            agrSpecifyName: '',
+            agrVersion: '',
+            etpName: ''
+          }
+        ],
+        expand: false
+      });
+    }
   }
 
   search(b: boolean = false) {
@@ -28,6 +102,8 @@ export class AbsProductTypeComponent implements OnInit {
   }
 
   addOrEdit(id: string) {
+    this.dialogType = 1;
+    this.isShowModal = true;
   }
 
   del(id: string) {
@@ -38,17 +114,32 @@ export class AbsProductTypeComponent implements OnInit {
    * @param $event 选择事件
    */
   currentPageDataChange($event: any[]): void {
-    // this.listOfDisplayData = $event;
-    // this.refreshStatus();
   }
 
-  refreshStatus(): void {
-   /* this.isAllDisplayDataChecked = this.listOfDisplayData
-      .filter(item => !item.disabled)
-      .every(item => this.mapOfCheckedId[item.id]);
-    this.isIndeterminate =
-      this.listOfDisplayData.filter(item => !item.disabled).some(item => this.mapOfCheckedId[item.id]) &&
-      !this.isAllDisplayDataChecked;
-    this.numberOfChecked = this.listOfAllData.filter(item => this.mapOfCheckedId[item.id]).length;*/
+  resetAddOrEditModal(): void {
+    this.isShowModal = false;
+    this.dialogType = 1;
+    this.isOkLoading = false;
+    this.addOrEditForm.reset();
+  }
+
+  handleCancel() {
+    this.resetAddOrEditModal();
+  }
+
+  handleOk() {
+    if (this.addOrEditForm.valid) {
+      this.isOkLoading = true;
+      if (this.dialogType === 1) { // 新增
+        const value = this.addOrEditForm.value;
+      } else { // 编辑
+        const value = this.addOrEditForm.value;
+      }
+    } else {
+      for (const key in this.addOrEditForm.controls) {
+        this.addOrEditForm.controls[key].markAsDirty();
+        this.addOrEditForm.controls[key].updateValueAndValidity();
+      }
+    }
   }
 }

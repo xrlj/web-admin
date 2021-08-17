@@ -6,9 +6,9 @@ import {AbsProductTypeComponent} from './abs-product-type/abs-product-type.compo
 import {EtpRoleTypeComponent} from './etp-role-type/etp-role-type.component';
 import {AbsAnnexTypeComponent} from './abs-annex-type/abs-annex-type.component';
 import {ProtocolTemplateParComponent} from './protocol-template-par/protocol-template-par.component';
-import {NzCardModule, NzDividerModule, NzIconModule, NzInputModule, NzModalModule, NzTableModule, NzTagModule} from 'ng-zorro-antd';
+import {NzBadgeModule, NzCardModule, NzDividerModule, NzDropDownModule, NzFormModule, NzIconModule, NzInputModule, NzInputNumberModule, NzModalModule, NzSelectModule, NzTableModule, NzTagModule, NzTreeSelectModule} from 'ng-zorro-antd';
 import {NzButtonModule} from 'ng-zorro-antd/button';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 // 基础资料管理模块
 @NgModule({
@@ -24,7 +24,14 @@ import {FormsModule} from '@angular/forms';
     NzModalModule,
     NzTableModule,
     NzTagModule,
-    NzDividerModule
+    NzDividerModule,
+    ReactiveFormsModule,
+    NzFormModule,
+    NzInputNumberModule,
+    NzTreeSelectModule,
+    NzSelectModule,
+    NzBadgeModule,
+    NzDropDownModule
   ]
 })
 export class BasicInformationModule { }
