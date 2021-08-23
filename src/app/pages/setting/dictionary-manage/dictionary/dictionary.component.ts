@@ -1,5 +1,8 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {Component, OnInit, EventEmitter, Output} from '@angular/core';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {DictionaryService} from './dictionary.service';
+import {UIHelper} from '../../../../helpers/ui-helper';
+import {DefaultBusService} from '../../../../helpers/event-bus/default-bus.service';
 
 @Component({
   selector: 'app-dictionary',
@@ -8,8 +11,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class DictionaryComponent implements OnInit {
 
-  dicName: string; // 搜索条件，字典名称
-  dicType: string; // 搜索条件，字典类型
+  dictName: string; // 搜索条件，字典名称
+  dictType: string; // 搜索条件，字典类型
 
   // 表格
   isAllDisplayDataChecked = false;
@@ -31,24 +34,55 @@ export class DictionaryComponent implements OnInit {
 
   @Output() showType = new EventEmitter<number>();
 
-  constructor( private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private dictionaryService: DictionaryService,
+              private uiHelper: UIHelper, private defaultBusService: DefaultBusService) {
     this.addOrEditForm = this.fb.group({
-      dicName: [null, [Validators.required]],
-      dicType: [null, [Validators.required]],
-      sort: [null, [Validators.required]],
+      dictName: [null, [Validators.required]],
+      dictType: [null, [Validators.required]],
+      dictSort: [null, [Validators.required]],
       remark: [null, null]
     });
   }
 
   ngOnInit() {
+    this.search(true);
   }
 
-  search(b: boolean = false) {
-
+  search(reset: boolean = false) {
+    if (reset) {
+      this.pageIndex = 1;
+    }
+    this.loading = true;
+    this.dictionaryService.getListPage(this.pageIndex, this.pageSize,
+      this.dictName, this.dictType).ok(data => {
+      this.pageIndex = data.pageIndex;
+      this.pageSize = data.pageSize;
+      this.total = data.total;
+      this.listOfAllData = data.list;
+    }).fail(error => {
+      this.uiHelper.msgTipError(error.msg);
+    }).final(b => {
+      this.loading = false;
+    });
   }
 
-  add() {
-    this.isShowModal = true;
+
+  addOrUpdate(id?: string) {
+    if (id) { // 编辑
+      this.defaultBusService.showLoading(true);
+      this.dictionaryService.get(id).ok(data => {
+        this.modalType = 2;
+        this.isShowModal = true;
+        this.addOrEditForm.patchValue(data);
+      }).fail(error => {
+        this.uiHelper.msgTipError(error.msg);
+      }).final(b => {
+        this.defaultBusService.showLoading(false);
+      });
+    } else { // 新增
+      this.isShowModal = true;
+      this.modalType = 1;
+    }
   }
 
   del() {
@@ -56,6 +90,7 @@ export class DictionaryComponent implements OnInit {
   }
 
   reInitModal() {
+    this.modalType = 1;
     this.isShowModal = false;
     this.isModalOkLoading = false;
     this.addOrEditForm.reset();
@@ -97,6 +132,29 @@ export class DictionaryComponent implements OnInit {
   }
 
   handleOk() {
-
+    if (this.addOrEditForm.valid) { // 前端通过所有输入校验
+      this.isModalOkLoading = true;
+      const body: any = this.addOrEditForm.value;
+      this.dictionaryService.addOrUpdate(body).ok(data => {
+          if (data) {
+            this.search(true);
+          } else {
+            this.uiHelper.msgTipError('操作失败');
+          }
+      }).fail(error => {
+        this.uiHelper.msgTipError(error.msg);
+      }).final(b => {
+        if (b) {
+          this.reInitModal();
+        } else {
+          this.isModalOkLoading = false;
+        }
+      });
+    } else {
+      for (const key in this.addOrEditForm.controls) {
+        this.addOrEditForm.controls[key].markAsDirty();
+        this.addOrEditForm.controls[key].updateValueAndValidity();
+      }
+    }
   }
 }

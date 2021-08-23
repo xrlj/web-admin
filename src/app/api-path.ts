@@ -77,6 +77,20 @@ export const ApiPath = {
     areaDic: {
       getProvinceList: `/${syscommon}/areaDic/getProvinceList`,
       getChildrenList: `/${syscommon}/areaDic/getChildrenList`,
+    },
+    universalDic: {
+      addOrUpdate: `/${syscommon}/universalDic/addOrUpdate`,
+      delete: `/${syscommon}/universalDic/delete`,
+      get: `/${syscommon}/universalDic/get`,
+      getListPage: `/${syscommon}/universalDic/getListPage`,
+      getList: `/${syscommon}/universalDic/getList`
+    },
+    universalDicValue: {
+      addOrUpdate: `/${syscommon}/universalDicValue/addOrUpdate`,
+      delete: `/${syscommon}/universalDicValue/delete`,
+      get: `/${syscommon}/universalDicValue/get`,
+      getListPage: `/${syscommon}/universalDicValue/getListPage`,
+      getList: `/${syscommon}/universalDicValue/getList`
     }
   },
   serviceebook: {

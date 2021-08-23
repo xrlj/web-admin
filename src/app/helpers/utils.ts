@@ -54,7 +54,7 @@ export class Utils {
    * @param token 待解析token。
    */
   jwtTokenDecode(): any {
-    const  token = localStorage.getItem(Constants.localStorageKey.token);
+    const token = localStorage.getItem(Constants.localStorageKey.token);
     if (!token) {
       throw new Error('没有获取到token');
     }
@@ -68,7 +68,7 @@ export class Utils {
    * @param token 保存的token。
    */
   jwtTokenIsExpired(): boolean {
-    const  token = localStorage.getItem(Constants.localStorageKey.token);
+    const token = localStorage.getItem(Constants.localStorageKey.token);
     if (!token) {
       throw new Error('没有获取到token');
     }
@@ -129,7 +129,7 @@ export class Utils {
    * @return 如： a,b,c
    */
   arrayToArrayParam(array: any[]): string {
-    let arrayPar  = '';
+    let arrayPar = '';
     array.forEach((value, index) => {
       arrayPar = arrayPar.concat(value);
       if (index !== array.length - 1) {
@@ -149,4 +149,32 @@ export class Utils {
       return v.toString(16);
     });
   }
+
+  /*////////////////// 字符串去空格 start ///////////////////*/
+
+  // 去除左侧空格
+  ltrim(str: string) {
+    const reg = /^\s+/g;
+    return str.replace(reg, '');
+  }
+
+  // 去除右侧空格
+  rtrim(str: string) {
+    const reg = /\s+$/g;
+    return str.replace(reg, '');
+  }
+
+  // 去除两侧的空格
+  trim(str: string) {
+    const reg = /^\s+|\s+$/g;
+    return str.replace(reg, '');
+  }
+
+  // 去除字符串中的所有空格
+  trim2(str: string) {
+    const reg = /\s+/g;
+    return str.replace(reg, '');
+  }
+
+  /*////////////////// 字符串去空格 end ///////////////////*/
 }
