@@ -3,6 +3,7 @@ const usercentral = 'usercentral';
 const sysfilesystem = 'sysfilesystem'; // 文件系统服务
 const syscommon = 'syscommon';
 const serviceebook = 'serviceebook';
+const serviceAbsProduct = 'serviceAbsProduct';
 
 export const ApiPath = {
   login: `/${serviceauth}/auth/sysLogin`,
@@ -91,6 +92,15 @@ export const ApiPath = {
       get: `/${syscommon}/universalDicValue/get`,
       getListPage: `/${syscommon}/universalDicValue/getListPage`,
       getList: `/${syscommon}/universalDicValue/getList`
+    }
+  },
+  serviceAbsProduct: {
+    fpdtType: {
+      addOrUpdate: `/${serviceAbsProduct}/fpdtType/addOrUpdate`,
+      delete: `/${serviceAbsProduct}/fpdtType/delete`,
+      get: `/${serviceAbsProduct}/fpdtType/get`,
+      getListPage: `/${serviceAbsProduct}/fpdtType/getListPage`,
+      getList: `/${serviceAbsProduct}/fpdtType/getList`
     }
   },
   serviceebook: {

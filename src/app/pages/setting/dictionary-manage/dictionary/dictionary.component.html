@@ -51,12 +51,14 @@
           (nzCheckedChange)="refreshStatus()"
         ></td>
         <td nzAlign="center">{{ data.dictName }}</td>
-        <td nzAlign="center">{{ data.dictType }}</td>
+        <td nzAlign="center"><a (click)="showTypeUI(data)">{{ data.dictType }}</a></td>
         <td nzAlign="center">{{ data.dictSort }}</td>
         <td nzAlign="center">{{ data.remark }}</td>
         <td nzAlign="center">{{ data.dateCreated }}</td>
         <td nzAlign="center">
           <a (click)="addOrUpdate(data.id)">编辑</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a (click)="del(data.id)">删除</a>
         </td>
       </tr>
       </tbody>

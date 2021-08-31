@@ -1,5 +1,10 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import {Component, OnInit, EventEmitter, Output, Input} from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {DictionaryTypeService} from './dictionary-type.service';
+import {UIHelper} from '../../../../helpers/ui-helper';
+import {DefaultBusService} from '../../../../helpers/event-bus/default-bus.service';
+import {Utils} from '../../../../helpers/utils';
+import {MyValidators} from '../../../../helpers/MyValidators';
 
 @Component({
   selector: 'app-dictionary-type',
@@ -8,8 +13,9 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class DictionaryTypeComponent implements OnInit {
 
-  dicTypeValue: string; // 搜索条件，字典值
-  dicTypeTag: string; // 搜索条件，字典标签
+  dictValue: number; // 搜索条件，字典值
+  dictValueEnum: string; // 搜索条件，字典值
+  dictLabel: string; // 搜索条件，字典标签
 
   // 表格
   isAllDisplayDataChecked = false;
@@ -31,31 +37,104 @@ export class DictionaryTypeComponent implements OnInit {
 
   @Output() showType = new EventEmitter<number>();
 
-  constructor( private fb: FormBuilder) {
+  @Input() dictId: string;
+  @Input() dictType: string;
+
+  details: any; // 选定记录详情。
+
+  // 排序
+  sortOrder: string;
+  sortField: string;
+
+  constructor( private fb: FormBuilder,
+               private dictionaryTypeService: DictionaryTypeService,
+               private uiHelper: UIHelper, private utils: Utils,
+               private defaultBusService: DefaultBusService) {
     this.addOrEditForm = this.fb.group({
-      dicTypeValue: [null, [Validators.required]],
-      dicTypeTag: [null, [Validators.required]],
+      dictValue: [null, [Validators.required]],
+      dictValueEnum: [null, [Validators.required, MyValidators.notChinese]],
+      dictLabel: [null, [Validators.required]],
+      isShow: [null, [Validators.required]],
       sort: [null, [Validators.required]],
       remark: [null, null]
     });
   }
 
   ngOnInit() {
+    this.search(true);
   }
 
-  search(b: boolean = false) {
+  search(reset: boolean = false) {
+    if (reset) {
+      this.pageIndex = 1;
+    }
 
+    // 设置参数
+    const body: any = {};
+    body.pageIndex = this.pageIndex;
+    body.pageSize = this.pageSize;
+    body.universalDicId = this.dictId;
+    body.dictValue = this.dictValue;
+    body.dictValueEnum = this.dictValueEnum;
+    body.dictLabel = this.dictLabel;
+    this.utils.setListSearchSortPar(body, this.sortOrder, this.sortField);
+
+    this.loading = true;
+    this.dictionaryTypeService.getListPage(body)
+      .ok(data => {
+        this.pageIndex = data.pageIndex;
+        this.pageSize = data.pageSize;
+        this.total = data.total;
+        this.listOfAllData = data.list;
+      })
+      .fail(error => {
+        this.uiHelper.msgTipError(error.msg);
+      })
+      .final(b => {
+        this.loading = false;
+      });
   }
 
   add() {
+    this.modalType = 1;
     this.isShowModal = true;
   }
 
-  del() {
-
+  del(id?: string) {
+    const checkIds: string[] = []; // 待删除
+    if (id) {
+      checkIds.push(id);
+    } else { // 批量删除
+      for (const key in this.mapOfCheckedId) {
+        if (this.mapOfCheckedId[key]) {
+          checkIds.push(key);
+        }
+      }
+      if (checkIds.length === 0) {
+        this.uiHelper.msgTipWarning('请选择!');
+        return;
+      }
+    }
+    this.defaultBusService.showLoading(true);
+    this.dictionaryTypeService.delete(checkIds)
+      .ok(data => {
+        if (data) {
+          this.mapOfCheckedId = {};
+          setTimeout(() => {
+            this.search();
+          }, 100);
+        }
+      })
+      .fail(error => {
+        this.uiHelper.msgTipError(error.msg);
+      })
+      .final(b => {
+        this.defaultBusService.showLoading(false);
+      });
   }
 
   reInitModal() {
+    this.modalType = 1;
     this.isShowModal = false;
     this.isModalOkLoading = false;
     this.addOrEditForm.reset();
@@ -97,10 +176,67 @@ export class DictionaryTypeComponent implements OnInit {
   }
 
   handleOk() {
-
+    if (this.addOrEditForm.valid) {
+      this.isModalOkLoading = true;
+      const body: any = this.addOrEditForm.value;
+      body.universalDicId = this.dictId;
+      if (this.modalType === 2) { // 编辑
+        body.id = this.details.id;
+      }
+      this.dictionaryTypeService.addOrUpdate(body).ok(data => {
+        if (data) {
+          setTimeout(() => {
+            this.search(false);
+          }, 100);
+        } else {
+          this.uiHelper.msgTipError('操作失败');
+        }
+      }).fail(error => {
+        this.uiHelper.msgTipError(error.msg);
+      }).final(b => {
+        if (b) {
+          this.reInitModal();
+        } else {
+          this.isModalOkLoading = false;
+        }
+      });
+    } else {
+      for (const key in this.addOrEditForm.controls) {
+        this.addOrEditForm.controls[key].markAsDirty();
+        this.addOrEditForm.controls[key].updateValueAndValidity();
+      }
+    }
   }
 
   back2Dictionary() {
     this.showType.emit(1);
+  }
+
+  edit(id: string) {
+    this.defaultBusService.showLoading(true);
+    this.dictionaryTypeService.get(id)
+      .ok(data => {
+        this.modalType = 2;
+        this.isShowModal = true;
+        this.addOrEditForm.patchValue(data);
+        this.details = data;
+      })
+      .fail(error => {
+        this.uiHelper.msgTipError(error.msg);
+      })
+      .final(b => {
+        this.defaultBusService.showLoading(false);
+      });
+  }
+
+  fieldSortHandler($event, fieldName) {
+    if ($event) {
+      this.sortOrder = $event;
+      this.sortField = `${fieldName},id`;
+      this.search(false);
+    } else {
+      this.sortOrder = null;
+      this.sortField = null;
+    }
   }
 }

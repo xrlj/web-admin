@@ -1,2 +1,8 @@
-<app-dictionary *ngIf="showType === 1" (showType)="changeShowType($event)"></app-dictionary>
-<app-dictionary-type *ngIf="showType === 2" (showType)="changeShowType($event)"></app-dictionary-type>
+<app-dictionary *ngIf="showType === 1" (rowInfo)="goToDictType($event)" (showType)="changeShowType($event)"></app-dictionary>
+<app-dictionary-type *ngIf="showType === 2"
+                     (showType)="changeShowType($event)"
+                     [dictType]="dictSelectRecordInfo.dictType"
+                     [dictId]="dictSelectRecordInfo.id"
+>
+
+</app-dictionary-type>

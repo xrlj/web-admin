@@ -1,10 +1,13 @@
-<nz-card class="card-list" nzTitle="字典类型管理" [nzExtra]="extraTemplate">
+<nz-card class="card-list" [nzTitle]="'字典类型管理-' + dictType" [nzExtra]="extraTemplate">
   <div class="card-list-action">
     <nz-input-group [nzSuffix]="dicValueSuffixTemplate">
-      <input type="text" nz-input [(ngModel)]="dicTypeValue" placeholder="字典值"/>
+      <input type="text" nz-input [(ngModel)]="dictValue" placeholder="字典值"/>
+    </nz-input-group>
+    <nz-input-group [nzSuffix]="dicValueEnumSuffixTemplate">
+      <input type="text" nz-input [(ngModel)]="dictValueEnum" placeholder="字典枚举值"/>
     </nz-input-group>
     <nz-input-group [nzSuffix]="dicTagSuffixTemplate">
-      <input type="text" nz-input [(ngModel)]="dicTypeTag" placeholder="字典标签"/>
+      <input type="text" nz-input [(ngModel)]="dictLabel" placeholder="字典标签"/>
     </nz-input-group>
     <button nz-button nzType="default" (click)="search(true)"><i nz-icon nzType="search"></i>查询</button>
     <button nz-button nzType="primary" (click)="add()"><i nz-icon nzType="plus"></i>新增</button>
@@ -34,11 +37,13 @@
           [nzIndeterminate]="isIndeterminate"
           (nzCheckedChange)="checkAll($event)"
         ></th>
-        <th nzWidth="18%" nzAlign="center">字典值</th>
-        <th nzWidth="18%" nzAlign="center">字典标签</th>
-        <th nzWidth="18%" nzAlign="center" nzShowSort>排序</th>
-        <th nzWidth="18%" nzAlign="center">备注</th>
-        <th nzWidth="18%" nzAlign="center" nzShowSort>创建时间</th>
+        <th nzWidth="10%" nzAlign="center">字典值</th>
+        <th nzWidth="10%" nzAlign="center">字典枚举值</th>
+        <th nzWidth="15%" nzAlign="center">字典标签</th>
+        <th nzWidth="10%" nzAlign="center">显示状态</th>
+        <th nzWidth="10%" nzAlign="center" [nzSortFn]="true" (nzSortOrderChange)="fieldSortHandler($event, 'sort')">排序</th>
+        <th nzWidth="20%" nzAlign="center">备注</th>
+        <th nzWidth="15%" nzAlign="center" [nzSortFn]="true" (nzSortOrderChange)="fieldSortHandler($event, 'dateCreated')">创建时间</th>
         <th nzWidth="10%" nzAlign="center">操作</th>
       </tr>
       </thead>
@@ -50,13 +55,20 @@
           [nzDisabled]="data.disabled"
           (nzCheckedChange)="refreshStatus()"
         ></td>
-        <td nzAlign="center">{{ data.dicTypeValue }}</td>
-        <td nzAlign="center">{{ data.dicTypeTag }}</td>
-        <td nzAlign="center">{{ data.dicTypeSort }}</td>
-        <td nzAlign="center">{{ data.dicTypeRemark }}</td>
+        <td nzAlign="center">{{ data.dictValue }}</td>
+        <td nzAlign="center">{{ data.dictValueEnum }}</td>
+        <td nzAlign="center">{{ data.dictLabel }}</td>
+        <td nzAlign="center">
+          <nz-tag *ngIf="data.isShow" [nzColor]="">显示</nz-tag>
+          <nz-tag *ngIf="!data.isShow"  [nzColor]="'#F6F6F6'" style="color: #505654; border-width: 1px;border-color: rgba(128,128,128,0.5);">不显示</nz-tag>
+        </td>
+        <td nzAlign="center">{{ data.sort }}</td>
+        <td nzAlign="center">{{ data.remark }}</td>
         <td nzAlign="center">{{ data.dateCreated }}</td>
         <td nzAlign="center">
-          <a>编辑</a>
+          <a (click)="edit(data.id)">编辑</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a (click)="del(data.id)">删除</a>
         </td>
       </tr>
       </tbody>
@@ -78,8 +90,20 @@
   class="ant-input-clear-icon"
   nzTheme="fill"
   nzType="close-circle"
-  *ngIf="dicTypeValue"
-  (click)="dicTypeValue = null"
+  *ngIf="dictValue"
+  (click)="dictValue = null"
+></i
+></ng-template>
+
+<ng-template #dicValueEnumSuffixTemplate
+><i
+  nz-icon
+  nz-tooltip
+  class="ant-input-clear-icon"
+  nzTheme="fill"
+  nzType="close-circle"
+  *ngIf="dictValueEnum"
+  (click)="dictValueEnum = null"
 ></i
 ></ng-template>
 
@@ -90,8 +114,8 @@
   class="ant-input-clear-icon"
   nzTheme="fill"
   nzType="close-circle"
-  *ngIf="dicTypeTag"
-  (click)="dicTypeTag = null"
+  *ngIf="dictLabel"
+  (click)="dictLabel = null"
 ></i
 ></ng-template>
 
@@ -107,21 +131,36 @@
 
   <form nz-form [formGroup]="addOrEditForm">
     <nz-form-item>
-      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="dicTypeValue" nzRequired>字典值</nz-form-label>
-      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项不能为空">
-        <input nz-input id="dicTypeValue" formControlName="dicTypeValue" placeholder="字典值"/>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="dictValue" nzRequired>字典值</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
+        <input nz-input id="dictValue" formControlName="dictValue" placeholder="字典值"/>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="dicTypeTag" nzRequired>字典标签</nz-form-label>
-      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项不能为空">
-        <input nz-input id="dicTypeTag" formControlName="dicTypeTag" placeholder="字典标签"/>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="dictValueEnum" nzRequired>字典枚举值</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
+        <input nz-input id="dictValueEnum" formControlName="dictValueEnum" placeholder="字典枚举值"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="dictLabel" nzRequired>字典标签</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
+        <input nz-input id="dictLabel" formControlName="dictLabel" placeholder="字典标签"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="isShow" nzRequired>是否显示</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <nz-select id="isShow" formControlName="isShow" [ngModel]="details ? (details.isShow ? 1 : 0) : 1">
+          <nz-option nzLabel="显示" [nzValue]="1"></nz-option>
+          <nz-option nzLabel="不显示" [nzValue]="0"></nz-option>
+        </nz-select>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
       <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="sort" nzRequired>排序</nz-form-label>
-      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项不能为空">
-        <nz-input-number id="sort" formControlName="sort" [nzMin]="1" [nzMax]="1000" [nzStep]="1" [ngModel]="1"
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
+        <nz-input-number id="sort" formControlName="sort" [nzMin]="0" [nzMax]="1000" [nzStep]="1"
                          style="width: 150px"></nz-input-number>
       </nz-form-control>
     </nz-form-item>

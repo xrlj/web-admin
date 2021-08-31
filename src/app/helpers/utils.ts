@@ -177,4 +177,15 @@ export class Utils {
   }
 
   /*////////////////// 字符串去空格 end ///////////////////*/
+
+  /**
+   * 设置列表查询排序参数。
+   */
+  setListSearchSortPar(body: any, sortOrder: string, sortFieldName: string) {
+    if (sortOrder && sortFieldName) {
+      sortOrder = sortOrder.substring(0, sortOrder.length - 3).toUpperCase();
+      body.sort = sortOrder;
+      body.sortFields = sortFieldName;
+    }
+  }
 }

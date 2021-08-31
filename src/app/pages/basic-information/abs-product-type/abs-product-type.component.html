@@ -4,10 +4,14 @@
       <input type="text" nz-input [(ngModel)]="productTypeName" placeholder="融资产品类型名称"/>
     </nz-input-group>
     <button nz-button nzType="default" (click)="search(true)"><i nz-icon nzType="search"></i>查询</button>
-    <button nz-button nzType="primary" (click)="addOrEdit('0')"><i nz-icon nzType="plus"></i>新增</button>
+    <button nz-button nzType="primary" (click)="add()"><i nz-icon nzType="plus"></i>新增</button>
   </div>
   <div class="card-list-table">
-    <nz-table #nestedTable [nzData]="vPdtTypes" [nzPageSize]="pageSize">
+    <nz-table #nestedTable
+              [nzLoading]="loading"
+              [nzData]="vPdtTypeList"
+              [nzPageSize]="pageSize"
+    >
       <thead>
         <tr>
           <th></th>
@@ -22,16 +26,19 @@
       <tbody>
         <ng-template ngFor let-data [ngForOf]="nestedTable.data">
           <tr>
-            <td [(nzExpand)]="data.expand"></td>
+            <td [(nzExpand)]="data.expand" (nzExpandChange)="expandChange($event, data.id)"></td>
             <td>{{ data.pdtTypeName }}</td>
             <td>{{ data.pdtTypeCode }}</td>
-            <td>{{ data.pdtTypeShow }}</td>
+            <td>
+              <nz-tag *ngIf="data.pdtTypeShow" [nzColor]="">显示</nz-tag>
+              <nz-tag *ngIf="!data.pdtTypeShow"  [nzColor]="'#F6F6F6'" style="color: #505654; border-width: 1px;border-color: rgba(128,128,128,0.5);">不显示</nz-tag>
+            </td>
             <td>{{ data.pdtTypeSort }}</td>
             <td>{{ data.pdtTypeDesc }}</td>
             <td>
-              <a>编辑</a>
+              <a (click)="edit(data.id)">编辑</a>
               <nz-divider nzType="vertical"></nz-divider>
-              <a>删除</a>
+              <a (click)="del(data.id)">删除</a>
             </td>
           </tr>
           <tr [nzExpand]="data.expand">
@@ -103,9 +110,9 @@
     <nz-form-item>
       <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="pdtTypeShow" nzRequired>是否显示</nz-form-label>
       <nz-form-control [nzSm]="10" [nzXs]="24">
-        <nz-select id="pdtTypeShow" formControlName="pdtTypeShow" [ngModel]="pdtTypeShow">
+        <nz-select id="pdtTypeShow" formControlName="pdtTypeShow">
           <nz-option nzLabel="显示" [nzValue]="true"></nz-option>
-          <nz-option nzLabel="不显示" [nzValue]='false'></nz-option>
+          <nz-option nzLabel="不显示" [nzValue]="false"></nz-option>
         </nz-select>
       </nz-form-control>
     </nz-form-item>
@@ -113,8 +120,13 @@
       <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="pdtTypeSort" nzRequired>排序</nz-form-label>
       <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
         <nz-input-number id="pdtTypeSort" formControlName="pdtTypeSort" [nzMin]="0" [nzMax]="1000" [nzStep]="1"
-                         [ngModel]="0"
                          style="width: 150px"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24">产品类型描述</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <input nz-input id="pdtTypeDesc" formControlName="pdtTypeDesc" placeholder="请输入描述"/>
       </nz-form-control>
     </nz-form-item>
   </form>

@@ -1,28 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MyValidators} from '../../../helpers/MyValidators';
-
-interface VPdtType {
-  key: string;
-  expand: boolean;
-  pdtTypeName: string;
-  pdtTypeCode: string;
-  pdtTypeSort: number;
-  pdtTypeShow: number | string;
-  pdtTypeDesc: string;
-  templates: VPdtTypeTemplate[];
-}
-
-interface VPdtTypeTemplate {
-  key: string;
-  agrCode: string;
-  agrName: string;
-  agrBigTypeName: string;
-  agrTypeName: string;
-  agrSpecifyName: string;
-  agrVersion: string;
-  etpName: string;
-}
+import {AbsProductTypeService} from './abs-product-type.service';
+import {UIHelper} from '../../../helpers/ui-helper';
+import {Utils} from '../../../helpers/utils';
+import {DefaultBusService} from '../../../helpers/event-bus/default-bus.service';
+import {VPdtTypeResp} from '../../../helpers/vo/resp/v-pdt-type-resp';
 
 // ABS产品类别管理
 @Component({
@@ -34,10 +17,10 @@ export class AbsProductTypeComponent implements OnInit {
 
   productTypeName: string;
 
-  listOfAllData: any[] = []; // 列表数据
+  vPdtTypeList: VPdtTypeResp[] = [];
   loading = false;
   pageIndex = 1;
-  pageSize = 10;
+  pageSize = 20;
   total = 0;
 
   isShowModal = false;
@@ -46,67 +29,81 @@ export class AbsProductTypeComponent implements OnInit {
   addOrEditForm: FormGroup;
   editId: string; // 编辑记录id
 
-  pdtTypeShow = true;
+  details: VPdtTypeResp;
 
-
-  vPdtTypes: VPdtType[] = [];
-
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private absProductTypeService: AbsProductTypeService,
+              private uiHelper: UIHelper, private utils: Utils,
+              private defaultBusService: DefaultBusService) {
     // 新增对话框
     this.addOrEditForm = this.fb.group({
       pdtTypeName: [null, [MyValidators.required, MyValidators.maxLength(80)]],
-      pdtTypeCode: [null, [MyValidators.required, MyValidators.maxLength(80)]],
-      pdtTypeShow: [null, [Validators.required]],
-      pdtTypeSort: [null, MyValidators.required]
+      pdtTypeCode: [null, [MyValidators.required, MyValidators.maxLength(80), MyValidators.notChinese]],
+      pdtTypeShow: [true, [Validators.required]],
+      pdtTypeSort: [1, [MyValidators.required]],
+      pdtTypeDesc: [null, null]
     });
   }
 
   ngOnInit(): void {
-    for (let i = 0; i < 3; ++i) {
-      this.vPdtTypes.push({
-        key: i.toString(),
-        pdtTypeCode: `${i}_`,
-        pdtTypeName: '',
-        pdtTypeShow: '',
-        pdtTypeSort: 0,
-        pdtTypeDesc: '',
-        templates: [
-          {
-            key: (i + 1).toString(),
-            agrCode: '1',
-            agrName: '',
-            agrBigTypeName: '',
-            agrTypeName: '',
-            agrSpecifyName: '',
-            agrVersion: '',
-            etpName: ''
-          },
-          {
-            key: (i + 1).toString(),
-            agrCode: '2',
-            agrName: '',
-            agrBigTypeName: '',
-            agrTypeName: '',
-            agrSpecifyName: '',
-            agrVersion: '',
-            etpName: ''
-          }
-        ],
-        expand: false
-      });
-    }
+    this.search(false);
   }
 
   search(b: boolean = false) {
+    if (b) this.pageIndex = 1;
+    this.loading = true;
 
+    // 参数
+    const body: any = {};
+    body.pageIndex = this.pageIndex;
+    body.pageSize = this.pageSize;
+    body.pdtTypeName =  this.productTypeName;
+
+    this.absProductTypeService.getListPage(body)
+      .ok(data => {
+        this.pageIndex = data.pageIndex;
+        this.pageSize = data.pageSize;
+        this.total = data.total;
+        this.vPdtTypeList = data.list;
+        this.setListPatch();
+      })
+      .fail(error => {
+        this.uiHelper.msgTipError(error.msg);
+      })
+      .final(bb => {
+        this.loading = false;
+      });
   }
 
-  addOrEdit(id: string) {
+  setListPatch() {
+    if (this.vPdtTypeList.length === 0) {
+      return;
+    }
+    this.vPdtTypeList.forEach(item => {
+      item.expand = false;
+      item.key = item.id;
+      item.templates = [];
+    });
+  }
+
+  add() {
     this.dialogType = 1;
     this.isShowModal = true;
   }
 
   del(id: string) {
+    this.defaultBusService.showLoading(true);
+    this.absProductTypeService.delete(id)
+      .ok(data => {
+        setTimeout(() => {
+          this.search(false);
+        }, 100);
+      })
+      .fail(error => {
+        this.uiHelper.msgTipError(error.msg);
+      })
+      .final(b => {
+        this.defaultBusService.showLoading(false);
+      });
   }
 
   /**
@@ -120,7 +117,10 @@ export class AbsProductTypeComponent implements OnInit {
     this.isShowModal = false;
     this.dialogType = 1;
     this.isOkLoading = false;
+    this.details = null;
     this.addOrEditForm.reset();
+    this.addOrEditForm.controls.pdtTypeShow.setValue(true);
+    this.addOrEditForm.controls.pdtTypeSort.setValue(1);
   }
 
   handleCancel() {
@@ -130,16 +130,56 @@ export class AbsProductTypeComponent implements OnInit {
   handleOk() {
     if (this.addOrEditForm.valid) {
       this.isOkLoading = true;
-      if (this.dialogType === 1) { // 新增
-        const value = this.addOrEditForm.value;
-      } else { // 编辑
-        const value = this.addOrEditForm.value;
+      const value = this.addOrEditForm.value;
+      if (this.dialogType === 2) { // 编辑
+        value.id = this.details.id;
       }
+      this.absProductTypeService.addOrUpdate(value)
+        .ok(data => {
+          this.resetAddOrEditModal();
+          setTimeout(() => {
+            this.search();
+          }, 100);
+        })
+        .fail(error => {
+          this.uiHelper.msgTipError(error.msg);
+        })
+        .final(b => {
+          this.isOkLoading = false;
+        });
     } else {
       for (const key in this.addOrEditForm.controls) {
         this.addOrEditForm.controls[key].markAsDirty();
         this.addOrEditForm.controls[key].updateValueAndValidity();
       }
     }
+  }
+
+  expandChange($event: boolean, id) {
+    this.vPdtTypeList.forEach(item => {
+      const _id = item.id;
+      if (id === _id) {
+        item.expand = $event;
+      } else {
+        item.expand = false;
+      }
+    });
+  }
+
+  edit(id: string) {
+    this.defaultBusService.showLoading(true);
+    this.absProductTypeService.get(id)
+      .ok(data => {
+        this.details = data;
+        this.addOrEditForm.patchValue(this.details, {})
+        this.isShowModal = true;
+        this.dialogType = 2;
+      })
+      .fail(error => {
+        this.uiHelper.msgTipError(error.msg);
+      })
+      .final(b => {
+        this.defaultBusService.showLoading(false);
+      });
   }
 }

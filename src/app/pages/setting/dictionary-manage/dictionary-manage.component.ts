@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild, ViewChildren} from '@angular/core';
+import {DictionaryTypeComponent} from './dictionary-type/dictionary-type.component';
 
 @Component({
   selector: 'app-dictionary-manage',
@@ -6,6 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./dictionary-manage.component.less']
 })
 export class DictionaryManageComponent implements OnInit {
+
+  @ViewChild(DictionaryTypeComponent)
+  dictionaryTypeComponent: DictionaryTypeComponent;
+
+  dictSelectRecordInfo: any;
 
   showType = 1;
 
@@ -18,4 +24,7 @@ export class DictionaryManageComponent implements OnInit {
     this.showType = showType;
   }
 
+  goToDictType($event: any) {
+    this.dictSelectRecordInfo = $event;
+  }
 }

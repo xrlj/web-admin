@@ -33,6 +33,9 @@ export class DictionaryComponent implements OnInit {
   addOrEditForm: FormGroup;
 
   @Output() showType = new EventEmitter<number>();
+  @Output() rowInfo = new EventEmitter<any>();
+
+  details: any; // 选定记录详情
 
   constructor(private fb: FormBuilder, private dictionaryService: DictionaryService,
               private uiHelper: UIHelper, private defaultBusService: DefaultBusService) {
@@ -73,6 +76,7 @@ export class DictionaryComponent implements OnInit {
       this.dictionaryService.get(id).ok(data => {
         this.modalType = 2;
         this.isShowModal = true;
+        this.details = data;
         this.addOrEditForm.patchValue(data);
       }).fail(error => {
         this.uiHelper.msgTipError(error.msg);
@@ -85,8 +89,37 @@ export class DictionaryComponent implements OnInit {
     }
   }
 
-  del() {
-    this.showType.emit(2);
+  del(id?: string) {
+    const checkIds: string[] = []; // 待删除
+    if (id) {
+      checkIds.push(id);
+    } else {
+      for (const key in this.mapOfCheckedId) {
+        if (this.mapOfCheckedId[key]) {
+          checkIds.push(key);
+        }
+      }
+      if (checkIds.length === 0) {
+        this.uiHelper.msgTipWarning('请选择!');
+        return;
+      }
+    }
+    this.defaultBusService.showLoading(true);
+    this.dictionaryService.delete(checkIds)
+      .ok(data => {
+        if (data) {
+          this.mapOfCheckedId = {};
+          setTimeout(() => {
+            this.search();
+          }, 100);
+        }
+      })
+      .fail(error => {
+        this.uiHelper.msgTipError(error.msg);
+      })
+      .final(b => {
+        this.defaultBusService.showLoading(false);
+      });
   }
 
   reInitModal() {
@@ -135,12 +168,17 @@ export class DictionaryComponent implements OnInit {
     if (this.addOrEditForm.valid) { // 前端通过所有输入校验
       this.isModalOkLoading = true;
       const body: any = this.addOrEditForm.value;
+      if (this.modalType === 2) { // 编辑
+        body.id = this.details.id;
+      }
       this.dictionaryService.addOrUpdate(body).ok(data => {
-          if (data) {
+        if (data) {
+          setTimeout(() => {
             this.search(true);
-          } else {
-            this.uiHelper.msgTipError('操作失败');
-          }
+          }, 100);
+        } else {
+          this.uiHelper.msgTipError('操作失败');
+        }
       }).fail(error => {
         this.uiHelper.msgTipError(error.msg);
       }).final(b => {
@@ -156,5 +194,10 @@ export class DictionaryComponent implements OnInit {
         this.addOrEditForm.controls[key].updateValueAndValidity();
       }
     }
+  }
+
+  showTypeUI(data: any) {
+    this.showType.emit(2);
+    this.rowInfo.emit(data);
   }
 }
