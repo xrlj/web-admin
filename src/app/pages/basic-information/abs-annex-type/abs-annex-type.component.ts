@@ -23,14 +23,12 @@ export class AbsAnnexTypeComponent implements OnInit {
   isOkLoading = false;
   addOrEditForm: FormGroup;
 
-  annexTypeShow = true;
-
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder ) {
     this.addOrEditForm = this.fb.group({
       annexTypeName: [null, [MyValidators.required, MyValidators.maxLength(80)]],
       annexTypeCode: [null, [MyValidators.required, MyValidators.maxLength(80)]],
-      annexTypeSort: [null, [Validators.required]],
-      annexTypeShow: [null, MyValidators.required]
+      annexTypeSort: [1, [Validators.required]],
+      annexTypeShow: [true, MyValidators.required]
     });
   }
 
@@ -40,11 +38,14 @@ export class AbsAnnexTypeComponent implements OnInit {
   currentPageDataChange($event: any[]): void {
   }
 
-  search(b: boolean = false) {
+  search(resetPageIndex: boolean = false) {
+    if (resetPageIndex) this.pageIndex = 1;
 
+    this.loading = true;
+    // this.
   }
 
-  addOrEdit(id: string) {
+  add() {
     this.dialogType = 1;
     this.isShowModal = true;
   }
@@ -57,6 +58,8 @@ export class AbsAnnexTypeComponent implements OnInit {
     this.dialogType = 1;
     this.isOkLoading = false;
     this.addOrEditForm.reset();
+    this.addOrEditForm.controls.annexTypeShow.setValue(true);
+    this.addOrEditForm.controls.annexTypeSort.setValue(1);
   }
 
   handleCancel() {

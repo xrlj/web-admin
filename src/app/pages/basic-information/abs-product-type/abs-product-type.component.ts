@@ -106,13 +106,6 @@ export class AbsProductTypeComponent implements OnInit {
       });
   }
 
-  /**
-   * 表格数据更改时候设定选择信息。保持选择或者取消
-   * @param $event 选择事件
-   */
-  currentPageDataChange($event: any[]): void {
-  }
-
   resetAddOrEditModal(): void {
     this.isShowModal = false;
     this.dialogType = 1;

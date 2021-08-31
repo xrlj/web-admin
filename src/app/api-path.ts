@@ -101,6 +101,13 @@ export const ApiPath = {
       get: `/${serviceAbsProduct}/fpdtType/get`,
       getListPage: `/${serviceAbsProduct}/fpdtType/getListPage`,
       getList: `/${serviceAbsProduct}/fpdtType/getList`
+    },
+    annexType: {
+      addOrUpdate: `/${serviceAbsProduct}/annexType/addOrUpdate`,
+      delete: `/${serviceAbsProduct}/annexType/delete`,
+      get: `/${serviceAbsProduct}/annexType/get`,
+      getListPage: `/${serviceAbsProduct}/annexType/getListPage`,
+      getList: `/${serviceAbsProduct}/annexType/getList`
     }
   },
   serviceebook: {
