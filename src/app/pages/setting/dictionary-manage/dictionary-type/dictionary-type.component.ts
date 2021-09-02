@@ -185,6 +185,7 @@ export class DictionaryTypeComponent implements OnInit {
       }
       this.dictionaryTypeService.addOrUpdate(body).ok(data => {
         if (data) {
+          this.reInitModal();
           setTimeout(() => {
             this.search(false);
           }, 100);

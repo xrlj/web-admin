@@ -1,7 +1,7 @@
 <nz-card class="card-list" nzTitle="融资附件类型管理">
   <div class="card-list-action">
     <nz-input-group [nzSuffix]="typeNameSuffixTemplate">
-      <input type="text" nz-input [(ngModel)]="productTypeName" placeholder="附件类型名称"/>
+      <input type="text" nz-input [(ngModel)]="annexTypeName" placeholder="附件类型名称"/>
     </nz-input-group>
     <button nz-button nzType="default" (click)="search(true)"><i nz-icon nzType="search"></i>查询</button>
     <button nz-button nzType="primary" (click)="add()"><i nz-icon nzType="plus"></i>新增</button>
@@ -32,15 +32,17 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let data of table['data']">
-        <td nzAlign="center"></td>
-        <td nzAlign="center"></td>
-        <td nzAlign="center"></td>
-        <td nzAlign="center"></td>
-        <td nzAlign="center"></td>
-        <td nzAlign="center"></td>
+      <tr *ngFor="let data of table['data']; let i = index">
+        <td nzAlign="center">{{(pageIndex - 1) * pageSize + i + 1}}</td>
+        <td nzAlign="center">{{data.annexTypeName}}</td>
+        <td nzAlign="center">{{data.annexTypeCode}}</td>
+        <td nzAlign="center">{{data.annexTypeSort}}</td>
         <td nzAlign="center">
-          <a (click)="addOrEdit(data.id)">编辑</a>
+          <nz-tag *ngIf="data.annexTypeShow" [nzColor]="">显示</nz-tag>
+          <nz-tag *ngIf="!data.annexTypeShow"  [nzColor]="'#F6F6F6'" style="color: #505654; border-width: 1px;border-color: rgba(128,128,128,0.5);">不显示</nz-tag>
+        </td>
+        <td nzAlign="center">
+          <a (click)="edit(data.id)">编辑</a>
           <nz-divider nzType="vertical"></nz-divider>
           <a (click)="del(data.id)">删除</a>
         </td>
@@ -57,8 +59,8 @@
   class="ant-input-clear-icon"
   nzTheme="fill"
   nzType="close-circle"
-  *ngIf="productTypeName"
-  (click)="productTypeName = null"
+  *ngIf="annexTypeName"
+  (click)="annexTypeName = null"
 ></i
 ></ng-template>
 
