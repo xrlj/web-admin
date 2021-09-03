@@ -91,18 +91,21 @@ export class AbsProductTypeComponent implements OnInit {
   }
 
   del(id: string) {
-    this.defaultBusService.showLoading(true);
-    this.absProductTypeService.delete(id)
-      .ok(data => {
-        setTimeout(() => {
-          this.search(false);
-        }, 100);
-      })
-      .fail(error => {
-        this.uiHelper.msgTipError(error.msg);
-      })
-      .final(b => {
-        this.defaultBusService.showLoading(false);
+    this.uiHelper.modalDel('确定删除?')
+      .ok(() => {
+        this.defaultBusService.showLoading(true);
+        this.absProductTypeService.delete(id)
+          .ok(data => {
+            setTimeout(() => {
+              this.search(false);
+            }, 100);
+          })
+          .fail(error => {
+            this.uiHelper.msgTipError(error.msg);
+          })
+          .final(b => {
+            this.defaultBusService.showLoading(false);
+          });
       });
   }
 

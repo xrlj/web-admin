@@ -8,10 +8,13 @@ import {ProtocolTemplateParComponent} from './protocol-template-par/protocol-tem
 import {NzBadgeModule, NzCardModule, NzDividerModule, NzDropDownModule, NzFormModule, NzIconModule, NzInputModule, NzInputNumberModule, NzModalModule, NzSelectModule, NzTableModule, NzTagModule, NzTreeSelectModule} from 'ng-zorro-antd';
 import {NzButtonModule} from 'ng-zorro-antd/button';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { AgrTypeBigComponent } from './agr-type-big/agr-type-big.component';
+import { AgrTypeComponent } from './agr-type/agr-type.component';
+import { AgrTypeSpecifyComponent } from './agr-type-specify/agr-type-specify.component';
 
 // 基础资料管理模块
 @NgModule({
-  declarations: [AbsProductTypeComponent, AbsAnnexTypeComponent, ProtocolTemplateParComponent],
+  declarations: [AbsProductTypeComponent, AbsAnnexTypeComponent, ProtocolTemplateParComponent, AgrTypeBigComponent, AgrTypeComponent, AgrTypeSpecifyComponent],
   imports: [
     CommonModule,
     BasicInformationRoutingModule,

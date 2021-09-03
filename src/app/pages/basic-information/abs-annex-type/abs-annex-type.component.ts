@@ -27,7 +27,7 @@ export class AbsAnnexTypeComponent implements OnInit {
   isOkLoading = false;
   addOrEditForm: FormGroup;
 
-  details: any; // 性情
+  details: any; // 详情
 
   constructor(private fb: FormBuilder, private absAnnexTypeService: AbsAnnexTypeService,
               private uiHelper: UIHelper, private defaultBusService: DefaultBusService) {
@@ -75,18 +75,21 @@ export class AbsAnnexTypeComponent implements OnInit {
   }
 
   del(id: string) {
-    this.defaultBusService.showLoading(true);
-    this.absAnnexTypeService.delete(id)
-      .ok(data => {
-        setTimeout(() => {
-          this.search(false);
-        }, 100);
-      })
-      .fail(error => {
-        this.uiHelper.msgTipError(error.msg);
-      })
-      .final(b => {
-        this.defaultBusService.showLoading(false);
+    this.uiHelper.modalDel('确定删除?')
+      .ok(() => {
+        this.defaultBusService.showLoading(true);
+        this.absAnnexTypeService.delete(id)
+          .ok(data => {
+            setTimeout(() => {
+              this.search(false);
+            }, 100);
+          })
+          .fail(error => {
+            this.uiHelper.msgTipError(error.msg);
+          })
+          .final(b => {
+            this.defaultBusService.showLoading(false);
+          });
       });
   }
 
