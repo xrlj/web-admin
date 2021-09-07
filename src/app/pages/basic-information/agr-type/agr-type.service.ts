@@ -6,28 +6,28 @@ import {ApiPath} from '../../../api-path';
 @Injectable({
   providedIn: 'root'
 })
-export class AgrTypeBigService {
+export class AgrTypeService {
 
   constructor(private api: Api, private utils: Utils) { }
 
   addOrUpdate(body: any): any {
-    return this.api.post(`${ApiPath.serviceAbsTemplate.agrTypeBig.addOrUpdate}`, body);
+    return this.api.post(`${ApiPath.serviceAbsTemplate.agrType.addOrUpdate}`, body);
   }
 
   getListPage(body: any): any {
-    return this.api.post(ApiPath.serviceAbsTemplate.agrTypeBig.getListPage, body);
+    return this.api.post(ApiPath.serviceAbsTemplate.agrType.getListPage, body);
   }
 
   getListAll(body: any): any {
-    return this.api.post(ApiPath.serviceAbsTemplate.agrTypeBig.getListAll, body);
+    return this.api.post(ApiPath.serviceAbsTemplate.agrType.getListAll, body);
   }
 
   get(id: string): any {
-    return this.api.get(`${ApiPath.serviceAbsTemplate.agrTypeBig.get}/${id}`);
+    return this.api.get(`${ApiPath.serviceAbsTemplate.agrType.get}/${id}`);
   }
 
   delete(...ids: any[]): any {
     const pars = this.utils.arrayToArrayParam(ids);
-    return this.api.delete(`${ApiPath.serviceAbsTemplate.agrTypeBig.delete}/${pars}`)
+    return this.api.delete(`${ApiPath.serviceAbsTemplate.agrType.delete}/${pars}`)
   }
 }

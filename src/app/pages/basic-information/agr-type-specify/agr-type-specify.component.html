@@ -1,1 +1,137 @@
-<p>agr-type-specify works!</p>
+<nz-card class="card-list" nzTitle="合同版别管理" [nzExtra]="extraTemplate">
+  <div class="card-list-action">
+    <nz-select nzShowSearch
+               [nzLoading]="loadingAgrTypeBig"
+               [(ngModel)]="agrTypeBigSelected"
+               (ngModelChange)="bigTypeChange($event)"
+               style="min-width: 200px; margin-right: 10px"
+    >
+      <nz-option *ngFor="let agrTypeBig of agrTypeBigListAll!" [nzLabel]="agrTypeBig.bigName" [nzValue]="agrTypeBig.id"></nz-option>
+    </nz-select>
+    <nz-select nzShowSearch
+               [nzLoading]="loadingAgrType"
+               [(ngModel)]="agrTypeSelected"
+               (ngModelChange)="typeChange($event)"
+               style="min-width: 200px; margin-right: 10px"
+    >
+      <nz-option *ngFor="let agrType of agrTypeListAll!" [nzLabel]="agrType.typeName" [nzValue]="agrType.id"></nz-option>
+    </nz-select>
+    <nz-input-group [nzSuffix]="specifyTypeNameSuffixTemplate">
+      <input type="text" nz-input [(ngModel)]="specifyTypeName" placeholder="版别名称"/>
+    </nz-input-group>
+    <button nz-button nzType="default" (click)="search(true)"><i nz-icon nzType="search"></i>查询</button>
+    <button nz-button nzType="primary" (click)="add()"><i nz-icon nzType="plus"></i>新增</button>
+  </div>
+  <div class="card-list-table">
+    <nz-table
+      #table
+      nzShowPagination
+      nzShowSizeChanger
+      nzBordered
+      [nzFrontPagination]="false"
+      [nzData]="listOfAllData"
+      [nzLoading]="loading"
+      [nzTotal]="total"
+      [(nzPageIndex)]="pageIndex"
+      [(nzPageSize)]="pageSize"
+      (nzPageIndexChange)="search()"
+      (nzPageSizeChange)="search(true)"
+    >
+      <thead>
+      <tr>
+        <th nzWidth="5%" nzAlign="center">序号</th>
+        <th nzWidth="25%" nzAlign="center">版别名称</th>
+        <th nzWidth="25%" nzAlign="center">版别编号</th>
+        <th nzWidth="15%" nzAlign="center">排序</th>
+        <th nzWidth="15%" nzAlign="center">是否显示</th>
+        <th nzWidth="15%" nzAlign="center">操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of table['data']; let i = index">
+        <td nzAlign="center">{{(pageIndex - 1) * pageSize + i + 1}}</td>
+        <td nzAlign="center">{{data.specifyName}}</td>
+        <td nzAlign="center">{{data.specifyCode}}</td>
+        <td nzAlign="center">{{data.specifySort}}</td>
+        <td nzAlign="center">
+          <nz-tag *ngIf="data.specifyShow" [nzColor]="">显示</nz-tag>
+          <nz-tag *ngIf="!data.specifyShow"  [nzColor]="'#F6F6F6'" style="color: #505654; border-width: 1px;border-color: rgba(128,128,128,0.5);">不显示</nz-tag>
+        </td>
+        <td nzAlign="center">
+          <a (click)="edit(data.id)">编辑</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a (click)="del(data.id)">删除</a>
+        </td>
+      </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</nz-card>
+
+<ng-template #extraTemplate>
+  <span style="cursor: pointer;" (click)="refresh()">
+    <i nz-icon [nzType]="'sync'" [nzSpin]="loading"></i><!--动态加载的，点击刷新的时候把false改成true-->
+    <span style="margin-left: 5px;">刷新数据</span>
+  </span>
+</ng-template>
+
+<ng-template #specifyTypeNameSuffixTemplate
+><i
+  nz-icon
+  nz-tooltip
+  class="ant-input-clear-icon"
+  nzTheme="fill"
+  nzType="close-circle"
+  *ngIf="specifyTypeName"
+  (click)="specifyTypeName = null"
+></i
+></ng-template>
+
+<!--新增菜单对话框-->
+<nz-modal [(nzVisible)]="isShowModal"
+          nzMaskClosable = false
+          nzWidth="800"
+          [nzTitle]="dialogType === 1 ? '新增' : '修改'"
+          (nzOnCancel)="handleCancel()"
+          (nzOnOk)="handleOk(dialogType)"
+          [nzOkLoading]="isOkLoading">
+
+  <form nz-form [formGroup]="addOrEditForm">
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="agrTypeId" nzRequired>合同类型</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
+        <nz-select nzShowSearch nzAllowClear [nzLoading]="loadingAgrType" id="agrTypeId" formControlName="agrTypeId" nzPlaceHolder="请选择所属合同类型">
+          <nz-option *ngFor="let agrType of agrTypeListAll!" [nzLabel]="agrType.typeName" [nzValue]="agrType.id"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="specifyName" nzRequired>版别名称</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
+        <input nz-input id="specifyName" formControlName="specifyName" placeholder="请输入版别名称"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="specifyCode" nzRequired>版别编号</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
+        <input nz-input id="specifyCode" formControlName="specifyCode" placeholder="请输入版别编号"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="specifyShow" nzRequired>是否显示</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24">
+        <nz-select id="specifyShow" formControlName="specifyShow">
+          <nz-option nzLabel="显示" [nzValue]="true"></nz-option>
+          <nz-option nzLabel="不显示" [nzValue]="false"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="specifySort" nzRequired>排序</nz-form-label>
+      <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="必填项">
+        <nz-input-number id="specifySort" formControlName="specifySort" [nzMin]="1" [nzMax]="1000" [nzStep]="1"
+                         style="width: 150px"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>

@@ -4,6 +4,7 @@ const sysfilesystem = 'sysfilesystem'; // 文件系统服务
 const syscommon = 'syscommon';
 const serviceebook = 'serviceebook';
 const serviceAbsProduct = 'serviceAbsProduct';
+const serviceAbsTemplate = 'serviceAbsTemplate';
 
 export const ApiPath = {
   login: `/${serviceauth}/auth/sysLogin`,
@@ -108,6 +109,29 @@ export const ApiPath = {
       get: `/${serviceAbsProduct}/annexType/get`,
       getListPage: `/${serviceAbsProduct}/annexType/getListPage`,
       getList: `/${serviceAbsProduct}/annexType/getList`
+    }
+  },
+  serviceAbsTemplate: {
+    agrTypeBig: {
+      addOrUpdate: `/${serviceAbsTemplate}/agrTypeBig/addOrUpdate`,
+      delete: `/${serviceAbsTemplate}/agrTypeBig/delete`,
+      get: `/${serviceAbsTemplate}/agrTypeBig/get`,
+      getListPage: `/${serviceAbsTemplate}/agrTypeBig/getListPage`,
+      getListAll: `/${serviceAbsTemplate}/agrTypeBig/getListAll`
+    },
+    agrType: {
+      addOrUpdate: `/${serviceAbsTemplate}/agrType/addOrUpdate`,
+      delete: `/${serviceAbsTemplate}/agrType/delete`,
+      get: `/${serviceAbsTemplate}/agrType/get`,
+      getListPage: `/${serviceAbsTemplate}/agrType/getListPage`,
+      getListAll: `/${serviceAbsTemplate}/agrType/getListAll`
+    },
+    agrTypeSpecify: {
+      addOrUpdate: `/${serviceAbsTemplate}/agrTypeSpecify/addOrUpdate`,
+      delete: `/${serviceAbsTemplate}/agrTypeSpecify/delete`,
+      get: `/${serviceAbsTemplate}/agrTypeSpecify/get`,
+      getListPage: `/${serviceAbsTemplate}/agrTypeSpecify/getListPage`,
+      getListAll: `/${serviceAbsTemplate}/agrTypeSpecify/getListAll`
     }
   },
   serviceebook: {
