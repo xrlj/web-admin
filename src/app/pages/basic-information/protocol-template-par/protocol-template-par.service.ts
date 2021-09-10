@@ -13,13 +13,13 @@ export class ProtocolTemplateParService {
    * 新增或者更新。
    */
   addOrUpdate(body: any): any {
-    this.api.post(ApiPath.serviceAbsTemplate.templateParManage.addOrUpdate, body);
+    return this.api.post(ApiPath.serviceAbsTemplate.templateParManage.addOrUpdate, body);
   }
 
   /**
    * 获取所有树形结构展示。
    */
   getTreeListAll(): any {
-    this.api.get(ApiPath.serviceAbsTemplate.templateParManage.getTreeListAll);
+    return this.api.get(ApiPath.serviceAbsTemplate.templateParManage.getTreeListAll);
   }
 }

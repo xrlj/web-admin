@@ -2,6 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {VMenuResp} from '../../../helpers/vo/resp/v-menu-resp';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MyValidators} from '../../../helpers/MyValidators';
+import {AbsProductTypeService} from '../abs-product-type/abs-product-type.service';
+import {ProtocolTemplateParService} from './protocol-template-par.service';
+import {UIHelper} from '../../../helpers/ui-helper';
 
 // 协议模板参数管理
 @Component({
@@ -26,8 +29,7 @@ export class ProtocolTemplateParComponent implements OnInit {
   // 详情
   details: any;
 
-  /*=======新增菜单对话的菜单类型选择=======*/
-  selectList: any[];
+  /*=======新增编辑对话框上级参数选定=======*/
   selectKey: any;
 
   nodes = [
@@ -52,7 +54,8 @@ export class ProtocolTemplateParComponent implements OnInit {
     }
   ];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private service: ProtocolTemplateParService,
+              private uiHelper: UIHelper) {
     this.addOrEditForm = this.fb.group({
       parNameCn: [null, [Validators.required, MyValidators.maxLength(80)]],
       parent: [null, null],
@@ -63,6 +66,24 @@ export class ProtocolTemplateParComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.search();
+  }
+
+  search() {
+    this.isListDataLoading = true;
+    this.service.getTreeListAll()
+      .ok(data => {
+        debugger;
+        if (data) {
+          this.listData = data;
+        }
+      })
+      .fail(error => {
+        this.uiHelper.msgTipError(error.msg);
+      })
+      .final(b => {
+        this.isListDataLoading = false;
+      });
   }
 
   refresh() {
@@ -117,6 +138,17 @@ export class ProtocolTemplateParComponent implements OnInit {
       if (this.dialogType === 2) { // 编辑
         body.id = this.details.id;
       }
+      this.isAddOkLoading = true;
+      this.service.addOrUpdate(body)
+        .ok(data => {
+          this.resetModal();
+        })
+        .fail(error => {
+          this.uiHelper.msgTipError(error.msg);
+        })
+        .final(b => {
+          this.isAddOkLoading = false;
+        });
     } else {
       for (const key in this.addOrEditForm.controls) {
         this.addOrEditForm.controls[key].markAsDirty();
