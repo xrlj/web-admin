@@ -132,6 +132,12 @@ export const ApiPath = {
       get: `/${serviceAbsTemplate}/agrTypeSpecify/get`,
       getListPage: `/${serviceAbsTemplate}/agrTypeSpecify/getListPage`,
       getListAll: `/${serviceAbsTemplate}/agrTypeSpecify/getListAll`
+    },
+    templateParManage: {
+      addOrUpdate: `/${serviceAbsTemplate}/templateParManage/addOrUpdate`,
+      delete: `/${serviceAbsTemplate}/templateParManage/delete`,
+      get: `/${serviceAbsTemplate}/templateParManage/get`,
+      getTreeListAll: `/${serviceAbsTemplate}/templateParManage/getTreeListAll`
     }
   },
   serviceebook: {
