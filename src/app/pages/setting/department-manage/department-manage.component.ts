@@ -215,7 +215,6 @@ export class DepartmentManageComponent implements OnInit {
    * @param $event 选择的key
    */
   selectParentDeptOnChange($event: string): void {
-    console.log($event);
     if ($event) {
       this.getSelectTreeIdByKey(this.selectDeptList);
     } else {

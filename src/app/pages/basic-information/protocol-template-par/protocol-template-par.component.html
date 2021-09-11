@@ -1,5 +1,5 @@
 <!--菜单列表-->
-<nz-card class="card-list" nzTitle="应用菜单列表" [nzExtra]="extraTemplate">
+<nz-card class="card-list" nzTitle="协议模板参数管理" [nzExtra]="extraTemplate">
   <div class="card-list-action">
     <button nz-button nzType="default" (click)="refresh()"><i nz-icon nzType="search"></i>查询</button>
     <button nz-button nzType="primary" (click)="add()"><i nz-icon nzType="plus"></i>新增</button>
@@ -23,13 +23,13 @@
     <ng-container *ngFor="let data of expandTable['data']">
       <ng-container *ngFor="let item of listOfExpandedData[data.key]">
         <tr *ngIf="(item.parent && item.parent.expand) || !item.parent">
-          <td
+          <td nzAlign="center"
             [nzIndentSize]="item.level * 20"
             [nzShowExpand]="!!item.children"
             [(nzExpand)]="item.expand"
             (nzExpandChange)="collapse(listOfExpandedData[data.key], item, $event)"
           >
-            {{ item.title }}
+            {{ item.parNameCn }}
           </td>
           <td nzAlign="center">
             {{item.parName}}
@@ -75,13 +75,12 @@
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="parent" nzRequired>上级参数</nz-form-label>
+      <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="parentId" nzRequired>上级参数</nz-form-label>
       <nz-form-control [nzSm]="10" [nzXs]="24">
-        <nz-tree-select id="parent" formControlName="parent"
-                        [nzNodes]="nodes"
+        <nz-tree-select id="parentId" formControlName="parentId"
+                        [nzNodes]="listData"
                         nzShowSearch
                         nzPlaceHolder="一级参数"
-                        [(ngModel)]="selectKey"
                         (ngModelChange)="onChange($event)">
         </nz-tree-select>
       </nz-form-control>

@@ -5,6 +5,8 @@ import {MyValidators} from '../../../helpers/MyValidators';
 import {AbsProductTypeService} from '../abs-product-type/abs-product-type.service';
 import {ProtocolTemplateParService} from './protocol-template-par.service';
 import {UIHelper} from '../../../helpers/ui-helper';
+import {UiTableHelper} from '../../../helpers/ui-table-helper';
+import {DefaultBusService} from '../../../helpers/event-bus/default-bus.service';
 
 // 协议模板参数管理
 @Component({
@@ -32,33 +34,12 @@ export class ProtocolTemplateParComponent implements OnInit {
   /*=======新增编辑对话框上级参数选定=======*/
   selectKey: any;
 
-  nodes = [
-    {
-      title: 'parent 1',
-      key: '100',
-      children: [
-        {
-          title: 'parent 1-0',
-          key: '1001',
-          children: [
-            { title: 'leaf 1-0-0', key: '10010', isLeaf: true },
-            { title: 'leaf 1-0-1', key: '10011', isLeaf: true }
-          ]
-        },
-        {
-          title: 'parent 1-1',
-          key: '1002',
-          children: [{ title: 'leaf 1-1-0', key: '10020', isLeaf: true }]
-        }
-      ]
-    }
-  ];
-
   constructor(private fb: FormBuilder, private service: ProtocolTemplateParService,
-              private uiHelper: UIHelper) {
+              private uiHelper: UIHelper, private uiTableHelper: UiTableHelper,
+              private defaultBusService: DefaultBusService) {
     this.addOrEditForm = this.fb.group({
-      parNameCn: [null, [Validators.required, MyValidators.maxLength(80)]],
-      parent: [null, null],
+      parNameCn: [null, [MyValidators.required, MyValidators.maxLength(80)]],
+      parentId: [null, null],
       parName: [null, [MyValidators.required, MyValidators.notChinese, MyValidators.maxLength(50)]],
       parNameDb: [null, [MyValidators.required, MyValidators.notChinese, MyValidators.maxLength(50)]],
       parNameDesc: [null, [MyValidators.maxLength(255)]],
@@ -73,9 +54,12 @@ export class ProtocolTemplateParComponent implements OnInit {
     this.isListDataLoading = true;
     this.service.getTreeListAll()
       .ok(data => {
-        debugger;
         if (data) {
           this.listData = data;
+          this.uiHelper.patchSelectTree(this.listData);
+          this.listData.forEach((val) => {
+            this.listOfExpandedData[val.key] = this.uiTableHelper.convertTreeToList(val);
+          });
         }
       })
       .fail(error => {
@@ -101,31 +85,50 @@ export class ProtocolTemplateParComponent implements OnInit {
     this.isShowAdd = true;
   }
 
-  collapse(array: VMenuResp[], data: VMenuResp, $event: boolean): void {
-    if ($event === false) {
-      if (data.children) {
-        data.children.forEach(d => {
-          // tslint:disable-next-line:no-non-null-assertion
-          const target = array.find(a => a.key === d.key)!;
-          target.expand = false;
-          this.collapse(array, target, false);
-        });
-      } else {
-        return;
-      }
-    }
+  collapse(array: any[], data: any, $event: boolean): void {
+    this.uiTableHelper.collapse(array, data, $event);
   }
 
   addForCurrent(id) {
-
+    this.dialogType = 1;
+    this.isShowAdd = true;
+    this.addOrEditForm.patchValue({parentId: id});
   }
 
   edit(id) {
-
+    this.defaultBusService.showLoading(true);
+    this.service.get(id)
+      .ok(data => {
+        this.details = data;
+        this.dialogType = 2;
+        this.isShowAdd = true;
+        this.addOrEditForm.patchValue(this.details);
+      })
+      .fail(error => {
+        this.uiHelper.msgTipError(error.msg);
+      })
+      .final(b => {
+        this.defaultBusService.showLoading(false);
+      });
   }
 
   del(id: string, title: string) {
-
+    this.uiHelper.modalDel(`确定删除【${title}】?`)
+      .ok(() => {
+        this.defaultBusService.showLoading(true);
+        this.service.del(id)
+          .ok(data => {
+            setTimeout(() => {
+              this.search();
+            }, 100);
+          })
+          .fail(error => {
+            this.uiHelper.msgTipError(error.msg);
+          })
+          .final(b => {
+            this.defaultBusService.showLoading(false);
+          });
+      });
   }
 
   handleCancel() {
@@ -142,6 +145,7 @@ export class ProtocolTemplateParComponent implements OnInit {
       this.service.addOrUpdate(body)
         .ok(data => {
           this.resetModal();
+          this.search();
         })
         .fail(error => {
           this.uiHelper.msgTipError(error.msg);
@@ -158,6 +162,6 @@ export class ProtocolTemplateParComponent implements OnInit {
   }
 
   onChange($event: any) {
-
+    console.log($event); // key
   }
 }

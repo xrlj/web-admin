@@ -266,7 +266,7 @@ export class UIHelper {
   }
 
   /**
-   * 补全下拉树需要属性。
+   * 补全下拉树需要属性。包含上面方法功能
    */
   patchSelectTree(treeDataList: any): void {
     if (!treeDataList) {
@@ -278,6 +278,7 @@ export class UIHelper {
       const children = value.children;
       if (children === null || children === undefined || children.length === 0) {
         value.isLeaf = true;
+        value.children = null;
       } else {
         this.patchSelectTree(children);
       }
