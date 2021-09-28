@@ -145,7 +145,7 @@ export class ProtocolTemplateParComponent implements OnInit {
       this.service.addOrUpdate(body)
         .ok(data => {
           this.resetModal();
-          this.search();
+          setTimeout(() => {this.search();}, 100);
         })
         .fail(error => {
           this.uiHelper.msgTipError(error.msg);
