@@ -17,7 +17,7 @@ export class AgrTypeBigComponent implements OnInit {
   listOfAllData: any[] = []; // 列表数据
   loading = false;
   pageIndex = 1;
-  pageSize = 10;
+  pageSize = 1;
   total = 0;
 
   isShowModal = false;
