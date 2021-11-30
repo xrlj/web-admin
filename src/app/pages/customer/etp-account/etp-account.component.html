@@ -74,8 +74,8 @@
                   <div *ngSwitchCase="userStatusEnum.CHECK_WAIT">
                     <a (click)="verifyCheck(data.userId)">审核</a>
                   </div>
-                  <div *ngSwitchCase="userStatusEnum.CHECK_PASS">
-                  </div>
+                  <!--<div *ngSwitchCase="userStatusEnum.CHECK_PASS">
+                  </div>-->
                   <div *ngSwitchDefault>
                     <a (click)="details(data.userId)">查看</a>
                     <nz-divider nzType="vertical"></nz-divider>

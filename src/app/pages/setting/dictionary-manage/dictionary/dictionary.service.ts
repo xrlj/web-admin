@@ -20,6 +20,8 @@ export class DictionaryService {
     body.pageSize = pageSize;
     body.dictName = dictName;
     body.dictType = dictType;
+    body.sort = 'ASC';
+    body.sortFields = 'dictSort';
     return this.api.post(ApiPath.syscommon.universalDic.getListPage, body);
   }
 
