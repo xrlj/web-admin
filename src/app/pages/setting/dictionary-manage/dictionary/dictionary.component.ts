@@ -86,6 +86,7 @@ export class DictionaryComponent implements OnInit {
     } else { // 新增
       this.isShowModal = true;
       this.modalType = 1;
+      this.addOrEditForm.controls.dictSort.setValue(0);
     }
   }
 
